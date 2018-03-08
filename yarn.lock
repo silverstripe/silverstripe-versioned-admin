@@ -3243,7 +3243,7 @@ expand-range@^1.8.1:
   dependencies:
     fill-range "^2.1.0"
 
-expose-loader@^0.7.3:
+expose-loader@^0.7.3, expose-loader@^0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/expose-loader/-/expose-loader-0.7.4.tgz#9bcdd3878b5da9107930b55a03f65afe90b3314a"
 
@@ -5581,6 +5581,10 @@ modernizr@^3.5.0:
     requirejs "2.1.22"
     yargs "7.0.2"
 
+moment@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.21.0.tgz#2a114b51d2a6ec9e6d83cf803f838a878d8a023a"
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -7288,7 +7292,7 @@ sass-lint@^1.11.1:
     path-is-absolute "^1.0.0"
     util "^0.10.3"
 
-sass-loader@^6.0.5:
+sass-loader@^6.0.5, sass-loader@^6.0.7:
   version "6.0.7"
   resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-6.0.7.tgz#dd2fdb3e7eeff4a53f35ba6ac408715488353d00"
   dependencies:

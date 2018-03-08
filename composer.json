@@ -37,6 +37,12 @@
             "client/dist"
         ]
     },
+    "autoload": {
+        "psr-4": {
+            "SilverStripe\\VersionedAdmin\\": "src/",
+            "SilverStripe\\VersionedAdmin\\Tests\\": "tests/"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }

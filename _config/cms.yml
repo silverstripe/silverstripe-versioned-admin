@@ -1,0 +1,8 @@
+---
+Name: versionedadmincmsconfig
+Only:
+  moduleexists: silverstripe/cms
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\CMS\Controllers\CMSPageHistoryController:
+    class: SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController
