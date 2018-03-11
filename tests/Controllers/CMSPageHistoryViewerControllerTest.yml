@@ -1,0 +1,5 @@
+SilverStripe\CMS\Model\SiteTree:
+  page_one:
+    Title: Page one
+    URLSegment: page-one
+    Content: <p>Hello world!</p>
