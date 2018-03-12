@@ -15,11 +15,11 @@ class HistoryViewerFieldTest extends SapphireTest
 
         $css = Requirements::backend()->getCSS();
         $this->assertNotEmpty($css);
-        $this->assertContains('versioned-admin/client', key($css));
+        $this->assertContains('client/dist/styles/bundle.css', key($css));
 
         $javascript = Requirements::backend()->getJavascript();
         $this->assertNotEmpty($javascript);
-        $this->assertContains('versioned-admin/client', key($javascript));
+        $this->assertContains('client/dist/js/bundle.js', key($javascript));
     }
 
     public function testGetSourceRecord()
