@@ -28,8 +28,8 @@ before_script:
   # Install composer
   - composer validate
   - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql 2.0.x-dev; fi
+  - composer require --no-update silverstripe/recipe-cms 1.2.x-dev
   - composer install --prefer-dist
-  - composer require silverstripe/recipe-cms 1.2.x-dev
 
   # Install NPM dependencies
   - if [[ $NPM_TEST ]]; then nvm install $TRAVIS_NODE_VERSION && nvm use $TRAVIS_NODE_VERSION && npm install -g yarn && yarn install --network-concurrency 1 && (cd vendor/silverstripe/admin && yarn install --network-concurrency 1) && yarn run build; fi
