@@ -28,7 +28,7 @@ jQuery.entwine('ss', ($) => {
       );
 
       // Hide the CMS actions when in the history viewer
-      $('.toolbar--south.cms-content-actions').hide();
+      $('.CMSPageHistoryViewerController .toolbar--south.cms-content-actions').hide();
     }
   });
 });

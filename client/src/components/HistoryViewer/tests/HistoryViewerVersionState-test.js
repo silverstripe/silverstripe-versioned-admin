@@ -20,7 +20,7 @@ describe('HistoryViewerVersionState', () => {
 
   describe('getPublishedState', () => {
     it('returns the correct state', () => {
-      let mockVersion = {
+      const mockVersion = {
         Published: true
       };
 
@@ -72,7 +72,7 @@ describe('HistoryViewerVersionState', () => {
 
     it('returns an empty string when version is not live', () => {
       component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState/>
+        <HistoryViewerVersionState />
       );
 
       expect(component.getBadges()).toBe('');

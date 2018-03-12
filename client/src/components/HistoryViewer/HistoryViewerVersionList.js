@@ -13,6 +13,7 @@ class HistoryViewerVersionList extends PureComponent {
           {
             this.props.versions.map((version) => (
               <HistoryViewerVersion
+                key={version.Version}
                 version={version}
               />
             ))

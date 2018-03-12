@@ -26,7 +26,9 @@ class HistoryViewer extends Component {
    */
   getVersions() {
     const versions = this.props.versions;
-    const edges = (versions && versions.Versions.edges) || [];
+    const edges = (versions && versions.Versions && versions.Versions.edges)
+      ? versions.Versions.edges
+      : [];
     return edges.map((version) => version.node);
   }
 
@@ -80,7 +82,9 @@ class HistoryViewer extends Component {
       return null;
     }
 
-    const totalVersions = this.props.versions.Versions.pageInfo.totalCount || 0;
+    const totalVersions = this.props.versions.Versions
+      ? this.props.versions.Versions.pageInfo.totalCount
+      : 0;
     if (totalVersions <= this.props.limit) {
       return null;
     }
