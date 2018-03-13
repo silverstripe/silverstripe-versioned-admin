@@ -8,7 +8,7 @@ import { loadComponent } from 'lib/Injector';
  * outside of a React context e.g. in the CMS
  */
 jQuery.entwine('ss', ($) => {
-  $('.history-viewer__container').entwine({
+  $('.js-injector-boot .history-viewer__container').entwine({
     onmatch() {
       const cmsContent = this.closest('.cms-content').attr('id');
       const context = (cmsContent)
