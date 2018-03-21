@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import HistoryViewerVersionState from 'components/HistoryViewer/HistoryViewerVersionState';
+import { versionType, defaultVersion } from 'types/versionType';
 
 class HistoryViewerVersion extends Component {
   /**
@@ -9,11 +10,8 @@ class HistoryViewerVersion extends Component {
    * @returns {string}
    */
   getAuthor() {
-    const version = this.props.version;
-    let member = {
-      FirstName: '',
-      Surname: '',
-    };
+    const { version } = this.props;
+    let member = {};
 
     if (version.Published && version.Publisher) {
       member = version.Publisher;
@@ -25,12 +23,13 @@ class HistoryViewerVersion extends Component {
   }
 
   render() {
+    const { version } = this.props;
     return (
       <tr>
-        <td>{this.props.version.Version}</td>
+        <td>{version.Version}</td>
         <td>
           <HistoryViewerVersionState
-            version={this.props.version}
+            version={version}
           />
         </td>
         <td>{this.getAuthor()}</td>
@@ -40,11 +39,11 @@ class HistoryViewerVersion extends Component {
 }
 
 HistoryViewerVersion.propTypes = {
-  version: React.PropTypes.object,
+  version: versionType,
 };
 
 HistoryViewerVersion.defaultProps = {
-  version: {},
+  version: defaultVersion,
 };
 
 export default HistoryViewerVersion;

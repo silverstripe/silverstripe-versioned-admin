@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import historyStateRouter from 'components/HistoryViewer/HistoryViewerStateRouter';
 import HistoryViewerVersionList from 'components/HistoryViewer/HistoryViewerVersionList';
+import { versionType } from 'types/versionType';
 import Griddle from 'griddle-react';
 import i18n from 'i18n';
 
@@ -22,10 +23,10 @@ class HistoryViewer extends Component {
   /**
    * Returns the result of the GraphQL version history query
    *
-   * @returns {array}
+   * @returns {Array}
    */
   getVersions() {
-    const versions = this.props.versions;
+    const { versions } = this.props;
     const edges = (versions && versions.Versions && versions.Versions.edges)
       ? versions.Versions.edges
       : [];
@@ -39,10 +40,11 @@ class HistoryViewer extends Component {
    */
   handleSetPage(page) {
     // Note: data from Griddle is zero-indexed
-    this.props.actions.versions.goToPage(page + 1);
-
-    if (typeof this.props.onPageChange === 'function') {
-      this.props.onPageChange(page + 1);
+    const newPage = page + 1;
+    const { onPageChange, actions } = this.props;
+    actions.versions.goToPage(newPage);
+    if (typeof onPageChange === 'function') {
+      onPageChange(newPage);
     }
   }
 
@@ -50,9 +52,8 @@ class HistoryViewer extends Component {
    * Handler for incrementing the set page
    */
   handleNextPage() {
-    // Note: data for Griddle needs to be zero-indexed
-    const currentPage = this.props.page - 1;
-    this.handleSetPage(currentPage + 1);
+    // Note: data for Griddle needs to be zero-indexed, so don't add 1 to this
+    this.handleSetPage(this.props.page);
   }
 
   /**
@@ -78,27 +79,32 @@ class HistoryViewer extends Component {
    * @returns {XML|null}
    */
   renderPagination() {
-    if (!this.props.versions) {
+    const { limit, page, versions } = this.props;
+
+    if (!versions) {
       return null;
     }
 
-    const totalVersions = this.props.versions.Versions
-      ? this.props.versions.Versions.pageInfo.totalCount
+    const totalVersions = versions.Versions
+      ? versions.Versions.pageInfo.totalCount
       : 0;
-    if (totalVersions <= this.props.limit) {
+
+    if (totalVersions <= limit) {
       return null;
     }
+
     const props = {
       setPage: this.handleSetPage,
-      maxPage: Math.ceil(this.props.versions.Versions.pageInfo.totalCount / this.props.limit),
+      maxPage: Math.ceil(totalVersions / limit),
       next: this.handleNextPage,
       nextText: i18n._t('HistoryViewer.NEXT', 'Next'),
       previous: this.handlePrevPage,
       previousText: i18n._t('HistoryViewer.PREVIOUS', 'Previous'),
       // Note: zero indexed
-      currentPage: this.props.page - 1,
+      currentPage: page - 1,
       useGriddleStyles: false,
     };
+
     return (
       <div className="griddle-footer">
         <Griddle.GridPagination {...props} />
@@ -107,8 +113,10 @@ class HistoryViewer extends Component {
   }
 
   render() {
+    const { loading } = this.props;
+
     // Handle loading state
-    if (this.props.loading) {
+    if (loading) {
       return (
         <div className="flexbox-area-grow">
           <div key="overlay" className="cms-content-loading-overlay ui-widget-overlay-light" />
@@ -131,14 +139,32 @@ class HistoryViewer extends Component {
 }
 
 HistoryViewer.propTypes = {
-  limit: React.PropTypes.number,
-  offset: React.PropTypes.number,
-  recordId: React.PropTypes.number.isRequired,
-  versions: React.PropTypes.object,
+  limit: PropTypes.number,
+  offset: PropTypes.number,
+  recordId: PropTypes.number.isRequired,
+  versions: PropTypes.shape({
+    Versions: PropTypes.shape({
+      pageInfo: PropTypes.shape({
+        totalCount: PropTypes.number,
+      }),
+      edges: PropTypes.arrayOf(PropTypes.shape({
+        node: versionType,
+      })),
+    }),
+  }),
+  page: PropTypes.number,
+  actions: PropTypes.object,
 };
 
 HistoryViewer.defaultProps = {
-  versions: {},
+  versions: {
+    Versions: {
+      pageInfo: {
+        totalCount: 0,
+      },
+      edges: [],
+    },
+  },
 };
 
 export { HistoryViewer as Component };

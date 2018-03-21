@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react';
 import HistoryViewerHeading from 'components/HistoryViewer/HistoryViewerHeading';
 import HistoryViewerVersion from 'components/HistoryViewer/HistoryViewerVersion';
+import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionList extends PureComponent {
   render() {
+    const { versions } = this.props;
+
     return (
       <table className="table table-hover">
         <thead>
@@ -11,7 +14,7 @@ class HistoryViewerVersionList extends PureComponent {
         </thead>
         <tbody>
           {
-            this.props.versions.map((version) => (
+            versions.map((version) => (
               <HistoryViewerVersion
                 key={version.Version}
                 version={version}
@@ -25,7 +28,7 @@ class HistoryViewerVersionList extends PureComponent {
 }
 
 HistoryViewerVersionList.propTypes = {
-  versions: React.PropTypes.array,
+  versions: React.PropTypes.arrayOf(versionType),
 };
 
 HistoryViewerVersionList.defaultProps = {

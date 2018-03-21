@@ -2,6 +2,7 @@ import i18n from 'i18n';
 import React, { Component } from 'react';
 import moment from 'moment';
 import Badge from 'components/Badge/Badge';
+import { versionType, defaultVersion } from 'types/versionType';
 
 class HistoryViewerVersionState extends Component {
   /**
@@ -40,7 +41,7 @@ class HistoryViewerVersionState extends Component {
   /**
    * Return any status badges for the record
    *
-   * @returns {string}
+   * @returns {ReactElement|string}
    */
   getBadges() {
     if (this.props.version.LiveVersion) {
@@ -66,12 +67,12 @@ class HistoryViewerVersionState extends Component {
 }
 
 HistoryViewerVersionState.propTypes = {
-  version: React.PropTypes.object,
+  version: versionType,
   extraClass: React.PropTypes.string,
 };
 
 HistoryViewerVersionState.defaultProps = {
-  version: {},
+  version: defaultVersion,
   extraClass: '',
 };
 
