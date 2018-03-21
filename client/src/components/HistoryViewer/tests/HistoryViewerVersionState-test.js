@@ -36,7 +36,7 @@ describe('HistoryViewerVersionState', () => {
         <HistoryViewerVersionState version={{}} />
       );
 
-      expect(component.getPublishedState()).toBe('Modified');
+      expect(component.getPublishedState()).toBe('Saved');
     });
   });
 

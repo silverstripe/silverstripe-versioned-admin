@@ -15,7 +15,7 @@ class HistoryViewerVersionState extends Component {
   }
 
   /**
-   * When the record is published, return "Published", else return "Modified"
+   * When the record is published, return "Published", else return "Saved"
    *
    * @returns {string}
    */
@@ -24,7 +24,7 @@ class HistoryViewerVersionState extends Component {
       return i18n._t('HistoryViewer.Published', 'Published');
     }
 
-    return i18n._t('HistoryViewer.Modified', 'Modified');
+    return i18n._t('HistoryViewer.Saved', 'Saved');
   }
 
   /**
