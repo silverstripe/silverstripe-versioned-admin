@@ -1,9 +1,11 @@
+/* global window */
 import React, { Component } from 'react';
 
 /**
  * The state router HOC encapsulates the pagination page number state for the
  * HistoryViewer's GraphQL query, and pagination utilities.
  */
+
 const historyStateRouter = (RoutedComponent) => {
   class HistoryViewerStateRouter extends Component {
     constructor(props) {
@@ -24,6 +26,7 @@ const historyStateRouter = (RoutedComponent) => {
       return (
         <RoutedComponent
           {...this.props}
+          store={window.ss.store}
           page={this.state.page}
           onPageChange={this.handlePage}
         />

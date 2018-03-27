@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
-import historyStateRouter from 'components/HistoryViewer/HistoryViewerStateRouter';
-import HistoryViewerVersionList from 'components/HistoryViewer/HistoryViewerVersionList';
+import { connect } from 'react-redux';
+import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
+import HistoryViewerVersionDetail from './HistoryViewerVersionDetail';
+import HistoryViewerVersionList from './HistoryViewerVersionList';
 import { versionType } from 'types/versionType';
 import Griddle from 'griddle-react';
 import i18n from 'i18n';
@@ -18,6 +20,10 @@ class HistoryViewer extends Component {
     this.handleSetPage = this.handleSetPage.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePrevPage = this.handlePrevPage.bind(this);
+
+    this.state = {
+      selectedVersion: 0,
+    };
   }
 
   /**
@@ -31,6 +37,21 @@ class HistoryViewer extends Component {
       ? versions.Versions.edges
       : [];
     return edges.map((version) => version.node);
+  }
+
+  /**
+   * Renders the detail form for a selected version
+   *
+   * @returns {HistoryViewerVersionDetail}
+   */
+  getVersionDetail() {
+    const { currentVersion } = this.props;
+
+    return (
+      <HistoryViewerVersionDetail
+        version={this.getVersions().filter((version) => version.Version === currentVersion)}
+      />
+    );
   }
 
   /**
@@ -125,11 +146,22 @@ class HistoryViewer extends Component {
       );
     }
 
+    // Render the selected version details
+    if (this.props.currentVersion) {
+      return (
+        <div className="history-viewer">
+          {this.getVersionDetail()}
+        </div>
+      );
+    }
+
+    // Render the version list
     return (
       <div className="history-viewer">
         <HistoryViewerVersionList
           versions={this.getVersions()}
         />
+
         <div className="history-viewer__pagination">
           {this.renderPagination()}
         </div>
@@ -167,10 +199,17 @@ HistoryViewer.defaultProps = {
   },
 };
 
+
+function mapStateToProps(state) {
+  const historyViewerState = state.versionedAdmin.historyViewer;
+  return {
+    currentVersion: historyViewerState.currentVersion,
+  };
+}
+
 export { HistoryViewer as Component };
 
-const HistoryViewerProvider = compose(
+export default compose(
+  connect(mapStateToProps),
   historyStateRouter
 )(HistoryViewer);
-
-export default HistoryViewerProvider;

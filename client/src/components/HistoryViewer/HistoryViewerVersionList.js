@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import HistoryViewerHeading from 'components/HistoryViewer/HistoryViewerHeading';
-import HistoryViewerVersion from 'components/HistoryViewer/HistoryViewerVersion';
+import HistoryViewerHeading from './HistoryViewerHeading';
+import HistoryViewerVersion from './HistoryViewerVersion';
 import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionList extends PureComponent {
@@ -17,6 +17,7 @@ class HistoryViewerVersionList extends PureComponent {
             versions.map((version) => (
               <HistoryViewerVersion
                 key={version.Version}
+                handleClick={() => this.props.handleClickVersion(version.Version)}
                 version={version}
               />
             ))
