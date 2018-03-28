@@ -7,9 +7,13 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormFactory;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
 use SilverStripe\ORM\DataObject;
 
 class DataObjectVersionFormFactory implements FormFactory
@@ -91,9 +95,34 @@ class DataObjectVersionFormFactory implements FormFactory
     protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
     {
         $record = $context['Record'];
+        /** @var FieldList $fields */
         $fields = $record->getCMSFields();
+        $this->removeHistoryViewerFields($fields);
         $this->invokeWithExtensions('updateFormFields', $fields, $controller, $name, $context);
+
         return $fields;
+    }
+
+    /**
+     * Do not return {@link HistoryViewerField} instances in the form - remove them if they are found
+     *
+     * @param FieldList $fields
+     */
+    protected function removeHistoryViewerFields(FieldList $fields)
+    {
+        // Remove HistoryViewerFields
+        $fields->recursiveWalk(function (FormField $field) {
+            if ($field instanceof HistoryViewerField) {
+                $field->getContainerFieldList()->remove($field);
+            }
+        });
+
+        // Cleanup empty tabs after removing HistoryViewerFields
+        $fields->recursiveWalk(function (FormField $field) {
+            if ($field instanceof Tab && !$field->Fields()->count()) {
+                $field->getContainerFieldList()->remove($field);
+            }
+        });
     }
 
     protected function getFormActions(RequestHandler $controller = null, $formName, $context = [])

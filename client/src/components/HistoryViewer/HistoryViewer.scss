@@ -9,6 +9,8 @@
 }
 
 .history-viewer__table--current {
+  margin-bottom: 0;
+
   // There will only be one table row in this table state
   tbody tr,
   tbody tr:hover {
