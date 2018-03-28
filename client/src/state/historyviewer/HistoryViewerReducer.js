@@ -1,4 +1,4 @@
-import HISTORYVIEWER from './HistoryViewerActionTypes';
+import HISTORY_VIEWER from './HistoryViewerActionTypes';
 
 const initialState = {
   currentVersion: 0,
@@ -14,14 +14,14 @@ const initialState = {
  */
 export default function historyViewerReducer(state = initialState, { type, payload } = {}) {
   switch (type) {
-    case HISTORYVIEWER.SET_CURRENT_VERSION: {
+    case HISTORY_VIEWER.SET_CURRENT_VERSION: {
       return {
         ...state,
         currentVersion: payload.id,
       };
     }
 
-    case HISTORYVIEWER.CLEAR_CURRENT_VERSION: {
+    case HISTORY_VIEWER.CLEAR_CURRENT_VERSION: {
       return {
         ...state,
         currentVersion: 0,

@@ -20,6 +20,7 @@ jQuery.entwine('ss', ($) => {
       ReactDOM.render(
         <HistoryViewerComponent
           recordId={this.data('record-id')}
+          recordClass={this.data('record-class')}
           limit={30}
           offset={0}
           page={0}

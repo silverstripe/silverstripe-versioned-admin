@@ -357,6 +357,8 @@ var _FormBuilderLoader = __webpack_require__("containers/FormBuilderLoader/FormB
 
 var _FormBuilderLoader2 = _interopRequireDefault(_FormBuilderLoader);
 
+var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0!./client/src/types/versionType.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -377,12 +379,15 @@ var HistoryViewerVersionDetail = function (_Component) {
   _createClass(HistoryViewerVersionDetail, [{
     key: 'render',
     value: function render() {
-      var schemaUrl = 'http://ss42.localhost/admin/historyviewer/schema/versionForm?RecordClass=SilverStripe\\CMS\\Model\\SiteTree&RecordID=2&RecordVersion=1';
+      var schemaUrl = this.props.schemaUrl;
+
+
       return _react2.default.createElement(
         'div',
         { className: 'history-viewer__version-detail' },
         _react2.default.createElement(_FormBuilderLoader2.default, {
-          identifier: 'HistoryViewer.VersionDetail', schemaUrl: schemaUrl
+          identifier: 'HistoryViewer.VersionDetail',
+          schemaUrl: schemaUrl
         })
       );
     }
@@ -390,6 +395,13 @@ var HistoryViewerVersionDetail = function (_Component) {
 
   return HistoryViewerVersionDetail;
 }(_react.Component);
+
+HistoryViewerVersionDetail.propTypes = {
+  recordClass: _react2.default.PropTypes.string.isRequired,
+  recordId: _react2.default.PropTypes.number.isRequired,
+  schemaUrl: _react2.default.PropTypes.string.isRequired,
+  version: _versionType.versionType.isRequired
+};
 
 exports.default = HistoryViewerVersionDetail;
 
@@ -698,6 +710,7 @@ _jquery2.default.entwine('ss', function ($) {
 
       _reactDom2.default.render(_react2.default.createElement(HistoryViewerComponent, {
         recordId: this.data('record-id'),
+        recordClass: this.data('record-class'),
         limit: 30,
         offset: 0,
         page: 0
@@ -723,7 +736,7 @@ Object.defineProperty(exports, "__esModule", {
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 exports.default = ['SET_CURRENT_VERSION', 'CLEAR_CURRENT_VERSION'].reduce(function (obj, item) {
-  return Object.assign(obj, _defineProperty({}, item, 'HISTORYVIEWER.' + item));
+  return Object.assign(obj, _defineProperty({}, item, 'HISTORY_VIEWER.' + item));
 }, {});
 
 /***/ }),
@@ -900,12 +913,41 @@ var HistoryViewer = function (_Component) {
       });
     }
   }, {
+    key: 'getVersionDetail',
+    value: function getVersionDetail() {
+      var _props = this.props,
+          currentVersion = _props.currentVersion,
+          recordId = _props.recordId,
+          recordClass = _props.recordClass;
+
+
+      var store = window.ss.store;
+      var sectionConfigKey = 'SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController';
+      var sectionConfig = store.getState().config.sections.find(function (section) {
+        return section.name === sectionConfigKey;
+      });
+      var schemaUrlBase = sectionConfig.form.versionForm.schemaUrl + '/' + recordId;
+      var schemaQueryString = 'RecordClass=' + recordClass + '&RecordID=' + recordId + '&RecordVersion=' + currentVersion;
+      var schemaUrl = schemaUrlBase + '?' + schemaQueryString;
+
+      var props = {
+        recordClass: recordClass,
+        recordId: recordId,
+        schemaUrl: schemaUrl,
+        version: this.getVersions().filter(function (version) {
+          return version.Version === currentVersion;
+        })[0]
+      };
+
+      return _react2.default.createElement(_HistoryViewerVersionDetail2.default, props);
+    }
+  }, {
     key: 'handleSetPage',
     value: function handleSetPage(page) {
       var newPage = page + 1;
-      var _props = this.props,
-          onPageChange = _props.onPageChange,
-          actions = _props.actions;
+      var _props2 = this.props,
+          onPageChange = _props2.onPageChange,
+          actions = _props2.actions;
 
       actions.versions.goToPage(newPage);
       if (typeof onPageChange === 'function') {
@@ -930,10 +972,10 @@ var HistoryViewer = function (_Component) {
   }, {
     key: 'renderPagination',
     value: function renderPagination() {
-      var _props2 = this.props,
-          limit = _props2.limit,
-          page = _props2.page,
-          versions = _props2.versions;
+      var _props3 = this.props,
+          limit = _props3.limit,
+          page = _props3.page,
+          versions = _props3.versions;
 
 
       if (!versions) {
@@ -963,18 +1005,6 @@ var HistoryViewer = function (_Component) {
         { className: 'griddle-footer' },
         _react2.default.createElement(_griddleReact2.default.GridPagination, props)
       );
-    }
-  }, {
-    key: 'getVersionDetail',
-    value: function getVersionDetail() {
-      var currentVersion = this.props.currentVersion;
-
-
-      return _react2.default.createElement(_HistoryViewerVersionDetail2.default, {
-        version: this.getVersions().filter(function (version) {
-          return version.Version === currentVersion;
-        })
-      });
     }
   }, {
     key: 'render',

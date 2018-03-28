@@ -17,7 +17,7 @@ class HistoryViewerController extends LeftAndMain
 {
     private static $url_segment = 'historyviewer';
 
-    private static $url_rule = '/$Action/$ID';
+    private static $url_rule = '/$Action';
 
     private static $url_priority = 10;
 

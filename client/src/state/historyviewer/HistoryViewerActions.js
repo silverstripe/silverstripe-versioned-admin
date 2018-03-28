@@ -1,4 +1,4 @@
-import HISTORYVIEWER from './HistoryViewerActionTypes';
+import HISTORY_VIEWER from './HistoryViewerActionTypes';
 
 /**
  * Setting the current version will enable context views for a specific record
@@ -7,7 +7,7 @@ import HISTORYVIEWER from './HistoryViewerActionTypes';
 export function setCurrentVersion(id) {
   return (dispatch) => {
     dispatch({
-      type: HISTORYVIEWER.SET_CURRENT_VERSION,
+      type: HISTORY_VIEWER.SET_CURRENT_VERSION,
       payload: { id },
     });
   };
@@ -19,7 +19,7 @@ export function setCurrentVersion(id) {
 export function clearCurrentVersion() {
   return (dispatch) => {
     dispatch({
-      type: HISTORYVIEWER.CLEAR_CURRENT_VERSION,
+      type: HISTORY_VIEWER.CLEAR_CURRENT_VERSION,
       payload: {},
     });
   };

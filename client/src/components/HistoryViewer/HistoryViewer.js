@@ -1,3 +1,5 @@
+/* global window */
+
 import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -45,13 +47,22 @@ class HistoryViewer extends Component {
    * @returns {HistoryViewerVersionDetail}
    */
   getVersionDetail() {
-    const { currentVersion } = this.props;
+    const { currentVersion, recordId, recordClass } = this.props;
 
-    return (
-      <HistoryViewerVersionDetail
-        version={this.getVersions().filter((version) => version.Version === currentVersion)}
-      />
-    );
+    const store = window.ss.store;
+    const sectionConfigKey = 'SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController';
+    const sectionConfig = store.getState().config.sections
+      .find((section) => section.name === sectionConfigKey);
+    const schemaUrlBase = `${sectionConfig.form.versionForm.schemaUrl}/${recordId}`;
+    const schemaQueryString = `RecordClass=${recordClass}&RecordID=${recordId}&RecordVersion=${currentVersion}`;
+    const schemaUrl = `${schemaUrlBase}?${schemaQueryString}`;
+
+    const props = {
+      schemaUrl,
+      version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
+    };
+
+    return <HistoryViewerVersionDetail {...props} />;
   }
 
   /**
