@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
 import HistoryViewerVersionDetail from './HistoryViewerVersionDetail';
 import HistoryViewerVersionList from './HistoryViewerVersionList';
+import Loading from './Loading';
 import { versionType } from 'types/versionType';
 import Griddle from 'griddle-react';
 import i18n from 'i18n';
@@ -149,12 +150,7 @@ class HistoryViewer extends Component {
 
     // Handle loading state
     if (loading) {
-      return (
-        <div className="flexbox-area-grow">
-          <div key="overlay" className="cms-content-loading-overlay ui-widget-overlay-light" />
-          <div key="spinner" className="cms-content-loading-spinner" />
-        </div>
-      );
+      return <Loading />;
     }
 
     // Render the selected version details

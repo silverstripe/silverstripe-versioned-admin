@@ -347,8 +347,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__("react");
 
 var _react2 = _interopRequireDefault(_react);
@@ -361,44 +359,21 @@ var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var HistoryViewerVersionDetail = function (_Component) {
-  _inherits(HistoryViewerVersionDetail, _Component);
-
-  function HistoryViewerVersionDetail() {
-    _classCallCheck(this, HistoryViewerVersionDetail);
-
-    return _possibleConstructorReturn(this, (HistoryViewerVersionDetail.__proto__ || Object.getPrototypeOf(HistoryViewerVersionDetail)).apply(this, arguments));
-  }
-
-  _createClass(HistoryViewerVersionDetail, [{
-    key: 'render',
-    value: function render() {
-      var schemaUrl = this.props.schemaUrl;
+var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
+  var schemaUrl = props.schemaUrl;
 
 
-      return _react2.default.createElement(
-        'div',
-        { className: 'history-viewer__version-detail' },
-        _react2.default.createElement(_FormBuilderLoader2.default, {
-          identifier: 'HistoryViewer.VersionDetail',
-          schemaUrl: schemaUrl
-        })
-      );
-    }
-  }]);
-
-  return HistoryViewerVersionDetail;
-}(_react.Component);
+  return _react2.default.createElement(
+    'div',
+    { className: 'history-viewer__version-detail' },
+    _react2.default.createElement(_FormBuilderLoader2.default, {
+      identifier: 'HistoryViewer.VersionDetail',
+      schemaUrl: schemaUrl
+    })
+  );
+};
 
 HistoryViewerVersionDetail.propTypes = {
-  recordClass: _react2.default.PropTypes.string.isRequired,
-  recordId: _react2.default.PropTypes.number.isRequired,
   schemaUrl: _react2.default.PropTypes.string.isRequired,
   version: _versionType.versionType.isRequired
 };
@@ -606,6 +581,35 @@ HistoryViewerVersionState.defaultProps = {
 };
 
 exports.default = HistoryViewerVersionState;
+
+/***/ }),
+
+/***/ "./client/src/components/HistoryViewer/Loading.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Loading = function Loading() {
+  return _react2.default.createElement(
+    "div",
+    { className: "flexbox-area-grow" },
+    _react2.default.createElement("div", { key: "overlay", className: "cms-content-loading-overlay ui-widget-overlay-light" }),
+    _react2.default.createElement("div", { key: "spinner", className: "cms-content-loading-spinner" })
+  );
+};
+
+exports.default = Loading;
 
 /***/ }),
 
@@ -866,6 +870,10 @@ var _HistoryViewerVersionList = __webpack_require__("./client/src/components/His
 
 var _HistoryViewerVersionList2 = _interopRequireDefault(_HistoryViewerVersionList);
 
+var _Loading = __webpack_require__("./client/src/components/HistoryViewer/Loading.js");
+
+var _Loading2 = _interopRequireDefault(_Loading);
+
 var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0!./client/src/types/versionType.js");
 
 var _griddleReact = __webpack_require__("./node_modules/griddle-react/modules/griddle.jsx.js");
@@ -931,8 +939,6 @@ var HistoryViewer = function (_Component) {
       var schemaUrl = schemaUrlBase + '?' + schemaQueryString;
 
       var props = {
-        recordClass: recordClass,
-        recordId: recordId,
         schemaUrl: schemaUrl,
         version: this.getVersions().filter(function (version) {
           return version.Version === currentVersion;
@@ -1012,12 +1018,7 @@ var HistoryViewer = function (_Component) {
       var loading = this.props.loading;
 
       if (loading) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'flexbox-area-grow' },
-          _react2.default.createElement('div', { key: 'overlay', className: 'cms-content-loading-overlay ui-widget-overlay-light' }),
-          _react2.default.createElement('div', { key: 'spinner', className: 'cms-content-loading-spinner' })
-        );
+        return _react2.default.createElement(_Loading2.default, null);
       }
 
       if (this.props.currentVersion) {

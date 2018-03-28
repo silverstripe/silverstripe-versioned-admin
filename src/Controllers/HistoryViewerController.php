@@ -3,7 +3,6 @@
 namespace SilverStripe\VersionedAdmin\Controllers;
 
 use InvalidArgumentException;
-use function print_r;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\LeftAndMainFormRequestHandler;
 use SilverStripe\Control\HTTPRequest;
