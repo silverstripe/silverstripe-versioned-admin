@@ -32,4 +32,13 @@ jQuery.entwine('ss', ($) => {
       $('.CMSPageHistoryViewerController .toolbar--south.cms-content-actions').hide();
     }
   });
+
+  // Prevent the default anchor behaviour for any CMS tab links that are rendered in
+  // via a React FormBuilder
+  $('.history-viewer__version-detail .nav-link').entwine({
+    onclick(e) {
+      e.preventDefault();
+      this._super(e);
+    }
+  });
 });

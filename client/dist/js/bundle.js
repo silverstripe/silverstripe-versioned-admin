@@ -287,28 +287,6 @@ var HistoryViewerVersion = function (_Component) {
       return (member.FirstName || '') + ' ' + (member.Surname || '');
     }
   }, {
-    key: 'handleClick',
-    value: function handleClick() {
-      var _props = this.props,
-          handleSetCurrentVersion = _props.handleSetCurrentVersion,
-          version = _props.version,
-          showClearButton = _props.showClearButton;
-
-      if (showClearButton) {
-        return;
-      }
-
-      handleSetCurrentVersion(version.Version);
-    }
-  }, {
-    key: 'handleClose',
-    value: function handleClose() {
-      console.log('close clicked');
-      var handleClearCurrentVersion = this.props.handleClearCurrentVersion;
-
-      handleClearCurrentVersion();
-    }
-  }, {
     key: 'getClearButton',
     value: function getClearButton() {
       var showClearButton = this.props.showClearButton;
@@ -327,6 +305,27 @@ var HistoryViewerVersion = function (_Component) {
           extraClass: 'history-viewer__close-button'
         })
       );
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      var _props = this.props,
+          handleSetCurrentVersion = _props.handleSetCurrentVersion,
+          version = _props.version,
+          showClearButton = _props.showClearButton;
+
+      if (showClearButton) {
+        return;
+      }
+
+      handleSetCurrentVersion(version.Version);
+    }
+  }, {
+    key: 'handleClose',
+    value: function handleClose() {
+      var handleClearCurrentVersion = this.props.handleClearCurrentVersion;
+
+      handleClearCurrentVersion();
     }
   }, {
     key: 'render',
@@ -423,8 +422,8 @@ var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
     { className: 'history-viewer' },
     _react2.default.createElement(_HistoryViewerVersionList2.default, {
       extraClass: 'history-viewer__table--current',
-      showClearButton: true,
-      versions: [version]
+      versions: [version],
+      showClearButton: true
     }),
     _react2.default.createElement(
       'div',
@@ -794,6 +793,13 @@ _jquery2.default.entwine('ss', function ($) {
       }), this[0]);
 
       $('.CMSPageHistoryViewerController .toolbar--south.cms-content-actions').hide();
+    }
+  });
+
+  $('.history-viewer__version-detail .nav-link').entwine({
+    onclick: function onclick(e) {
+      e.preventDefault();
+      this._super(e);
     }
   });
 });

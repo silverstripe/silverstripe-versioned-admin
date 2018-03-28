@@ -37,11 +37,11 @@
 .history-viewer__close-button {
   background: transparent;
   border: 1px solid $white;
-  border-radius: 25px; // circular
+  border-radius: 50%; // circular
   color: $white;
-  padding: .4rem .5rem;
+  padding: .4rem .55rem;
 
-  &:before {
+  &::before {
     font-size: 1.4rem;
   }
 }
