@@ -183,7 +183,7 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var HistoryViewerHeading = function HistoryViewerHeading() {
+var HistoryViewerHeading = function HistoryViewerHeading(props) {
   return _react2.default.createElement(
     'tr',
     null,
@@ -201,8 +201,17 @@ var HistoryViewerHeading = function HistoryViewerHeading() {
       'th',
       null,
       _i18n2.default._t('HistoryViewer.Author', 'Author')
-    )
+    ),
+    props.hasActions ? _react2.default.createElement('th', null) : null
   );
+};
+
+HistoryViewerHeading.propTypes = {
+  hasActions: _react2.default.PropTypes.bool
+};
+
+HistoryViewerHeading.defaultProps = {
+  hasActions: false
 };
 
 exports.default = HistoryViewerHeading;
@@ -237,6 +246,10 @@ var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js
 
 var _HistoryViewerActions = __webpack_require__("./client/src/state/historyviewer/HistoryViewerActions.js");
 
+var _FormAction = __webpack_require__("components/FormAction/FormAction");
+
+var _FormAction2 = _interopRequireDefault(_FormAction);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -254,6 +267,7 @@ var HistoryViewerVersion = function (_Component) {
     var _this = _possibleConstructorReturn(this, (HistoryViewerVersion.__proto__ || Object.getPrototypeOf(HistoryViewerVersion)).call(this, props));
 
     _this.handleClick = _this.handleClick.bind(_this);
+    _this.handleClose = _this.handleClose.bind(_this);
     return _this;
   }
 
@@ -277,9 +291,42 @@ var HistoryViewerVersion = function (_Component) {
     value: function handleClick() {
       var _props = this.props,
           handleSetCurrentVersion = _props.handleSetCurrentVersion,
-          version = _props.version;
+          version = _props.version,
+          showClearButton = _props.showClearButton;
+
+      if (showClearButton) {
+        return;
+      }
 
       handleSetCurrentVersion(version.Version);
+    }
+  }, {
+    key: 'handleClose',
+    value: function handleClose() {
+      console.log('close clicked');
+      var handleClearCurrentVersion = this.props.handleClearCurrentVersion;
+
+      handleClearCurrentVersion();
+    }
+  }, {
+    key: 'getClearButton',
+    value: function getClearButton() {
+      var showClearButton = this.props.showClearButton;
+
+      if (!showClearButton) {
+        return null;
+      }
+
+      return _react2.default.createElement(
+        'td',
+        { className: 'history-viewer__actions' },
+        _react2.default.createElement(_FormAction2.default, {
+          onClick: this.handleClose,
+          icon: 'cancel',
+          title: null,
+          extraClass: 'history-viewer__close-button'
+        })
+      );
     }
   }, {
     key: 'render',
@@ -306,7 +353,8 @@ var HistoryViewerVersion = function (_Component) {
           'td',
           null,
           this.getAuthor()
-        )
+        ),
+        this.getClearButton()
       );
     }
   }]);
@@ -315,10 +363,12 @@ var HistoryViewerVersion = function (_Component) {
 }(_react.Component);
 
 HistoryViewerVersion.propTypes = {
+  showClearButton: _react2.default.PropTypes.bool,
   version: _versionType.versionType
 };
 
 HistoryViewerVersion.defaultProps = {
+  showClearButton: false,
   version: _versionType.defaultVersion
 };
 
@@ -355,21 +405,35 @@ var _FormBuilderLoader = __webpack_require__("containers/FormBuilderLoader/FormB
 
 var _FormBuilderLoader2 = _interopRequireDefault(_FormBuilderLoader);
 
+var _HistoryViewerVersionList = __webpack_require__("./client/src/components/HistoryViewer/HistoryViewerVersionList.js");
+
+var _HistoryViewerVersionList2 = _interopRequireDefault(_HistoryViewerVersionList);
+
 var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0!./client/src/types/versionType.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
-  var schemaUrl = props.schemaUrl;
+  var schemaUrl = props.schemaUrl,
+      version = props.version;
 
 
   return _react2.default.createElement(
     'div',
-    { className: 'history-viewer__version-detail' },
-    _react2.default.createElement(_FormBuilderLoader2.default, {
-      identifier: 'HistoryViewer.VersionDetail',
-      schemaUrl: schemaUrl
-    })
+    { className: 'history-viewer' },
+    _react2.default.createElement(_HistoryViewerVersionList2.default, {
+      extraClass: 'history-viewer__table--current',
+      showClearButton: true,
+      versions: [version]
+    }),
+    _react2.default.createElement(
+      'div',
+      { className: 'history-viewer__version-detail' },
+      _react2.default.createElement(_FormBuilderLoader2.default, {
+        identifier: 'HistoryViewer.VersionDetail',
+        schemaUrl: schemaUrl
+      })
+    )
   );
 };
 
@@ -426,16 +490,23 @@ var HistoryViewerVersionList = function (_PureComponent) {
   }
 
   _createClass(HistoryViewerVersionList, [{
+    key: 'getClassNames',
+    value: function getClassNames() {
+      var extraClass = this.props.extraClass;
+
+      return 'table ' + extraClass;
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
-
-      var versions = this.props.versions;
+      var _props = this.props,
+          showClearButton = _props.showClearButton,
+          versions = _props.versions;
 
 
       return _react2.default.createElement(
         'table',
-        { className: 'table table-hover' },
+        { className: this.getClassNames() },
         _react2.default.createElement(
           'thead',
           null,
@@ -447,9 +518,7 @@ var HistoryViewerVersionList = function (_PureComponent) {
           versions.map(function (version) {
             return _react2.default.createElement(_HistoryViewerVersion2.default, {
               key: version.Version,
-              handleClick: function handleClick() {
-                return _this2.props.handleClickVersion(version.Version);
-              },
+              showClearButton: showClearButton,
               version: version
             });
           })
@@ -462,10 +531,14 @@ var HistoryViewerVersionList = function (_PureComponent) {
 }(_react.PureComponent);
 
 HistoryViewerVersionList.propTypes = {
+  extraClass: _react2.default.PropTypes.string,
+  showClearButton: _react2.default.PropTypes.bool,
   versions: _react2.default.PropTypes.arrayOf(_versionType.versionType)
 };
 
 HistoryViewerVersionList.defaultProps = {
+  extraClass: 'table-hover',
+  showClearButton: false,
   versions: []
 };
 
@@ -903,10 +976,6 @@ var HistoryViewer = function (_Component) {
     _this.handleSetPage = _this.handleSetPage.bind(_this);
     _this.handleNextPage = _this.handleNextPage.bind(_this);
     _this.handlePrevPage = _this.handlePrevPage.bind(_this);
-
-    _this.state = {
-      selectedVersion: 0
-    };
     return _this;
   }
 
@@ -1015,18 +1084,16 @@ var HistoryViewer = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var loading = this.props.loading;
+      var _props4 = this.props,
+          loading = _props4.loading,
+          currentVersion = _props4.currentVersion;
 
       if (loading) {
         return _react2.default.createElement(_Loading2.default, null);
       }
 
-      if (this.props.currentVersion) {
-        return _react2.default.createElement(
-          'div',
-          { className: 'history-viewer' },
-          this.getVersionDetail()
-        );
+      if (currentVersion) {
+        return this.getVersionDetail();
       }
 
       return _react2.default.createElement(
@@ -11665,6 +11732,13 @@ module.exports = function(module) {
 /***/ (function(module, exports) {
 
 module.exports = Badge;
+
+/***/ }),
+
+/***/ "components/FormAction/FormAction":
+/***/ (function(module, exports) {
+
+module.exports = FormAction;
 
 /***/ }),
 

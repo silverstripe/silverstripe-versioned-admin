@@ -62,7 +62,7 @@ class DataObjectVersionFormFactory implements FormFactory
             }
         }
 
-        $form->addExtraClass('form--fill-height form--padded');
+        $form->addExtraClass('form--fill-height form--padded form--no-dividers');
         return $form;
     }
 

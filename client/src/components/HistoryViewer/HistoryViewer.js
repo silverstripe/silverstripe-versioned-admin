@@ -23,10 +23,6 @@ class HistoryViewer extends Component {
     this.handleSetPage = this.handleSetPage.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePrevPage = this.handlePrevPage.bind(this);
-
-    this.state = {
-      selectedVersion: 0,
-    };
   }
 
   /**
@@ -146,7 +142,7 @@ class HistoryViewer extends Component {
   }
 
   render() {
-    const { loading } = this.props;
+    const { loading, currentVersion } = this.props;
 
     // Handle loading state
     if (loading) {
@@ -154,12 +150,8 @@ class HistoryViewer extends Component {
     }
 
     // Render the selected version details
-    if (this.props.currentVersion) {
-      return (
-        <div className="history-viewer">
-          {this.getVersionDetail()}
-        </div>
-      );
+    if (currentVersion) {
+      return this.getVersionDetail();
     }
 
     // Render the version list

@@ -1,16 +1,25 @@
 import React from 'react';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
+import HistoryViewerVersionList from './HistoryViewerVersionList';
 import { versionType } from 'types/versionType';
 
 const HistoryViewerVersionDetail = (props) => {
-  const { schemaUrl } = props;
+  const { schemaUrl, version } = props;
 
   return (
-    <div className="history-viewer__version-detail">
-      <FormBuilderLoader
-        identifier="HistoryViewer.VersionDetail"
-        schemaUrl={schemaUrl}
+    <div className="history-viewer">
+      <HistoryViewerVersionList
+        extraClass="history-viewer__table--current"
+        versions={[version]}
+        showClearButton
       />
+
+      <div className="history-viewer__version-detail">
+        <FormBuilderLoader
+          identifier="HistoryViewer.VersionDetail"
+          schemaUrl={schemaUrl}
+        />
+      </div>
     </div>
   );
 };
