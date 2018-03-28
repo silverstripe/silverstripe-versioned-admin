@@ -1,6 +1,8 @@
 # SilverStripe Versioned Admin Module
 
 [![Build Status](https://api.travis-ci.org/silverstripe/silverstripe-versioned-admin.svg?branch=master)](https://travis-ci.org/silverstripe/silverstripe-versioned-admin)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/silverstripe/silverstripe-versioned-admin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/silverstripe/silverstripe-versioned-admin/?branch=master)
+[![codecov](https://codecov.io/gh/silverstripe/silverstripe-versioned-admin/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-versioned-admin)
 [![License](https://poser.pugx.org/silverstripe/versioned-admin/license.svg)](https://github.com/silverstripe/silverstripe-versioned-admin#license)
 
 ## Overview
