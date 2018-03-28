@@ -69,25 +69,6 @@ class HistoryViewerController extends LeftAndMain
         return $this->getSchemaResponse($schemaID, $form);
     }
 
-//    public function apiViewVersion(HTTPRequest $request)
-//    {
-//        $recordClass = $request->getVar('class');
-//        $recordId = $request->getVar('id');
-//        $recordVersion = $request->getVar('version');
-//
-//        // Ensure correct information is provided
-//        if (!$recordClass || !$recordId || !$recordVersion) {
-//            $this->jsonError(400);
-//            return null;
-//        }
-//
-//        return $this->getVersionForm([
-//            'RecordClass' => $recordClass,
-//            'RecordID' => $recordId,
-//            'RecordVersion' => $recordVersion,
-//        ]);
-//    }
-
     public function getVersionForm(array $context)
     {
         // Check context
