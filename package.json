@@ -51,7 +51,9 @@
     "@silverstripe/eslint-config": "^0.0.2",
     "@silverstripe/webpack-config": "^0.7.0",
     "babel-jest": "^19.0.0",
-    "jest-cli": "^19.0.2"
+    "expose-loader": "^0.7.4",
+    "jest-cli": "^19.0.2",
+    "sass-loader": "^6.0.7"
   },
   "dependencies": {
     "@storybook/addon-actions": "^3.2.16",
@@ -62,7 +64,9 @@
     "graphql-tag": "^0.1.17",
     "griddle-react": "^0.7.0",
     "jquery": "^3.1.1",
+    "moment": "^2.21.0",
     "react": "15.3.1",
+    "react-addons-test-utils": "15.3.1",
     "react-apollo": "^0.7.1",
     "react-dom": "15.3.1",
     "react-redux": "^4.4.5",
