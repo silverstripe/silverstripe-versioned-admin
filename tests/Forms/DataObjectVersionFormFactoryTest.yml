@@ -1,0 +1,4 @@
+SilverStripe\VersionedAdmin\Tests\Forms\DataObjectVersionFormFactoryTest\ObjectWithFields:
+  object_one:
+    Title: Some stub object
+    Age: 120
