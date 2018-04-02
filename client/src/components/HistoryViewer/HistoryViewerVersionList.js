@@ -15,7 +15,7 @@ class HistoryViewerVersionList extends PureComponent {
   }
 
   render() {
-    const { showClearButton, versions } = this.props;
+    const { isActive, versions } = this.props;
 
     return (
       <table className={this.getClassNames()}>
@@ -27,7 +27,7 @@ class HistoryViewerVersionList extends PureComponent {
             versions.map((version) => (
               <HistoryViewerVersion
                 key={version.Version}
-                showClearButton={showClearButton}
+                isActive={isActive}
                 version={version}
               />
             ))
@@ -40,13 +40,13 @@ class HistoryViewerVersionList extends PureComponent {
 
 HistoryViewerVersionList.propTypes = {
   extraClass: React.PropTypes.string,
-  showClearButton: React.PropTypes.bool,
+  isActive: React.PropTypes.bool,
   versions: React.PropTypes.arrayOf(versionType),
 };
 
 HistoryViewerVersionList.defaultProps = {
   extraClass: 'table-hover',
-  showClearButton: false,
+  isActive: false,
   versions: [],
 };
 

@@ -289,9 +289,9 @@ var HistoryViewerVersion = function (_Component) {
   }, {
     key: 'getClearButton',
     value: function getClearButton() {
-      var showClearButton = this.props.showClearButton;
+      var isActive = this.props.isActive;
 
-      if (!showClearButton) {
+      if (!isActive) {
         return null;
       }
 
@@ -312,9 +312,9 @@ var HistoryViewerVersion = function (_Component) {
       var _props = this.props,
           handleSetCurrentVersion = _props.handleSetCurrentVersion,
           version = _props.version,
-          showClearButton = _props.showClearButton;
+          isActive = _props.isActive;
 
-      if (showClearButton) {
+      if (isActive) {
         return;
       }
 
@@ -330,7 +330,9 @@ var HistoryViewerVersion = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var version = this.props.version;
+      var _props2 = this.props,
+          version = _props2.version,
+          isActive = _props2.isActive;
 
 
       return _react2.default.createElement(
@@ -345,7 +347,8 @@ var HistoryViewerVersion = function (_Component) {
           'td',
           null,
           _react2.default.createElement(_HistoryViewerVersionState2.default, {
-            version: version
+            version: version,
+            isActive: isActive
           })
         ),
         _react2.default.createElement(
@@ -362,12 +365,12 @@ var HistoryViewerVersion = function (_Component) {
 }(_react.Component);
 
 HistoryViewerVersion.propTypes = {
-  showClearButton: _react2.default.PropTypes.bool,
+  isActive: _react2.default.PropTypes.bool,
   version: _versionType.versionType
 };
 
 HistoryViewerVersion.defaultProps = {
-  showClearButton: false,
+  isActive: false,
   version: _versionType.defaultVersion
 };
 
@@ -423,7 +426,7 @@ var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
     _react2.default.createElement(_HistoryViewerVersionList2.default, {
       extraClass: 'history-viewer__table--current',
       versions: [version],
-      showClearButton: true
+      isActive: true
     }),
     _react2.default.createElement(
       'div',
@@ -499,7 +502,7 @@ var HistoryViewerVersionList = function (_PureComponent) {
     key: 'render',
     value: function render() {
       var _props = this.props,
-          showClearButton = _props.showClearButton,
+          isActive = _props.isActive,
           versions = _props.versions;
 
 
@@ -517,7 +520,7 @@ var HistoryViewerVersionList = function (_PureComponent) {
           versions.map(function (version) {
             return _react2.default.createElement(_HistoryViewerVersion2.default, {
               key: version.Version,
-              showClearButton: showClearButton,
+              isActive: isActive,
               version: version
             });
           })
@@ -531,13 +534,13 @@ var HistoryViewerVersionList = function (_PureComponent) {
 
 HistoryViewerVersionList.propTypes = {
   extraClass: _react2.default.PropTypes.string,
-  showClearButton: _react2.default.PropTypes.bool,
+  isActive: _react2.default.PropTypes.bool,
   versions: _react2.default.PropTypes.arrayOf(_versionType.versionType)
 };
 
 HistoryViewerVersionList.defaultProps = {
   extraClass: 'table-hover',
-  showClearButton: false,
+  isActive: false,
   versions: []
 };
 
@@ -615,8 +618,18 @@ var HistoryViewerVersionState = function (_Component) {
   }, {
     key: 'getBadges',
     value: function getBadges() {
-      if (this.props.version.LiveVersion) {
-        return _react2.default.createElement(_Badge2.default, { status: 'success', message: _i18n2.default._t('HistoryViewer.BadgeLive', 'Live'), className: '' });
+      var _props = this.props,
+          version = _props.version,
+          isActive = _props.isActive;
+
+
+      if (version.LiveVersion) {
+        return _react2.default.createElement(_Badge2.default, {
+          status: 'success',
+          message: _i18n2.default._t('HistoryViewer.BadgeLive', 'Live'),
+          className: '',
+          inverted: isActive
+        });
       }
 
       return '';
@@ -632,7 +645,7 @@ var HistoryViewerVersionState = function (_Component) {
         _react2.default.createElement(
           'small',
           { className: 'text-muted' },
-          _i18n2.default.sprintf(_i18n2.default._t('HistoryViewer.StateOnDate', 'on %s'), this.getDate())
+          this.getDate()
         ),
         this.getBadges()
       );
@@ -644,12 +657,14 @@ var HistoryViewerVersionState = function (_Component) {
 
 HistoryViewerVersionState.propTypes = {
   version: _versionType.versionType,
-  extraClass: _react2.default.PropTypes.string
+  extraClass: _react2.default.PropTypes.string,
+  isActive: _react2.default.PropTypes.bool
 };
 
 HistoryViewerVersionState.defaultProps = {
   version: _versionType.defaultVersion,
-  extraClass: ''
+  extraClass: '',
+  isActive: false
 };
 
 exports.default = HistoryViewerVersionState;

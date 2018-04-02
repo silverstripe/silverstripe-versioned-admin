@@ -35,13 +35,13 @@ class HistoryViewerVersion extends Component {
 
   /**
    * Return a "clear" button to close the version, for example when used in a "detail view"
-   * context
+   * context. This is shown when this version is "active", displayed with a blue background.
    *
    * @returns {FormAction|null}
    */
   getClearButton() {
-    const { showClearButton } = this.props;
-    if (!showClearButton) {
+    const { isActive } = this.props;
+    if (!isActive) {
       return null;
     }
 
@@ -61,10 +61,10 @@ class HistoryViewerVersion extends Component {
    * When clicking on a version, render the detail view for it via a Redux action dispatch
    */
   handleClick() {
-    const { handleSetCurrentVersion, version, showClearButton } = this.props;
+    const { handleSetCurrentVersion, version, isActive } = this.props;
 
     // If the clear button is shown, don't do anything when clicking on the row
-    if (showClearButton) {
+    if (isActive) {
       return;
     }
 
@@ -80,7 +80,7 @@ class HistoryViewerVersion extends Component {
   }
 
   render() {
-    const { version } = this.props;
+    const { version, isActive } = this.props;
 
     return (
       <tr onClick={this.handleClick}>
@@ -88,6 +88,7 @@ class HistoryViewerVersion extends Component {
         <td>
           <HistoryViewerVersionState
             version={version}
+            isActive={isActive}
           />
         </td>
         <td>{this.getAuthor()}</td>
@@ -98,12 +99,12 @@ class HistoryViewerVersion extends Component {
 }
 
 HistoryViewerVersion.propTypes = {
-  showClearButton: React.PropTypes.bool,
+  isActive: React.PropTypes.bool,
   version: versionType,
 };
 
 HistoryViewerVersion.defaultProps = {
-  showClearButton: false,
+  isActive: false,
   version: defaultVersion,
 };
 

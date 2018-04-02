@@ -9,8 +9,6 @@
 }
 
 .history-viewer__table--current {
-  margin-bottom: 1rem;
-
   // There will only be one table row in this table state
   tbody tr,
   tbody tr:hover {
@@ -21,11 +19,6 @@
   .text-muted {
     color: $white !important;
   }
-
-  .badge-success {
-    background-color: $white;
-    color: $brand-success;
-  }
 }
 
 // Table cell containing action buttons, e.g. compare and close
@@ -34,6 +27,13 @@
   text-align: right;
   width: 1%;
   vertical-align: middle;
+}
+
+// Bring any CMS tabs in the detail view closer to the table above it
+.history-viewer__version-detail {
+  .nav-tabs {
+    margin-top: -$panel-padding-y;
+  }
 }
 
 .history-viewer__close-button {

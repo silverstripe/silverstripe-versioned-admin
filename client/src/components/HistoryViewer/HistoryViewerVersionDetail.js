@@ -11,7 +11,7 @@ const HistoryViewerVersionDetail = (props) => {
       <HistoryViewerVersionList
         extraClass="history-viewer__table--current"
         versions={[version]}
-        showClearButton
+        isActive
       />
 
       <div className="history-viewer__version-detail">

@@ -44,8 +44,17 @@ class HistoryViewerVersionState extends Component {
    * @returns {ReactElement|string}
    */
   getBadges() {
-    if (this.props.version.LiveVersion) {
-      return <Badge status="success" message={i18n._t('HistoryViewer.BadgeLive', 'Live')} className="" />;
+    const { version, isActive } = this.props;
+
+    if (version.LiveVersion) {
+      return (
+        <Badge
+          status="success"
+          message={i18n._t('HistoryViewer.BadgeLive', 'Live')}
+          className="" // removes the default pill styles
+          inverted={isActive}
+        />
+      );
     }
 
     return '';
@@ -54,12 +63,7 @@ class HistoryViewerVersionState extends Component {
   render() {
     return (
       <span className={this.getClassNames()}>
-        {this.getPublishedState()} <small className="text-muted">{
-        i18n.sprintf(
-          i18n._t('HistoryViewer.StateOnDate', 'on %s'),
-          this.getDate()
-        )
-      }</small>
+        {this.getPublishedState()} <small className="text-muted">{this.getDate()}</small>
         {this.getBadges()}
       </span>
     );
@@ -69,11 +73,13 @@ class HistoryViewerVersionState extends Component {
 HistoryViewerVersionState.propTypes = {
   version: versionType,
   extraClass: React.PropTypes.string,
+  isActive: React.PropTypes.bool,
 };
 
 HistoryViewerVersionState.defaultProps = {
   version: defaultVersion,
   extraClass: '',
+  isActive: false,
 };
 
 export default HistoryViewerVersionState;
