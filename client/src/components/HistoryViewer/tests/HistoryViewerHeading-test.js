@@ -4,21 +4,29 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import HistoryViewerHeading from '../HistoryViewerHeading';
 
-describe('HistoryViewerHeading', () => {
-  it('has four columns when hasActions is true', () => {
-    const component = ReactTestUtils.renderIntoDocument(
+class HeadingWrapper extends React.Component {
+  render() {
+    return (
       <table>
         <thead>
-          <HistoryViewerHeading hasActions />
+          <HistoryViewerHeading {...this.props} />
         </thead>
       </table>
     );
+  }
+}
 
-    const result = ReactTestUtils.findRenderedDOMComponentWithTag(
+describe('HistoryViewerHeading', () => {
+  it('has four columns when hasActions is true', () => {
+    const component = ReactTestUtils.renderIntoDocument(
+      <HeadingWrapper hasActions />
+    );
+
+    const result = ReactTestUtils.scryRenderedDOMComponentsWithTag(
       component,
       'th'
     );
 
-    expect(result.toBe).toEqual(4);
+    expect(result.length).toBe(4);
   })
 });

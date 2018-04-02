@@ -12,15 +12,3 @@ export function setCurrentVersion(id) {
     });
   };
 }
-
-/**
- * Clearing the current version will return the viewer back to a list state
- */
-export function clearCurrentVersion() {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.CLEAR_CURRENT_VERSION,
-      payload: {},
-    });
-  };
-}

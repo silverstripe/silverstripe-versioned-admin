@@ -234,17 +234,11 @@ var _react = __webpack_require__("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _redux = __webpack_require__("redux");
-
-var _reactRedux = __webpack_require__("react-redux");
-
 var _HistoryViewerVersionState = __webpack_require__("./client/src/components/HistoryViewer/HistoryViewerVersionState.js");
 
 var _HistoryViewerVersionState2 = _interopRequireDefault(_HistoryViewerVersionState);
 
 var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0!./client/src/types/versionType.js");
-
-var _HistoryViewerActions = __webpack_require__("./client/src/state/historyviewer/HistoryViewerActions.js");
 
 var _FormAction = __webpack_require__("components/FormAction/FormAction");
 
@@ -323,9 +317,9 @@ var HistoryViewerVersion = function (_Component) {
   }, {
     key: 'handleClose',
     value: function handleClose() {
-      var handleClearCurrentVersion = this.props.handleClearCurrentVersion;
+      var handleSetCurrentVersion = this.props.handleSetCurrentVersion;
 
-      handleClearCurrentVersion();
+      handleSetCurrentVersion(0);
     }
   }, {
     key: 'render',
@@ -366,6 +360,7 @@ var HistoryViewerVersion = function (_Component) {
 
 HistoryViewerVersion.propTypes = {
   isActive: _react2.default.PropTypes.bool,
+  handleSetCurrentVersion: _react2.default.PropTypes.func,
   version: _versionType.versionType
 };
 
@@ -374,18 +369,7 @@ HistoryViewerVersion.defaultProps = {
   version: _versionType.defaultVersion
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    handleSetCurrentVersion: function handleSetCurrentVersion(id) {
-      dispatch((0, _HistoryViewerActions.setCurrentVersion)(id));
-    },
-    handleClearCurrentVersion: function handleClearCurrentVersion() {
-      dispatch((0, _HistoryViewerActions.clearCurrentVersion)());
-    }
-  };
-}
-
-exports.default = (0, _redux.compose)((0, _reactRedux.connect)(function () {}, mapDispatchToProps))(HistoryViewerVersion);
+exports.default = HistoryViewerVersion;
 
 /***/ }),
 
@@ -417,7 +401,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
   var schemaUrl = props.schemaUrl,
-      version = props.version;
+      version = props.version,
+      handleSetCurrentVersion = props.handleSetCurrentVersion;
 
 
   return _react2.default.createElement(
@@ -426,6 +411,7 @@ var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
     _react2.default.createElement(_HistoryViewerVersionList2.default, {
       extraClass: 'history-viewer__table--current',
       versions: [version],
+      handleSetCurrentVersion: handleSetCurrentVersion,
       isActive: true
     }),
     _react2.default.createElement(
@@ -441,6 +427,7 @@ var HistoryViewerVersionDetail = function HistoryViewerVersionDetail(props) {
 
 HistoryViewerVersionDetail.propTypes = {
   schemaUrl: _react2.default.PropTypes.string.isRequired,
+  handleSetCurrentVersion: _react2.default.PropTypes.func,
   version: _versionType.versionType.isRequired
 };
 
@@ -503,7 +490,8 @@ var HistoryViewerVersionList = function (_PureComponent) {
     value: function render() {
       var _props = this.props,
           isActive = _props.isActive,
-          versions = _props.versions;
+          versions = _props.versions,
+          handleSetCurrentVersion = _props.handleSetCurrentVersion;
 
 
       return _react2.default.createElement(
@@ -521,7 +509,8 @@ var HistoryViewerVersionList = function (_PureComponent) {
             return _react2.default.createElement(_HistoryViewerVersion2.default, {
               key: version.Version,
               isActive: isActive,
-              version: version
+              version: version,
+              handleSetCurrentVersion: handleSetCurrentVersion
             });
           })
         )
@@ -535,6 +524,7 @@ var HistoryViewerVersionList = function (_PureComponent) {
 HistoryViewerVersionList.propTypes = {
   extraClass: _react2.default.PropTypes.string,
   isActive: _react2.default.PropTypes.bool,
+  handleSetCurrentVersion: _react2.default.PropTypes.func,
   versions: _react2.default.PropTypes.arrayOf(_versionType.versionType)
 };
 
@@ -833,7 +823,7 @@ Object.defineProperty(exports, "__esModule", {
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-exports.default = ['SET_CURRENT_VERSION', 'CLEAR_CURRENT_VERSION'].reduce(function (obj, item) {
+exports.default = ['SET_CURRENT_VERSION'].reduce(function (obj, item) {
   return Object.assign(obj, _defineProperty({}, item, 'HISTORY_VIEWER.' + item));
 }, {});
 
@@ -849,7 +839,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.setCurrentVersion = setCurrentVersion;
-exports.clearCurrentVersion = clearCurrentVersion;
 
 var _HistoryViewerActionTypes = __webpack_require__("./client/src/state/historyviewer/HistoryViewerActionTypes.js");
 
@@ -862,15 +851,6 @@ function setCurrentVersion(id) {
     dispatch({
       type: _HistoryViewerActionTypes2.default.SET_CURRENT_VERSION,
       payload: { id: id }
-    });
-  };
-}
-
-function clearCurrentVersion() {
-  return function (dispatch) {
-    dispatch({
-      type: _HistoryViewerActionTypes2.default.CLEAR_CURRENT_VERSION,
-      payload: {}
     });
   };
 }
@@ -914,13 +894,6 @@ function historyViewerReducer() {
       {
         return _extends({}, state, {
           currentVersion: payload.id
-        });
-      }
-
-    case _HistoryViewerActionTypes2.default.CLEAR_CURRENT_VERSION:
-      {
-        return _extends({}, state, {
-          currentVersion: 0
         });
       }
 
@@ -970,6 +943,8 @@ var _Loading2 = _interopRequireDefault(_Loading);
 
 var _versionType = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0!./client/src/types/versionType.js");
 
+var _HistoryViewerActions = __webpack_require__("./client/src/state/historyviewer/HistoryViewerActions.js");
+
 var _griddleReact = __webpack_require__("./node_modules/griddle-react/modules/griddle.jsx.js");
 
 var _griddleReact2 = _interopRequireDefault(_griddleReact);
@@ -1016,10 +991,11 @@ var HistoryViewer = function (_Component) {
       var _props = this.props,
           currentVersion = _props.currentVersion,
           recordId = _props.recordId,
-          recordClass = _props.recordClass;
+          recordClass = _props.recordClass,
+          handleSetCurrentVersion = _props.handleSetCurrentVersion,
+          store = _props.store;
 
 
-      var store = window.ss.store;
       var sectionConfigKey = 'SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController';
       var sectionConfig = store.getState().config.sections.find(function (section) {
         return section.name === sectionConfigKey;
@@ -1030,6 +1006,7 @@ var HistoryViewer = function (_Component) {
 
       var props = {
         schemaUrl: schemaUrl,
+        handleSetCurrentVersion: handleSetCurrentVersion,
         version: this.getVersions().filter(function (version) {
           return version.Version === currentVersion;
         })[0]
@@ -1107,7 +1084,8 @@ var HistoryViewer = function (_Component) {
     value: function render() {
       var _props4 = this.props,
           loading = _props4.loading,
-          currentVersion = _props4.currentVersion;
+          currentVersion = _props4.currentVersion,
+          handleSetCurrentVersion = _props4.handleSetCurrentVersion;
 
       if (loading) {
         return _react2.default.createElement(_Loading2.default, null);
@@ -1121,6 +1099,7 @@ var HistoryViewer = function (_Component) {
         'div',
         { className: 'history-viewer' },
         _react2.default.createElement(_HistoryViewerVersionList2.default, {
+          handleSetCurrentVersion: handleSetCurrentVersion,
           versions: this.getVersions()
         }),
         _react2.default.createElement(
@@ -1139,6 +1118,7 @@ HistoryViewer.propTypes = {
   limit: _react.PropTypes.number,
   offset: _react.PropTypes.number,
   recordId: _react.PropTypes.number.isRequired,
+  currentVersion: _react.PropTypes.number,
   versions: _react.PropTypes.shape({
     Versions: _react.PropTypes.shape({
       pageInfo: _react.PropTypes.shape({
@@ -1150,10 +1130,13 @@ HistoryViewer.propTypes = {
     })
   }),
   page: _react.PropTypes.number,
-  actions: _react.PropTypes.object
+  actions: _react.PropTypes.object,
+  handleSetCurrentVersion: _react.PropTypes.func,
+  handleClearCurrentVersion: _react.PropTypes.func
 };
 
 HistoryViewer.defaultProps = {
+  currentVersion: 0,
   versions: {
     Versions: {
       pageInfo: {
@@ -1171,8 +1154,16 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    handleSetCurrentVersion: function handleSetCurrentVersion(id) {
+      dispatch((0, _HistoryViewerActions.setCurrentVersion)(id));
+    }
+  };
+}
+
 exports.Component = HistoryViewer;
-exports.default = (0, _redux.compose)((0, _reactRedux.connect)(mapStateToProps), _HistoryViewerStateRouter2.default)(HistoryViewer);
+exports.default = (0, _redux.compose)((0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps), _HistoryViewerStateRouter2.default)(HistoryViewer);
 
 /***/ }),
 

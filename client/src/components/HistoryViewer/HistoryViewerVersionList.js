@@ -15,7 +15,7 @@ class HistoryViewerVersionList extends PureComponent {
   }
 
   render() {
-    const { isActive, versions } = this.props;
+    const { isActive, versions, handleSetCurrentVersion } = this.props;
 
     return (
       <table className={this.getClassNames()}>
@@ -29,6 +29,7 @@ class HistoryViewerVersionList extends PureComponent {
                 key={version.Version}
                 isActive={isActive}
                 version={version}
+                handleSetCurrentVersion={handleSetCurrentVersion}
               />
             ))
           }
@@ -41,6 +42,7 @@ class HistoryViewerVersionList extends PureComponent {
 HistoryViewerVersionList.propTypes = {
   extraClass: React.PropTypes.string,
   isActive: React.PropTypes.bool,
+  handleSetCurrentVersion: React.PropTypes.func,
   versions: React.PropTypes.arrayOf(versionType),
 };
 

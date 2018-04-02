@@ -8,6 +8,7 @@ import HistoryViewerVersionDetail from './HistoryViewerVersionDetail';
 import HistoryViewerVersionList from './HistoryViewerVersionList';
 import Loading from './Loading';
 import { versionType } from 'types/versionType';
+import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 import Griddle from 'griddle-react';
 import i18n from 'i18n';
 
@@ -44,9 +45,8 @@ class HistoryViewer extends Component {
    * @returns {HistoryViewerVersionDetail}
    */
   getVersionDetail() {
-    const { currentVersion, recordId, recordClass } = this.props;
+    const { currentVersion, recordId, recordClass, handleSetCurrentVersion, store } = this.props;
 
-    const store = window.ss.store;
     const sectionConfigKey = 'SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController';
     const sectionConfig = store.getState().config.sections
       .find((section) => section.name === sectionConfigKey);
@@ -56,6 +56,7 @@ class HistoryViewer extends Component {
 
     const props = {
       schemaUrl,
+      handleSetCurrentVersion,
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
 
@@ -142,7 +143,7 @@ class HistoryViewer extends Component {
   }
 
   render() {
-    const { loading, currentVersion } = this.props;
+    const { loading, currentVersion, handleSetCurrentVersion } = this.props;
 
     // Handle loading state
     if (loading) {
@@ -158,6 +159,7 @@ class HistoryViewer extends Component {
     return (
       <div className="history-viewer">
         <HistoryViewerVersionList
+          handleSetCurrentVersion={handleSetCurrentVersion}
           versions={this.getVersions()}
         />
 
@@ -173,6 +175,7 @@ HistoryViewer.propTypes = {
   limit: PropTypes.number,
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
+  currentVersion: PropTypes.number,
   versions: PropTypes.shape({
     Versions: PropTypes.shape({
       pageInfo: PropTypes.shape({
@@ -185,9 +188,12 @@ HistoryViewer.propTypes = {
   }),
   page: PropTypes.number,
   actions: PropTypes.object,
+  handleSetCurrentVersion: PropTypes.func,
+  handleClearCurrentVersion: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
+  currentVersion: 0,
   versions: {
     Versions: {
       pageInfo: {
@@ -206,9 +212,17 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    handleSetCurrentVersion(id) {
+      dispatch(setCurrentVersion(id));
+    },
+  };
+}
+
 export { HistoryViewer as Component };
 
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   historyStateRouter
 )(HistoryViewer);

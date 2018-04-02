@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import HistoryViewerVersionState from './HistoryViewerVersionState';
 import { versionType, defaultVersion } from 'types/versionType';
-import { setCurrentVersion, clearCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 import FormAction from 'components/FormAction/FormAction';
 
 class HistoryViewerVersion extends Component {
@@ -75,8 +72,8 @@ class HistoryViewerVersion extends Component {
    * When closing the version, return back to the list view via Redux action dispatch
    */
   handleClose() {
-    const { handleClearCurrentVersion } = this.props;
-    handleClearCurrentVersion();
+    const { handleSetCurrentVersion } = this.props;
+    handleSetCurrentVersion(0);
   }
 
   render() {
@@ -100,6 +97,7 @@ class HistoryViewerVersion extends Component {
 
 HistoryViewerVersion.propTypes = {
   isActive: React.PropTypes.bool,
+  handleSetCurrentVersion: React.PropTypes.func,
   version: versionType,
 };
 
@@ -108,17 +106,4 @@ HistoryViewerVersion.defaultProps = {
   version: defaultVersion,
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    handleSetCurrentVersion(id) {
-      dispatch(setCurrentVersion(id));
-    },
-    handleClearCurrentVersion() {
-      dispatch(clearCurrentVersion());
-    },
-  };
-}
-
-export default compose(
-  connect(() => {}, mapDispatchToProps)
-)(HistoryViewerVersion);
+export default HistoryViewerVersion;

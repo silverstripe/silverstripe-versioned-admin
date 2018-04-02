@@ -21,13 +21,6 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       };
     }
 
-    case HISTORY_VIEWER.CLEAR_CURRENT_VERSION: {
-      return {
-        ...state,
-        currentVersion: 0,
-      };
-    }
-
     default:
       return state;
   }
