@@ -66,7 +66,7 @@ class DataObjectVersionFormFactory implements FormFactory
             }
         }
 
-        $form->addExtraClass('form--fill-height form--padded form--no-dividers');
+        $form->addExtraClass('form--fill-height form--no-dividers');
         return $form;
     }
 
@@ -97,7 +97,10 @@ class DataObjectVersionFormFactory implements FormFactory
         $record = $context['Record'];
         /** @var FieldList $fields */
         $fields = $record->getCMSFields();
+
         $this->removeHistoryViewerFields($fields);
+        $this->removeSelectedRightTitles($fields);
+
         $this->invokeWithExtensions('updateFormFields', $fields, $controller, $name, $context);
 
         return $fields;
@@ -123,6 +126,22 @@ class DataObjectVersionFormFactory implements FormFactory
                 $field->getContainerFieldList()->remove($field);
             }
         });
+    }
+
+    /**
+     * Remove right titles from selected form fields by default
+     *
+     * @param FieldList $fields
+     */
+    protected function removeSelectedRightTitles(FieldList $fields)
+    {
+        $noRightTitle = ['MetaDescription', 'ExtraMeta'];
+
+        foreach ($noRightTitle as $fieldName) {
+            if ($field = $fields->dataFieldByName($fieldName)) {
+                $field->setRightTitle('');
+            }
+        }
     }
 
     protected function getFormActions(RequestHandler $controller = null, $formName, $context = [])

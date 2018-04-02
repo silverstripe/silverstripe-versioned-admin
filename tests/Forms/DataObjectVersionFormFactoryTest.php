@@ -3,6 +3,7 @@
 namespace SilverStripe\VersionedAdmin\Tests\Forms;
 
 use InvalidArgumentException;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
@@ -105,5 +106,24 @@ class DataObjectVersionFormFactoryTest extends SapphireTest
             $form->Fields()->fieldByName('Root.Main.Title'),
             'FieldList has readonly transformation performed'
         );
+    }
+
+    public function testSiteTreeMetaFieldsHaveNoRightTitle()
+    {
+        if (!class_exists(SiteTree::class)) {
+            $this->markTestSkipped('This test requires the cms module to be installed.');
+        }
+
+        $context = [
+            'Record' => new SiteTree(),
+        ];
+        $form = $this->factory->getForm($this->controller, 'some_form', $context);
+        $field = $form->Fields()->dataFieldByName('MetaDescription');
+        $this->assertInstanceOf(
+            ReadonlyField::class,
+            $field,
+            'FieldList has readonly transformation performed'
+        );
+        $this->assertEmpty($field->RightTitle());
     }
 }
