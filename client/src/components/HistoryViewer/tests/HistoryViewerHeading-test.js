@@ -4,7 +4,7 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import HistoryViewerHeading from '../HistoryViewerHeading';
 
-class HeadingWrapper extends React.Component {
+class HeadingWrapper extends React.PureComponent {
   render() {
     return (
       <table>
@@ -28,5 +28,5 @@ describe('HistoryViewerHeading', () => {
     );
 
     expect(result.length).toBe(4);
-  })
+  });
 });
