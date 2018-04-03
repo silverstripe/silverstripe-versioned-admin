@@ -189,7 +189,6 @@ HistoryViewer.propTypes = {
   page: PropTypes.number,
   actions: PropTypes.object,
   handleSetCurrentVersion: PropTypes.func,
-  handleClearCurrentVersion: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
