@@ -53,6 +53,7 @@ class HistoryViewer extends Component {
       handleSetCurrentVersion,
       schemaUrl,
     } = this.props;
+
     // Insert variables into the schema URL via regex replacements
     const schemaReplacements = {
       ':id': recordId,

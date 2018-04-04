@@ -1,29 +1,56 @@
-import React from 'react';
+import React, { Component } from 'react';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import HistoryViewerVersionList from './HistoryViewerVersionList';
+import Loading from './Loading';
 import { versionType } from 'types/versionType';
 
-const HistoryViewerVersionDetail = (props) => {
-  const { schemaUrl, version, handleSetCurrentVersion } = props;
+class HistoryViewerVersionDetail extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className="history-viewer">
-      <HistoryViewerVersionList
-        extraClass="history-viewer__table--current"
-        versions={[version]}
-        handleSetCurrentVersion={handleSetCurrentVersion}
-        isActive
-      />
+    this.handleLoadingSuccess = this.handleLoadingSuccess.bind(this);
 
-      <div className="history-viewer__version-detail">
-        <FormBuilderLoader
-          identifier="HistoryViewer.VersionDetail"
-          schemaUrl={schemaUrl}
+    this.state = {
+      loading: true,
+    };
+  }
+
+  /**
+   * When the form builder has finished loading the schema, change the state
+   * to remove the loading indicator
+   */
+  handleLoadingSuccess() {
+    this.setState({
+      loading: false
+    });
+  }
+
+  render() {
+    const { handleSetCurrentVersion, schemaUrl, version } = this.props;
+    const { loading } = this.state;
+
+    return (
+      <div className="history-viewer">
+        <HistoryViewerVersionList
+          extraClass="history-viewer__table--current"
+          versions={[version]}
+          handleSetCurrentVersion={handleSetCurrentVersion}
+          isActive
         />
+
+        <div className="history-viewer__version-detail">
+          <FormBuilderLoader
+            identifier="HistoryViewer.VersionDetail"
+            schemaUrl={schemaUrl}
+            onLoadingSuccess={this.handleLoadingSuccess}
+          />
+        </div>
+
+        { loading ? <Loading /> : null }
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 HistoryViewerVersionDetail.propTypes = {
   schemaUrl: React.PropTypes.string.isRequired,
