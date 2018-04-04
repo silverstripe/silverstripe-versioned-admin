@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
+import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import HistoryViewerVersionDetail from './HistoryViewerVersionDetail';
 import HistoryViewerVersionList from './HistoryViewerVersionList';
 import Loading from './Loading';
@@ -45,17 +46,22 @@ class HistoryViewer extends Component {
    * @returns {HistoryViewerVersionDetail}
    */
   getVersionDetail() {
-    const { currentVersion, recordId, recordClass, handleSetCurrentVersion, store } = this.props;
-
-    const sectionConfigKey = 'SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController';
-    const sectionConfig = store.getState().config.sections
-      .find((section) => section.name === sectionConfigKey);
-    const schemaUrlBase = `${sectionConfig.form.versionForm.schemaUrl}/${recordId}`;
-    const schemaQueryString = `RecordClass=${recordClass}&RecordID=${recordId}&RecordVersion=${currentVersion}`;
-    const schemaUrl = `${schemaUrlBase}?${schemaQueryString}`;
+    const {
+      currentVersion,
+      recordId,
+      recordClass,
+      handleSetCurrentVersion,
+      schemaUrl,
+    } = this.props;
+    // Insert variables into the schema URL via regex replacements
+    const schemaReplacements = {
+      ':id': recordId,
+      ':class': recordClass,
+      ':version': currentVersion,
+    };
 
     const props = {
-      schemaUrl,
+      schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
       handleSetCurrentVersion,
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
@@ -187,12 +193,14 @@ HistoryViewer.propTypes = {
     }),
   }),
   page: PropTypes.number,
+  schemaUrl: PropTypes.string,
   actions: PropTypes.object,
   handleSetCurrentVersion: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
   currentVersion: 0,
+  schemaUrl: '',
   versions: {
     Versions: {
       pageInfo: {
@@ -223,5 +231,6 @@ export { HistoryViewer as Component };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
+  historyViewerConfig,
   historyStateRouter
 )(HistoryViewer);
