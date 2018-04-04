@@ -5,6 +5,7 @@ namespace SilverStripe\VersionedAdmin\Controllers;
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
 
@@ -37,6 +38,7 @@ class CMSPageHistoryViewerController extends CMSMain
 
         if ($record) {
             $fieldList = FieldList::create(
+                HiddenField::create('ID', null, $record->ID),
                 HistoryViewerField::create('PageHistory')
                     ->setForm($form)
             );
