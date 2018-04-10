@@ -113,7 +113,11 @@ class HistoryViewer extends Component {
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
 
-    return <VersionDetailComponent {...props} />;
+    return (
+      <div className="history-viewer fill-height">
+        <VersionDetailComponent {...props} />
+      </div>
+    );
   }
 
   /**
@@ -168,14 +172,16 @@ class HistoryViewer extends Component {
     const { ListComponent, onSelect } = this.props;
 
     return (
-      <div className="history-viewer">
-        <ListComponent
-          onSelect={onSelect}
-          versions={this.getVersions()}
-        />
+      <div className="history-viewer fill-height">
+        <div className="panel panel--padded panel--scrollable">
+          <ListComponent
+            onSelect={onSelect}
+            versions={this.getVersions()}
+          />
 
-        <div className="history-viewer__pagination">
-          {this.renderPagination()}
+          <div className="history-viewer__pagination">
+            {this.renderPagination()}
+          </div>
         </div>
       </div>
     );

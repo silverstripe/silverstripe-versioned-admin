@@ -1,5 +1,5 @@
 <div
-    class="history-viewer__container"
+    class="history-viewer__container fill-height"
     data-record-id="{$getSourceRecord.ID}"
     data-record-class="{$getSourceRecord.ClassName}"
 >

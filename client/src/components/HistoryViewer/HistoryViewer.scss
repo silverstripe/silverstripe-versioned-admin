@@ -2,6 +2,16 @@
   td:first-child {
     width: 1%;
   }
+
+  > .panel--padded {
+    padding-top: 0;
+  }
+}
+
+// Used in conjunction with .panel--padded, removes top and bottom padding
+.panel--padded-side {
+  padding-bottom: 0;
+  padding-top: 0;
 }
 
 .history-viewer__form {
@@ -49,5 +59,22 @@
 
   &::before {
     font-size: 1.4rem;
+  }
+}
+
+// Todo: remove this when the CMS is React driven and we don't need this hack
+.history-viewer__preview {
+  margin-top: -54px;
+}
+
+.history-viewer__toolbar--condensed {
+  min-width: 50%;
+  width: 50%;
+}
+
+// Hide preview on small devices. @todo replace this with a view toggle component
+@include media-breakpoint-down(md) {
+  .history-viewer__preview {
+    display: none;
   }
 }
