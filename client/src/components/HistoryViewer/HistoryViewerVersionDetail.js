@@ -49,8 +49,7 @@ class HistoryViewerVersionDetail extends PureComponent {
         </div>
 
         <Preview
-          className="history-viewer__preview"
-          extraClass="" // removes default: fill-height
+          className="history-viewer__preview" // removes default: fill-height
           itemLinks={{
             preview: {
               Stage: {
@@ -59,7 +58,7 @@ class HistoryViewerVersionDetail extends PureComponent {
               },
             },
           }}
-          itemId={2} // arbitrary, just needs to be truthy
+          itemId={version.Version}
         />
       </div>
     );
