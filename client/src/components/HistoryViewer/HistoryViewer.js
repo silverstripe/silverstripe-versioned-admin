@@ -95,6 +95,7 @@ class HistoryViewer extends Component {
   renderVersionDetail() {
     const {
       currentVersion,
+      isPreviewable,
       recordId,
       recordClass,
       schemaUrl,
@@ -109,6 +110,7 @@ class HistoryViewer extends Component {
     };
 
     const props = {
+      isPreviewable,
       schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
@@ -169,11 +171,11 @@ class HistoryViewer extends Component {
    * @returns {HistoryViewerVersionList}
    */
   renderVersionList() {
-    const { ListComponent, onSelect } = this.props;
+    const { isPreviewable, ListComponent, onSelect } = this.props;
 
     return (
       <div className="history-viewer fill-height">
-        <div className="panel panel--padded panel--scrollable">
+        <div className={isPreviewable ? 'panel panel--padded panel--scrollable' : ''}>
           <ListComponent
             onSelect={onSelect}
             versions={this.getVersions()}
@@ -208,6 +210,7 @@ HistoryViewer.propTypes = {
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.number,
+  isPreviewable: PropTypes.bool,
   VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.shape({
     Versions: PropTypes.shape({
@@ -227,6 +230,7 @@ HistoryViewer.propTypes = {
 
 HistoryViewer.defaultProps = {
   currentVersion: 0,
+  isPreviewable: false,
   schemaUrl: '',
   versions: {
     Versions: {

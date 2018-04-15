@@ -16,23 +16,57 @@ class HistoryViewerVersionDetail extends PureComponent {
   }
 
   /**
+   * If the preview panel is enabled, return the component
+   *
+   * @returns {Preview|null}
+   */
+  getPreview() {
+    const { version, isPreviewable } = this.props;
+
+    if (!isPreviewable) {
+      return null;
+    }
+
+    return (
+      <Preview
+        className="history-viewer__preview flexbox-area-grow" // removes default: fill-height
+        itemLinks={{
+          preview: {
+            Stage: {
+              href: `${version.AbsoluteLink}&archiveDate=${version.LastEdited}`,
+              type: 'text/html',
+            },
+          },
+        }}
+        itemId={version.Version}
+      />
+    );
+  }
+
+  /**
    * Until the CMS is fully React driven, we must control certain aspects of the CMS DOM with
    * manual CSS tweaks. @todo remove this when React drives the CMS.
    */
   toggleToolbarClass() {
-    document
-      .querySelector('.CMSPageHistoryViewerController div:not(.cms-content-tools) .cms-content-header')
-      .classList
-      .toggle('history-viewer__toolbar--condensed');
+    const { isPreviewable } = this.props;
+
+    const selector = document
+      .querySelector('.CMSPageHistoryViewerController div:not(.cms-content-tools) .cms-content-header');
+
+    if (selector && isPreviewable) {
+      selector
+        .classList
+        .toggle('history-viewer__toolbar--condensed');
+    }
   }
 
   render() {
-    const { ListComponent, schemaUrl, version } = this.props;
+    const { isPreviewable, ListComponent, schemaUrl, version } = this.props;
 
     return (
       <div className="flexbox-area-grow fill-width">
         <div className="flexbox-area-grow fill-height">
-          <div className="panel panel--padded panel--padded-side panel--scrollable">
+          <div className={isPreviewable ? 'panel panel--padded panel--padded-side panel--scrollable' : ''}>
             <ListComponent
               extraClass="history-viewer__table--current"
               versions={[version]}
@@ -48,27 +82,21 @@ class HistoryViewerVersionDetail extends PureComponent {
           </div>
         </div>
 
-        <Preview
-          className="history-viewer__preview" // removes default: fill-height
-          itemLinks={{
-            preview: {
-              Stage: {
-                href: `${version.AbsoluteLink}&archiveDate=${version.LastEdited}`,
-                type: 'text/html',
-              },
-            },
-          }}
-          itemId={version.Version}
-        />
+        {this.getPreview()}
       </div>
     );
   }
 }
 
 HistoryViewerVersionDetail.propTypes = {
+  isPreviewable: PropTypes.bool,
   ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   schemaUrl: React.PropTypes.string.isRequired,
   version: versionType.isRequired,
+};
+
+HistoryViewerVersionDetail.defaultProps = {
+  isPreviewable: false,
 };
 
 export { HistoryViewerVersionDetail as Component };
