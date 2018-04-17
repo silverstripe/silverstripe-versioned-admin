@@ -3,15 +3,15 @@
 import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import Griddle from 'griddle-react';
 import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import HistoryViewerVersionDetail from './HistoryViewerVersionDetail';
 import HistoryViewerVersionList from './HistoryViewerVersionList';
-import Loading from './Loading';
-import { versionType } from 'types/versionType';
-import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
-import Griddle from 'griddle-react';
 import i18n from 'i18n';
+import Loading from 'components/Loading/Loading';
+import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { versionType } from 'types/versionType';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
@@ -28,6 +28,18 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Reset the selected version when unmounting HistoryViewer to prevent data leaking
+   * between instances
+   */
+  componentWillUnmount() {
+    const { onSelect } = this.props;
+
+    if (typeof onSelect === 'function') {
+      onSelect(0);
+    }
+  }
+
+  /**
    * Returns the result of the GraphQL version history query
    *
    * @returns {Array}
@@ -38,36 +50,6 @@ class HistoryViewer extends Component {
       ? versions.Versions.edges
       : [];
     return edges.map((version) => version.node);
-  }
-
-  /**
-   * Renders the detail form for a selected version
-   *
-   * @returns {HistoryViewerVersionDetail}
-   */
-  getVersionDetail() {
-    const {
-      currentVersion,
-      recordId,
-      recordClass,
-      handleSetCurrentVersion,
-      schemaUrl,
-    } = this.props;
-
-    // Insert variables into the schema URL via regex replacements
-    const schemaReplacements = {
-      ':id': recordId,
-      ':class': recordClass,
-      ':version': currentVersion,
-    };
-
-    const props = {
-      schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
-      handleSetCurrentVersion,
-      version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
-    };
-
-    return <HistoryViewerVersionDetail {...props} />;
   }
 
   /**
@@ -104,6 +86,36 @@ class HistoryViewer extends Component {
       return;
     }
     this.handleSetPage(currentPage - 1);
+  }
+
+  /**
+   * Renders the detail form for a selected version
+   *
+   * @returns {HistoryViewerVersionDetail}
+   */
+  renderVersionDetail() {
+    const {
+      currentVersion,
+      recordId,
+      recordClass,
+      onSelect,
+      schemaUrl,
+    } = this.props;
+
+    // Insert variables into the schema URL via regex replacements
+    const schemaReplacements = {
+      ':id': recordId,
+      ':class': recordClass,
+      ':version': currentVersion,
+    };
+
+    const props = {
+      schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
+      onSelect,
+      version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
+    };
+
+    return <HistoryViewerVersionDetail {...props} />;
   }
 
   /**
@@ -150,7 +162,7 @@ class HistoryViewer extends Component {
   }
 
   render() {
-    const { loading, currentVersion, handleSetCurrentVersion } = this.props;
+    const { loading, currentVersion, onSelect } = this.props;
 
     // Handle loading state
     if (loading) {
@@ -159,14 +171,14 @@ class HistoryViewer extends Component {
 
     // Render the selected version details
     if (currentVersion) {
-      return this.getVersionDetail();
+      return this.renderVersionDetail();
     }
 
     // Render the version list
     return (
       <div className="history-viewer">
         <HistoryViewerVersionList
-          handleSetCurrentVersion={handleSetCurrentVersion}
+          onSelect={onSelect}
           versions={this.getVersions()}
         />
 
@@ -196,7 +208,7 @@ HistoryViewer.propTypes = {
   page: PropTypes.number,
   schemaUrl: PropTypes.string,
   actions: PropTypes.object,
-  handleSetCurrentVersion: PropTypes.func,
+  onSelect: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
@@ -222,7 +234,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleSetCurrentVersion(id) {
+    onSelect(id) {
       dispatch(setCurrentVersion(id));
     },
   };

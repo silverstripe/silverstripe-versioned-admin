@@ -31,12 +31,34 @@ class HistoryViewerVersion extends Component {
   }
 
   /**
+   * When clicking on a version, render the detail view for it via a Redux action dispatch
+   */
+  handleClick() {
+    const { onSelect, version, isActive } = this.props;
+
+    // If the clear button is shown, don't do anything when clicking on the row
+    if (isActive) {
+      return;
+    }
+
+    onSelect(version.Version);
+  }
+
+  /**
+   * When closing the version, return back to the list view via Redux action dispatch
+   */
+  handleClose() {
+    const { onSelect } = this.props;
+    onSelect(0);
+  }
+
+  /**
    * Return a "clear" button to close the version, for example when used in a "detail view"
    * context. This is shown when this version is "active", displayed with a blue background.
    *
    * @returns {FormAction|null}
    */
-  getClearButton() {
+  renderClearButton() {
     const { isActive } = this.props;
     if (!isActive) {
       return null;
@@ -54,28 +76,6 @@ class HistoryViewerVersion extends Component {
     );
   }
 
-  /**
-   * When clicking on a version, render the detail view for it via a Redux action dispatch
-   */
-  handleClick() {
-    const { handleSetCurrentVersion, version, isActive } = this.props;
-
-    // If the clear button is shown, don't do anything when clicking on the row
-    if (isActive) {
-      return;
-    }
-
-    handleSetCurrentVersion(version.Version);
-  }
-
-  /**
-   * When closing the version, return back to the list view via Redux action dispatch
-   */
-  handleClose() {
-    const { handleSetCurrentVersion } = this.props;
-    handleSetCurrentVersion(0);
-  }
-
   render() {
     const { version, isActive } = this.props;
 
@@ -89,7 +89,7 @@ class HistoryViewerVersion extends Component {
           />
         </td>
         <td>{this.getAuthor()}</td>
-        { this.getClearButton() }
+        { this.renderClearButton() }
       </tr>
     );
   }
@@ -97,7 +97,7 @@ class HistoryViewerVersion extends Component {
 
 HistoryViewerVersion.propTypes = {
   isActive: React.PropTypes.bool,
-  handleSetCurrentVersion: React.PropTypes.func,
+  onSelect: React.PropTypes.func,
   version: versionType,
 };
 

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import classnames from 'classnames';
 import HistoryViewerHeading from './HistoryViewerHeading';
 import HistoryViewerVersion from './HistoryViewerVersion';
 import { versionType } from 'types/versionType';
@@ -11,11 +12,11 @@ class HistoryViewerVersionList extends PureComponent {
    */
   getClassNames() {
     const { extraClass } = this.props;
-    return `table ${extraClass}`;
+    return classnames({ table: true }, extraClass);
   }
 
   render() {
-    const { isActive, versions, handleSetCurrentVersion } = this.props;
+    const { isActive, versions, onSelect } = this.props;
 
     return (
       <table className={this.getClassNames()}>
@@ -29,7 +30,7 @@ class HistoryViewerVersionList extends PureComponent {
                 key={version.Version}
                 isActive={isActive}
                 version={version}
-                handleSetCurrentVersion={handleSetCurrentVersion}
+                onSelect={onSelect}
               />
             ))
           }
@@ -42,7 +43,7 @@ class HistoryViewerVersionList extends PureComponent {
 HistoryViewerVersionList.propTypes = {
   extraClass: React.PropTypes.string,
   isActive: React.PropTypes.bool,
-  handleSetCurrentVersion: React.PropTypes.func,
+  onSelect: React.PropTypes.func,
   versions: React.PropTypes.arrayOf(versionType),
 };
 

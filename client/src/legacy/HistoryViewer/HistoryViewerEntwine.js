@@ -30,6 +30,10 @@ jQuery.entwine('ss', ($) => {
 
       // Hide the CMS actions when in the history viewer
       $('.CMSPageHistoryViewerController .toolbar--south.cms-content-actions').hide();
+    },
+
+    onunmatch() {
+      ReactDOM.unmountComponentAtNode(this[0]);
     }
   });
 

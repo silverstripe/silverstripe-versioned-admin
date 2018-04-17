@@ -1,40 +1,18 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import HistoryViewerVersionList from './HistoryViewerVersionList';
-import Loading from './Loading';
 import { versionType } from 'types/versionType';
 
-class HistoryViewerVersionDetail extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleLoadingSuccess = this.handleLoadingSuccess.bind(this);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
-  /**
-   * When the form builder has finished loading the schema, change the state
-   * to remove the loading indicator
-   */
-  handleLoadingSuccess() {
-    this.setState({
-      loading: false
-    });
-  }
-
+class HistoryViewerVersionDetail extends PureComponent {
   render() {
-    const { handleSetCurrentVersion, schemaUrl, version } = this.props;
-    const { loading } = this.state;
+    const { onSelect, schemaUrl, version } = this.props;
 
     return (
       <div className="history-viewer">
         <HistoryViewerVersionList
           extraClass="history-viewer__table--current"
           versions={[version]}
-          handleSetCurrentVersion={handleSetCurrentVersion}
+          onSelect={onSelect}
           isActive
         />
 
@@ -42,11 +20,8 @@ class HistoryViewerVersionDetail extends Component {
           <FormBuilderLoader
             identifier="HistoryViewer.VersionDetail"
             schemaUrl={schemaUrl}
-            onLoadingSuccess={this.handleLoadingSuccess}
           />
         </div>
-
-        { loading ? <Loading /> : null }
       </div>
     );
   }
@@ -54,7 +29,7 @@ class HistoryViewerVersionDetail extends Component {
 
 HistoryViewerVersionDetail.propTypes = {
   schemaUrl: React.PropTypes.string.isRequired,
-  handleSetCurrentVersion: React.PropTypes.func,
+  onSelect: React.PropTypes.func,
   version: versionType.isRequired,
 };
 
