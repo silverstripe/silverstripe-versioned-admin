@@ -5,14 +5,13 @@ import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionDetail extends PureComponent {
   render() {
-    const { onSelect, schemaUrl, version } = this.props;
+    const { schemaUrl, version } = this.props;
 
     return (
       <div className="history-viewer">
         <HistoryViewerVersionList
           extraClass="history-viewer__table--current"
           versions={[version]}
-          onSelect={onSelect}
           isActive
         />
 
@@ -29,7 +28,6 @@ class HistoryViewerVersionDetail extends PureComponent {
 
 HistoryViewerVersionDetail.propTypes = {
   schemaUrl: React.PropTypes.string.isRequired,
-  onSelect: React.PropTypes.func,
   version: versionType.isRequired,
 };
 

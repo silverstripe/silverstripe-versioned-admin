@@ -2,7 +2,10 @@
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import { Component as HistoryViewer } from '../HistoryViewer';
+import { HistoryViewer } from '../HistoryViewer';
+// import { HistoryViewerVersion } from '../HistoryViewerVersion';
+
+jest.mock('components/HistoryViewer/HistoryViewerVersion');
 
 describe('HistoryViewer', () => {
   let component = null;

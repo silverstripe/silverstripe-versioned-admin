@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import HistoryViewerVersionState from './HistoryViewerVersionState';
 import { versionType, defaultVersion } from 'types/versionType';
 import FormAction from 'components/FormAction/FormAction';
+import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerVersion extends Component {
   constructor(props) {
@@ -106,4 +109,16 @@ HistoryViewerVersion.defaultProps = {
   version: defaultVersion,
 };
 
-export default HistoryViewerVersion;
+function mapDispatchToProps(dispatch) {
+  return {
+    onSelect(id) {
+      dispatch(setCurrentVersion(id));
+    },
+  };
+}
+
+export { HistoryViewerVersion };
+
+export default compose(
+  connect(() => {}, mapDispatchToProps)
+)(HistoryViewerVersion);

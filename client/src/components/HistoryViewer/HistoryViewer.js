@@ -98,7 +98,6 @@ class HistoryViewer extends Component {
       currentVersion,
       recordId,
       recordClass,
-      onSelect,
       schemaUrl,
     } = this.props;
 
@@ -111,7 +110,6 @@ class HistoryViewer extends Component {
 
     const props = {
       schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
-      onSelect,
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
 
@@ -240,7 +238,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export { HistoryViewer as Component };
+export { HistoryViewer };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
