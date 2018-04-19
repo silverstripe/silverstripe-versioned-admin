@@ -2,17 +2,19 @@
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import HistoryViewerVersion from '../HistoryViewerVersion';
+import { Component as HistoryViewerVersion } from '../HistoryViewerVersion';
 
 /**
  * Wrapper class to ensure the component is nested correctly before testing it
  */
 class TestHistoryViewerVersion extends React.PureComponent {
   render() {
+    const StateComponent = () => <div />;
+
     return (
       <table>
         <tbody>
-          <HistoryViewerVersion {...this.props} />
+          <HistoryViewerVersion StateComponent={StateComponent} {...this.props} />
         </tbody>
       </table>
     );
@@ -64,7 +66,6 @@ describe('HistoryViewerVersion', () => {
         'tr'
       );
 
-      expect(viewerVersion.textContent).toContain('Published');
       expect(viewerVersion.textContent).toContain('Sarah Smith');
     });
   });

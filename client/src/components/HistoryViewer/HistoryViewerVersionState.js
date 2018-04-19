@@ -1,7 +1,8 @@
-import i18n from 'i18n';
 import React, { Component } from 'react';
-import moment from 'moment';
 import Badge from 'components/Badge/Badge';
+import classnames from 'classnames';
+import i18n from 'i18n';
+import moment from 'moment';
 import { versionType, defaultVersion } from 'types/versionType';
 
 class HistoryViewerVersionState extends Component {
@@ -11,7 +12,8 @@ class HistoryViewerVersionState extends Component {
    * @returns {string}
    */
   getClassNames() {
-    return `${this.props.extraClass} history-viewer__version-state`;
+    const { extraClass } = this.props;
+    return classnames('history-viewer__version-state', extraClass);
   }
 
   /**
@@ -20,10 +22,11 @@ class HistoryViewerVersionState extends Component {
    * @returns {string}
    */
   getPublishedState() {
-    if (this.props.version.Published) {
+    const { version } = this.props;
+
+    if (version.Published) {
       return i18n._t('HistoryViewer.Published', 'Published');
     }
-
     return i18n._t('HistoryViewer.Saved', 'Saved');
   }
 

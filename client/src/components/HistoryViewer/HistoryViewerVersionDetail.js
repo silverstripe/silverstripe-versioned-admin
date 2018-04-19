@@ -1,15 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, { PropTypes, PureComponent } from 'react';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
-import HistoryViewerVersionList from './HistoryViewerVersionList';
+import { inject } from 'lib/Injector';
 import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionDetail extends PureComponent {
   render() {
-    const { schemaUrl, version } = this.props;
+    const { ListComponent, schemaUrl, version } = this.props;
 
     return (
       <div className="history-viewer">
-        <HistoryViewerVersionList
+        <ListComponent
           extraClass="history-viewer__table--current"
           versions={[version]}
           isActive
@@ -27,8 +27,14 @@ class HistoryViewerVersionDetail extends PureComponent {
 }
 
 HistoryViewerVersionDetail.propTypes = {
+  ListComponent: PropTypes.func,
   schemaUrl: React.PropTypes.string.isRequired,
   version: versionType.isRequired,
 };
 
-export default HistoryViewerVersionDetail;
+export { HistoryViewerVersionDetail as Component };
+
+export default inject(
+  ['HistoryViewerVersionList'],
+  (HistoryViewerVersionList) => ({ ListComponent: HistoryViewerVersionList })
+)(HistoryViewerVersionDetail);

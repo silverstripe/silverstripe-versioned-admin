@@ -1,8 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { PropTypes, PureComponent } from 'react';
 import classnames from 'classnames';
-import HistoryViewerHeading from './HistoryViewerHeading';
-import HistoryViewerVersion from './HistoryViewerVersion';
-
+import { inject } from 'lib/Injector';
 import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionList extends PureComponent {
@@ -17,17 +15,17 @@ class HistoryViewerVersionList extends PureComponent {
   }
 
   render() {
-    const { isActive, versions } = this.props;
+    const { HeadingComponent, isActive, VersionComponent, versions } = this.props;
 
     return (
       <table className={this.getClassNames()}>
         <thead>
-          <HistoryViewerHeading />
+          <HeadingComponent />
         </thead>
         <tbody>
           {
             versions.map((version) => (
-              <HistoryViewerVersion
+              <VersionComponent
                 key={version.Version}
                 isActive={isActive}
                 version={version}
@@ -41,9 +39,11 @@ class HistoryViewerVersionList extends PureComponent {
 }
 
 HistoryViewerVersionList.propTypes = {
-  extraClass: React.PropTypes.string,
-  isActive: React.PropTypes.bool,
-  versions: React.PropTypes.arrayOf(versionType),
+  extraClass: PropTypes.string,
+  HeadingComponent: PropTypes.func,
+  isActive: PropTypes.bool,
+  VersionComponent: PropTypes.func,
+  versions: PropTypes.arrayOf(versionType),
 };
 
 HistoryViewerVersionList.defaultProps = {
@@ -52,4 +52,12 @@ HistoryViewerVersionList.defaultProps = {
   versions: [],
 };
 
-export default HistoryViewerVersionList;
+export { HistoryViewerVersionList as Component };
+
+export default inject(
+  ['HistoryViewerHeading', 'HistoryViewerVersion'],
+  (HistoryViewerHeading, HistoryViewerVersion) => ({
+    HeadingComponent: HistoryViewerHeading,
+    VersionComponent: HistoryViewerVersion,
+  }),
+)(HistoryViewerVersionList);

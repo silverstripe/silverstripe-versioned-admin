@@ -6,9 +6,8 @@ import { connect } from 'react-redux';
 import Griddle from 'griddle-react';
 import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
-import HistoryViewerVersionDetail from './HistoryViewerVersionDetail';
-import HistoryViewerVersionList from './HistoryViewerVersionList';
 import i18n from 'i18n';
+import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
 import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
@@ -99,6 +98,7 @@ class HistoryViewer extends Component {
       recordId,
       recordClass,
       schemaUrl,
+      VersionDetailComponent,
     } = this.props;
 
     // Insert variables into the schema URL via regex replacements
@@ -113,7 +113,7 @@ class HistoryViewer extends Component {
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
 
-    return <HistoryViewerVersionDetail {...props} />;
+    return <VersionDetailComponent {...props} />;
   }
 
   /**
@@ -159,23 +159,17 @@ class HistoryViewer extends Component {
     );
   }
 
-  render() {
-    const { loading, currentVersion, onSelect } = this.props;
+  /**
+   * Renders a list of versions
+   *
+   * @returns {HistoryViewerVersionList}
+   */
+  renderVersionList() {
+    const { ListComponent, onSelect } = this.props;
 
-    // Handle loading state
-    if (loading) {
-      return <Loading />;
-    }
-
-    // Render the selected version details
-    if (currentVersion) {
-      return this.renderVersionDetail();
-    }
-
-    // Render the version list
     return (
       <div className="history-viewer">
-        <HistoryViewerVersionList
+        <ListComponent
           onSelect={onSelect}
           versions={this.getVersions()}
         />
@@ -186,13 +180,29 @@ class HistoryViewer extends Component {
       </div>
     );
   }
+
+  render() {
+    const { loading, currentVersion } = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
+
+    if (currentVersion) {
+      return this.renderVersionDetail();
+    }
+
+    return this.renderVersionList();
+  }
 }
 
 HistoryViewer.propTypes = {
   limit: PropTypes.number,
+  ListComponent: PropTypes.func,
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.number,
+  VersionDetailComponent: PropTypes.func,
   versions: PropTypes.shape({
     Versions: PropTypes.shape({
       pageInfo: PropTypes.shape({
@@ -238,10 +248,17 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export { HistoryViewer };
+export { HistoryViewer as Component };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   historyViewerConfig,
-  historyStateRouter
+  historyStateRouter,
+  inject(
+    ['HistoryViewerVersionList', 'HistoryViewerVersionDetail'],
+    (HistoryViewerVersionList, HistoryViewerVersionDetail) => ({
+      ListComponent: HistoryViewerVersionList,
+      VersionDetailComponent: HistoryViewerVersionDetail,
+    })
+  )
 )(HistoryViewer);

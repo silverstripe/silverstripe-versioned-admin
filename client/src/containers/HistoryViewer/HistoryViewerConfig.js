@@ -1,5 +1,6 @@
 import React from 'react';
 import Config from 'lib/Config';
+import { inject } from 'lib/Injector';
 
 const historyViewerConfig = (HistoryViewer) => {
   class HistoryViewerConfigProvider extends React.Component {
@@ -18,6 +19,7 @@ const historyViewerConfig = (HistoryViewer) => {
       const props = {
         ...this.props,
         config: this.getConfig(),
+        HistoryViewer,
         schemaUrl: this.getSchemaUrl(),
       };
 
@@ -29,7 +31,9 @@ const historyViewerConfig = (HistoryViewer) => {
     }
   }
 
-  return HistoryViewerConfigProvider;
+  return inject(
+    ['HistoryViewer']
+  )(HistoryViewerConfigProvider);
 };
 
 export default historyViewerConfig;

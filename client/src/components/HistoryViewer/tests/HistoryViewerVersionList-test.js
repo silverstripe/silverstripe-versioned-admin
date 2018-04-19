@@ -2,11 +2,18 @@
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import HistoryViewerVersionList from '../HistoryViewerVersionList';
+import { Component as HistoryViewerVersionList } from '../HistoryViewerVersionList';
 
 describe('HistoryViewerVersionList', () => {
+  const HeadingComponent = () => <tr />;
+  const VersionComponent = () => <div />;
+
   const component = ReactTestUtils.renderIntoDocument(
-    <HistoryViewerVersionList versions={[]} />
+    <HistoryViewerVersionList
+      HeadingComponent={HeadingComponent}
+      VersionComponent={VersionComponent}
+      versions={[]}
+    />
   );
 
   describe('render()', () => {

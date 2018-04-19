@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import HistoryViewerVersionState from './HistoryViewerVersionState';
+import { inject } from 'lib/Injector';
 import { versionType, defaultVersion } from 'types/versionType';
 import FormAction from 'components/FormAction/FormAction';
 import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
@@ -80,13 +80,13 @@ class HistoryViewerVersion extends Component {
   }
 
   render() {
-    const { version, isActive } = this.props;
+    const { version, isActive, StateComponent } = this.props;
 
     return (
       <tr onClick={this.handleClick}>
         <td>{version.Version}</td>
         <td>
-          <HistoryViewerVersionState
+          <StateComponent
             version={version}
             isActive={isActive}
           />
@@ -101,6 +101,7 @@ class HistoryViewerVersion extends Component {
 HistoryViewerVersion.propTypes = {
   isActive: React.PropTypes.bool,
   onSelect: React.PropTypes.func,
+  StateComponent: PropTypes.func,
   version: versionType,
 };
 
@@ -117,8 +118,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export { HistoryViewerVersion };
+export { HistoryViewerVersion as Component };
 
 export default compose(
-  connect(() => {}, mapDispatchToProps)
+  connect(() => {}, mapDispatchToProps),
+  inject(
+    ['HistoryViewerVersionState'],
+    (HistoryViewerVersionState) => ({ StateComponent: HistoryViewerVersionState })
+  )
 )(HistoryViewerVersion);
