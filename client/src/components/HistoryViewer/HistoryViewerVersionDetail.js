@@ -27,7 +27,7 @@ class HistoryViewerVersionDetail extends PureComponent {
 }
 
 HistoryViewerVersionDetail.propTypes = {
-  ListComponent: PropTypes.func,
+  ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   schemaUrl: React.PropTypes.string.isRequired,
   version: versionType.isRequired,
 };
@@ -36,5 +36,6 @@ export { HistoryViewerVersionDetail as Component };
 
 export default inject(
   ['HistoryViewerVersionList'],
-  (HistoryViewerVersionList) => ({ ListComponent: HistoryViewerVersionList })
+  (HistoryViewerVersionList) => ({ ListComponent: HistoryViewerVersionList }),
+  ({ version }) => `VersionedAdmin.HistoryViewer.HistoryViewerVersionDetail.${version.Version}`
 )(HistoryViewerVersionDetail);

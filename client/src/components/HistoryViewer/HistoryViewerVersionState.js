@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Badge from 'components/Badge/Badge';
 import classnames from 'classnames';
 import i18n from 'i18n';
 import moment from 'moment';
 import { versionType, defaultVersion } from 'types/versionType';
+import { inject } from 'lib/Injector';
 
 class HistoryViewerVersionState extends Component {
   /**
@@ -47,11 +47,11 @@ class HistoryViewerVersionState extends Component {
    * @returns {ReactElement|string}
    */
   getBadges() {
-    const { version, isActive } = this.props;
+    const { version, isActive, BadgeComponent } = this.props;
 
     if (version.LiveVersion) {
       return (
-        <Badge
+        <BadgeComponent
           status="success"
           message={i18n._t('HistoryViewer.BadgeLive', 'Live')}
           className="" // removes the default pill styles
@@ -77,6 +77,10 @@ HistoryViewerVersionState.propTypes = {
   version: versionType,
   extraClass: React.PropTypes.string,
   isActive: React.PropTypes.bool,
+  BadgeComponent: React.PropTypes.oneOfType([
+    React.PropTypes.node,
+    React.PropTypes.func,
+  ]).isRequired
 };
 
 HistoryViewerVersionState.defaultProps = {
@@ -85,4 +89,10 @@ HistoryViewerVersionState.defaultProps = {
   isActive: false,
 };
 
-export default HistoryViewerVersionState;
+export { HistoryViewerVersionState as Component };
+
+export default inject(
+  ['Badge'],
+  (BadgeComponent) => ({ BadgeComponent }),
+  ({ version }) => `HistoryViewer.HistoryViewerVersionState.${version.Version}`
+)(HistoryViewerVersionState);

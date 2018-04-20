@@ -9,12 +9,16 @@ import { Component as HistoryViewerVersion } from '../HistoryViewerVersion';
  */
 class TestHistoryViewerVersion extends React.PureComponent {
   render() {
-    const StateComponent = () => <div />;
+    const NullComponent = () => <div />;
 
     return (
       <table>
         <tbody>
-          <HistoryViewerVersion StateComponent={StateComponent} {...this.props} />
+          <HistoryViewerVersion
+            StateComponent={NullComponent}
+            FormActionComponent={NullComponent}
+            {...this.props}
+          />
         </tbody>
       </table>
     );

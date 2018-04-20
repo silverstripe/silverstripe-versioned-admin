@@ -198,11 +198,11 @@ class HistoryViewer extends Component {
 
 HistoryViewer.propTypes = {
   limit: PropTypes.number,
-  ListComponent: PropTypes.func,
+  ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.number,
-  VersionDetailComponent: PropTypes.func,
+  VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.shape({
     Versions: PropTypes.shape({
       pageInfo: PropTypes.shape({
@@ -234,9 +234,9 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const historyViewerState = state.versionedAdmin.historyViewer;
+  const { currentVersion } = state.versionedAdmin.historyViewer;
   return {
-    currentVersion: historyViewerState.currentVersion,
+    currentVersion,
   };
 }
 
@@ -259,6 +259,7 @@ export default compose(
     (HistoryViewerVersionList, HistoryViewerVersionDetail) => ({
       ListComponent: HistoryViewerVersionList,
       VersionDetailComponent: HistoryViewerVersionDetail,
-    })
+    }),
+    () => 'VersionedAdmin.HistoryViewer.HistoryViewer'
   )
 )(HistoryViewer);

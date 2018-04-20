@@ -3,7 +3,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { inject } from 'lib/Injector';
 import { versionType, defaultVersion } from 'types/versionType';
-import FormAction from 'components/FormAction/FormAction';
 import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerVersion extends Component {
@@ -62,14 +61,14 @@ class HistoryViewerVersion extends Component {
    * @returns {FormAction|null}
    */
   renderClearButton() {
-    const { isActive } = this.props;
+    const { isActive, FormActionComponent } = this.props;
     if (!isActive) {
       return null;
     }
 
     return (
       <td className="history-viewer__actions">
-        <FormAction
+        <FormActionComponent
           onClick={this.handleClose}
           icon="cancel"
           title={null}
@@ -101,7 +100,8 @@ class HistoryViewerVersion extends Component {
 HistoryViewerVersion.propTypes = {
   isActive: React.PropTypes.bool,
   onSelect: React.PropTypes.func,
-  StateComponent: PropTypes.func,
+  StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   version: versionType,
 };
 
@@ -123,7 +123,18 @@ export { HistoryViewerVersion as Component };
 export default compose(
   connect(() => {}, mapDispatchToProps),
   inject(
-    ['HistoryViewerVersionState'],
-    (HistoryViewerVersionState) => ({ StateComponent: HistoryViewerVersionState })
+    ['HistoryViewerVersionState', 'FormAction'],
+    (StateComponent, FormActionComponent) => ({
+      StateComponent,
+      FormActionComponent,
+    }),
+    ({ version }) => {
+      let context = 'VersionedAdmin.HistoryViewer.HistoryViewerVersion';
+      if (version) {
+        context += `.${version.Version}`;
+      }
+
+      return context;
+    }
   )
 )(HistoryViewerVersion);

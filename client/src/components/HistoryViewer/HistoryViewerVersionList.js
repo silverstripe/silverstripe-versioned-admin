@@ -40,9 +40,9 @@ class HistoryViewerVersionList extends PureComponent {
 
 HistoryViewerVersionList.propTypes = {
   extraClass: PropTypes.string,
-  HeadingComponent: PropTypes.func,
+  HeadingComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   isActive: PropTypes.bool,
-  VersionComponent: PropTypes.func,
+  VersionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.arrayOf(versionType),
 };
 
@@ -60,4 +60,5 @@ export default inject(
     HeadingComponent: HistoryViewerHeading,
     VersionComponent: HistoryViewerVersion,
   }),
+  () => 'VersionedAdmin.HistoryViewer.HistoryViewerVersionList'
 )(HistoryViewerVersionList);
