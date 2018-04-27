@@ -1,10 +1,16 @@
+/* global window */
+
 import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
-import historyStateRouter from 'components/HistoryViewer/HistoryViewerStateRouter';
-import HistoryViewerVersionList from 'components/HistoryViewer/HistoryViewerVersionList';
-import { versionType } from 'types/versionType';
+import { connect } from 'react-redux';
 import Griddle from 'griddle-react';
+import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
+import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
+import { inject } from 'lib/Injector';
+import Loading from 'components/Loading/Loading';
+import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { versionType } from 'types/versionType';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
@@ -18,6 +24,18 @@ class HistoryViewer extends Component {
     this.handleSetPage = this.handleSetPage.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePrevPage = this.handlePrevPage.bind(this);
+  }
+
+  /**
+   * Reset the selected version when unmounting HistoryViewer to prevent data leaking
+   * between instances
+   */
+  componentWillUnmount() {
+    const { onSelect } = this.props;
+
+    if (typeof onSelect === 'function') {
+      onSelect(0);
+    }
   }
 
   /**
@@ -70,6 +88,35 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Renders the detail form for a selected version
+   *
+   * @returns {HistoryViewerVersionDetail}
+   */
+  renderVersionDetail() {
+    const {
+      currentVersion,
+      recordId,
+      recordClass,
+      schemaUrl,
+      VersionDetailComponent,
+    } = this.props;
+
+    // Insert variables into the schema URL via regex replacements
+    const schemaReplacements = {
+      ':id': recordId,
+      ':class': recordClass,
+      ':version': currentVersion,
+    };
+
+    const props = {
+      schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
+      version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
+    };
+
+    return <VersionDetailComponent {...props} />;
+  }
+
+  /**
    * Renders the react component for pagination.
    * Currently borrows the pagination from Griddle, to keep styling consistent
    * between the two views.
@@ -112,36 +159,50 @@ class HistoryViewer extends Component {
     );
   }
 
-  render() {
-    const { loading } = this.props;
-
-    // Handle loading state
-    if (loading) {
-      return (
-        <div className="flexbox-area-grow">
-          <div key="overlay" className="cms-content-loading-overlay ui-widget-overlay-light" />
-          <div key="spinner" className="cms-content-loading-spinner" />
-        </div>
-      );
-    }
+  /**
+   * Renders a list of versions
+   *
+   * @returns {HistoryViewerVersionList}
+   */
+  renderVersionList() {
+    const { ListComponent, onSelect } = this.props;
 
     return (
       <div className="history-viewer">
-        <HistoryViewerVersionList
+        <ListComponent
+          onSelect={onSelect}
           versions={this.getVersions()}
         />
+
         <div className="history-viewer__pagination">
           {this.renderPagination()}
         </div>
       </div>
     );
   }
+
+  render() {
+    const { loading, currentVersion } = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
+
+    if (currentVersion) {
+      return this.renderVersionDetail();
+    }
+
+    return this.renderVersionList();
+  }
 }
 
 HistoryViewer.propTypes = {
   limit: PropTypes.number,
+  ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
+  currentVersion: PropTypes.number,
+  VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.shape({
     Versions: PropTypes.shape({
       pageInfo: PropTypes.shape({
@@ -153,10 +214,14 @@ HistoryViewer.propTypes = {
     }),
   }),
   page: PropTypes.number,
+  schemaUrl: PropTypes.string,
   actions: PropTypes.object,
+  onSelect: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
+  currentVersion: 0,
+  schemaUrl: '',
   versions: {
     Versions: {
       pageInfo: {
@@ -167,10 +232,34 @@ HistoryViewer.defaultProps = {
   },
 };
 
+
+function mapStateToProps(state) {
+  const { currentVersion } = state.versionedAdmin.historyViewer;
+  return {
+    currentVersion,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    onSelect(id) {
+      dispatch(setCurrentVersion(id));
+    },
+  };
+}
+
 export { HistoryViewer as Component };
 
-const HistoryViewerProvider = compose(
-  historyStateRouter
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  historyViewerConfig,
+  historyStateRouter,
+  inject(
+    ['HistoryViewerVersionList', 'HistoryViewerVersionDetail'],
+    (HistoryViewerVersionList, HistoryViewerVersionDetail) => ({
+      ListComponent: HistoryViewerVersionList,
+      VersionDetailComponent: HistoryViewerVersionDetail,
+    }),
+    () => 'VersionedAdmin.HistoryViewer.HistoryViewer'
+  )
 )(HistoryViewer);
-
-export default HistoryViewerProvider;

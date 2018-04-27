@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@silverstripe/eslint-config": "^0.0.2",
-    "@silverstripe/webpack-config": "^0.7.0",
+    "@silverstripe/webpack-config": "^0.8.0",
     "babel-jest": "^19.0.0",
     "expose-loader": "^0.7.4",
     "jest-cli": "^19.0.2",
@@ -60,6 +60,7 @@
     "@storybook/react": "^3.2.16",
     "apollo-client": "^0.5.22",
     "babel-polyfill": "6.7.4",
+    "classnames": "^2.2.5",
     "graphql-fragments": "^0.1.0",
     "graphql-tag": "^0.1.17",
     "griddle-react": "^0.7.0",

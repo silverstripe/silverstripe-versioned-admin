@@ -1,9 +1,13 @@
+/* global window */
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 
 /**
  * The state router HOC encapsulates the pagination page number state for the
- * HistoryViewer's GraphQL query, and pagination utilities.
+ * HistoryViewer's GraphQL query, pagination utilities and binding to the
+ * SilverStripe Redux store.
  */
+
 const historyStateRouter = (RoutedComponent) => {
   class HistoryViewerStateRouter extends Component {
     constructor(props) {
@@ -22,11 +26,13 @@ const historyStateRouter = (RoutedComponent) => {
 
     render() {
       return (
-        <RoutedComponent
-          {...this.props}
-          page={this.state.page}
-          onPageChange={this.handlePage}
-        />
+        <Provider store={window.ss.store}>
+          <RoutedComponent
+            {...this.props}
+            page={this.state.page}
+            onPageChange={this.handlePage}
+          />
+        </Provider>
       );
     }
   }

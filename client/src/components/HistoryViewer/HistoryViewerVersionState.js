@@ -1,8 +1,9 @@
-import i18n from 'i18n';
 import React, { Component } from 'react';
+import classnames from 'classnames';
+import i18n from 'i18n';
 import moment from 'moment';
-import Badge from 'components/Badge/Badge';
 import { versionType, defaultVersion } from 'types/versionType';
+import { inject } from 'lib/Injector';
 
 class HistoryViewerVersionState extends Component {
   /**
@@ -11,7 +12,8 @@ class HistoryViewerVersionState extends Component {
    * @returns {string}
    */
   getClassNames() {
-    return `${this.props.extraClass} history-viewer__version-state`;
+    const { extraClass } = this.props;
+    return classnames('history-viewer__version-state', extraClass);
   }
 
   /**
@@ -20,10 +22,11 @@ class HistoryViewerVersionState extends Component {
    * @returns {string}
    */
   getPublishedState() {
-    if (this.props.version.Published) {
+    const { version } = this.props;
+
+    if (version.Published) {
       return i18n._t('HistoryViewer.Published', 'Published');
     }
-
     return i18n._t('HistoryViewer.Saved', 'Saved');
   }
 
@@ -44,8 +47,17 @@ class HistoryViewerVersionState extends Component {
    * @returns {ReactElement|string}
    */
   getBadges() {
-    if (this.props.version.LiveVersion) {
-      return <Badge status="success" message={i18n._t('HistoryViewer.BadgeLive', 'Live')} className="" />;
+    const { version, isActive, BadgeComponent } = this.props;
+
+    if (version.LiveVersion) {
+      return (
+        <BadgeComponent
+          status="success"
+          message={i18n._t('HistoryViewer.BadgeLive', 'Live')}
+          className="" // removes the default pill styles
+          inverted={isActive}
+        />
+      );
     }
 
     return '';
@@ -54,12 +66,7 @@ class HistoryViewerVersionState extends Component {
   render() {
     return (
       <span className={this.getClassNames()}>
-        {this.getPublishedState()} <small className="text-muted">{
-        i18n.sprintf(
-          i18n._t('HistoryViewer.StateOnDate', 'on %s'),
-          this.getDate()
-        )
-      }</small>
+        {this.getPublishedState()} <small className="text-muted">{this.getDate()}</small>
         {this.getBadges()}
       </span>
     );
@@ -69,11 +76,23 @@ class HistoryViewerVersionState extends Component {
 HistoryViewerVersionState.propTypes = {
   version: versionType,
   extraClass: React.PropTypes.string,
+  isActive: React.PropTypes.bool,
+  BadgeComponent: React.PropTypes.oneOfType([
+    React.PropTypes.node,
+    React.PropTypes.func,
+  ]).isRequired
 };
 
 HistoryViewerVersionState.defaultProps = {
   version: defaultVersion,
   extraClass: '',
+  isActive: false,
 };
 
-export default HistoryViewerVersionState;
+export { HistoryViewerVersionState as Component };
+
+export default inject(
+  ['Badge'],
+  (BadgeComponent) => ({ BadgeComponent }),
+  ({ version }) => `HistoryViewer.HistoryViewerVersionState.${version.Version}`
+)(HistoryViewerVersionState);

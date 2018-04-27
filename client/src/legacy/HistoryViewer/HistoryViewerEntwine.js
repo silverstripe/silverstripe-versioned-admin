@@ -20,6 +20,7 @@ jQuery.entwine('ss', ($) => {
       ReactDOM.render(
         <HistoryViewerComponent
           recordId={this.data('record-id')}
+          recordClass={this.data('record-class')}
           limit={30}
           offset={0}
           page={0}
@@ -29,6 +30,19 @@ jQuery.entwine('ss', ($) => {
 
       // Hide the CMS actions when in the history viewer
       $('.CMSPageHistoryViewerController .toolbar--south.cms-content-actions').hide();
+    },
+
+    onunmatch() {
+      ReactDOM.unmountComponentAtNode(this[0]);
+    }
+  });
+
+  // Prevent the default anchor behaviour for any CMS tab links that are rendered in
+  // via a React FormBuilder
+  $('.history-viewer__version-detail .nav-link').entwine({
+    onclick(e) {
+      e.preventDefault();
+      this._super(e);
     }
   });
 });

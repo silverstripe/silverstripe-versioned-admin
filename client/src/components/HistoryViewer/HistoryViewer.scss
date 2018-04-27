@@ -4,6 +4,50 @@
   }
 }
 
+.history-viewer__form {
+  position: relative;
+}
+
 .history-viewer__version-state .badge {
-  margin-left: 5px;
+  margin-left: 10px;
+}
+
+.history-viewer__table--current {
+  // There will only be one table row in this table state
+  tbody tr,
+  tbody tr:hover {
+    background-color: $link-color;
+    color: $white;
+  }
+
+  .text-muted {
+    color: $white !important;
+  }
+}
+
+// Table cell containing action buttons, e.g. compare and close
+.table .history-viewer__actions {
+  padding: 0;
+  text-align: right;
+  width: 1%;
+  vertical-align: middle;
+}
+
+// Bring any CMS tabs in the detail view closer to the table above it
+.history-viewer__version-detail {
+  .nav-tabs {
+    margin-top: -$panel-padding-y;
+  }
+}
+
+.history-viewer__close-button {
+  background: transparent;
+  border: 1px solid $white;
+  border-radius: 50%; // circular
+  color: $white;
+  padding: .4rem .55rem;
+
+  &::before {
+    font-size: 1.4rem;
+  }
 }

@@ -35,6 +35,7 @@ class CMSPageHistoryViewerController extends CMSMain
 
         /** @var Form $form */
         $form = parent::getEditForm($id);
+        $form->addExtraClass('history-viewer__form');
 
         if ($record) {
             $fieldList = FieldList::create(

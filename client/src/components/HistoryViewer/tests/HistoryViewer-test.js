@@ -6,6 +6,9 @@ import { Component as HistoryViewer } from '../HistoryViewer';
 
 describe('HistoryViewer', () => {
   let component = null;
+  const ListComponent = () => <table />;
+  const VersionDetailComponent = () => <div />;
+
   const versions = {
     Versions: {
       pageInfo: {
@@ -47,7 +50,13 @@ describe('HistoryViewer', () => {
   describe('getVersions()', () => {
     it('returns the node element from each version edge', () => {
       component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewer versions={versions} recordId={1} limit={100} />
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          versions={versions}
+          recordId={1}
+          limit={100}
+        />
       );
 
       expect(component.getVersions().map((version) => version.Version)).toEqual([14, 13]);
@@ -57,7 +66,14 @@ describe('HistoryViewer', () => {
   describe('render()', () => {
     it('shows a loading state while loading results', () => {
       component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewer versions={versions} recordId={1} limit={100} loading />
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          versions={versions}
+          recordId={1}
+          limit={100}
+          loading
+        />
       );
 
       const result = ReactTestUtils.findRenderedDOMComponentWithClass(

@@ -2,10 +2,11 @@
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import HistoryViewerVersionState from '../HistoryViewerVersionState';
+import { Component as HistoryViewerVersionState } from '../HistoryViewerVersionState';
 
 describe('HistoryViewerVersionState', () => {
   let component = null;
+  HistoryViewerVersionState.defaultProps.BadgeComponent = () => <div />;
 
   describe('getClassNames()', () => {
     it('adds extra classes to the default class', () => {
@@ -60,7 +61,6 @@ describe('HistoryViewerVersionState', () => {
       const mockVersion = {
         LiveVersion: true
       };
-
       component = ReactTestUtils.renderIntoDocument(
         <HistoryViewerVersionState version={mockVersion} />
       );
