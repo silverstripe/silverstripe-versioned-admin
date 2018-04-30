@@ -1,9 +1,8 @@
-# Run asset-admin behat tests with this command (installed with silverstripe/installer)
-# Note that asset-admin behat tests require CMS module
+# Run versioned-admin behat tests with this command
+# Note that versioned-admin behat tests require CMS module
 # ========================================================================= #
-# vendor/bin/selenium-server-standalone -Dwebdriver.firefox.bin="/Applications/Firefox31.app/Contents/MacOS/firefox-bin"
-# vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php
-# vendor/bin/behat @asset-admin
+# chromedriver
+# vendor/bin/behat @versioned-admin
 # ========================================================================= #
 default:
   suites:
@@ -23,8 +22,6 @@ default:
         -
           SilverStripe\Framework\Tests\Behaviour\ConfigContext:
             - %paths.modules.versioned-admin%/tests/behat/files/
-#  default:
-#  suites: []
   extensions:
     SilverStripe\BehatExtension\MinkExtension:
       default_session: facebook_web_driver

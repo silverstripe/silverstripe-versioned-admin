@@ -25,29 +25,29 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1
 
 before_script:
-# Extra $PATH
+  # Extra $PATH
   - export PATH=/usr/lib/chromium-browser/:$PATH
 
-# Init PHP
+  # Init PHP
   - phpenv rehash
   - phpenv config-rm xdebug.ini
   - export PATH=~/.composer/vendor/bin:$PATH
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
-# Install composer
+  # Install composer
   - composer validate
   - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql 2.0.x-dev; fi
   - composer require --no-update silverstripe/recipe-testing:^1 silverstripe/recipe-cms 1.2.x-dev
   - composer install --prefer-source
 
-# Behat bootstrapping
-    - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
-    - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
-    - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
-    - if [[ $BEHAT_TEST ]]; then (chromedriver > artifacts/chromedriver.log 2>&1 &); fi
-    - if [[ $BEHAT_TEST ]]; then (vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
+  # Behat bootstrapping
+  - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi
+  - if [[ $BEHAT_TEST ]]; then cp composer.lock artifacts/; fi
+  - if [[ $BEHAT_TEST ]]; then sh -e /etc/init.d/xvfb start; sleep 3; fi
+  - if [[ $BEHAT_TEST ]]; then (chromedriver > artifacts/chromedriver.log 2>&1 &); fi
+  - if [[ $BEHAT_TEST ]]; then (vendor/bin/serve --bootstrap-file vendor/silverstripe/cms/tests/behat/serve-bootstrap.php &> artifacts/serve.log &); fi
 
-# Install NPM dependencies
+  # Install NPM dependencies
   - if [[ $NPM_TEST ]]; then nvm install $TRAVIS_NODE_VERSION && nvm use $TRAVIS_NODE_VERSION && npm install -g yarn && yarn install --network-concurrency 1 && (cd vendor/silverstripe/admin && yarn install --network-concurrency 1) && yarn run build; fi
 
 script:
@@ -57,6 +57,7 @@ script:
   - if [[ $NPM_TEST ]]; then git diff --name-status --relative=client; fi
   - if [[ $NPM_TEST ]]; then yarn run test; fi
   - if [[ $NPM_TEST ]]; then yarn run lint; fi
+  - if [[ $BEHAT_TEST ]]; then vendor/bin/behat @versioned-admin; fi
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml; fi
 
 after_success:
