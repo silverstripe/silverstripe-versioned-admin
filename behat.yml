@@ -8,7 +8,7 @@ default:
   suites:
     versioned-admin:
       paths:
-        - %paths.modules.versioned-admin%/tests/behat/features
+        - %paths.modules.versioned-admin%/tests/Behat/features
       contexts:
         - SilverStripe\VersionedAdmin\Tests\Behat\Context\FeatureContext
         - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
