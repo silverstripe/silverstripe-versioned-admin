@@ -1,7 +1,12 @@
 <?php
+
 namespace SilverStripe\VersionedAdmin\Tests\Behat\Context;
 
 use SilverStripe\BehatExtension\Context\SilverStripeContext;
+
+if (!class_exists(SilverStripeContext::class)) {
+    return;
+}
 
 class FeatureContext extends SilverStripeContext
 {

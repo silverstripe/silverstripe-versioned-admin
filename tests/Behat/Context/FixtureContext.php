@@ -2,12 +2,12 @@
 
 namespace SilverStripe\VersionedAdmin\Tests\Behat\Context;
 
-use Behat\Mink\Element\DocumentElement;
-use Behat\Mink\Element\NodeElement;
-use Page;
-use SilverStripe\Assets\Image;
 use SilverStripe\BehatExtension\Context\FixtureContext as BaseFixtureContext;
 use SilverStripe\BehatExtension\Utility\StepHelper;
+
+if (!class_exists(BaseFixtureContext::class)) {
+    return;
+}
 
 /**
  * Context used to create fixtures in the SilverStripe ORM.
