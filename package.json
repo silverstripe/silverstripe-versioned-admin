@@ -60,6 +60,7 @@
     "@storybook/react": "^3.2.16",
     "apollo-client": "^0.5.22",
     "babel-polyfill": "6.7.4",
+    "bootstrap": "4.0.0",
     "classnames": "^2.2.5",
     "graphql-fragments": "^0.1.0",
     "graphql-tag": "^0.1.17",

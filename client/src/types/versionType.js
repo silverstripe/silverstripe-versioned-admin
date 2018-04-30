@@ -9,6 +9,7 @@ const memberShape = PropTypes.shape({
 // Describes the data structure for a Version, returned via GraphQL scaffolding
 const versionType = PropTypes.shape({
   Version: PropTypes.number,
+  AbsoluteLink: PropTypes.string,
   LastEdited: PropTypes.string,
   Published: PropTypes.boolean,
   LiveVersion: PropTypes.boolean,
@@ -20,6 +21,7 @@ const versionType = PropTypes.shape({
 // A default (empty) data set for a version
 const defaultVersion = {
   Version: 0,
+  AbsoluteLink: '',
   LastEdited: '',
   Published: false,
   LiveVersion: false,

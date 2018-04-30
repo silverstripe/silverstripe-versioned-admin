@@ -3,6 +3,7 @@
 namespace SilverStripe\VersionedAdmin\Forms;
 
 use SilverStripe\Forms\FormField;
+use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Requirements;
 
@@ -31,5 +32,17 @@ class HistoryViewerField extends FormField
     public function getSourceRecord()
     {
         return $this->getForm() ? $this->getForm()->getRecord() : null;
+    }
+
+    /**
+     * Get whether the record is previewable
+     *
+     * @return boolean
+     */
+    public function getPreviewEnabled()
+    {
+        $record = $this->getSourceRecord();
+
+        return $record && $record instanceof CMSPreviewable;
     }
 }

@@ -21,15 +21,13 @@ jQuery.entwine('ss', ($) => {
         <HistoryViewerComponent
           recordId={this.data('record-id')}
           recordClass={this.data('record-class')}
+          isPreviewable={!!parseInt(this.data('preview-enabled'), 10)}
           limit={30}
           offset={0}
           page={0}
         />,
         this[0]
       );
-
-      // Hide the CMS actions when in the history viewer
-      $('.CMSPageHistoryViewerController .toolbar--south.cms-content-actions').hide();
     },
 
     onunmatch() {

@@ -36,6 +36,8 @@ class CMSPageHistoryViewerController extends CMSMain
         /** @var Form $form */
         $form = parent::getEditForm($id);
         $form->addExtraClass('history-viewer__form');
+        // Disable default CMS preview
+        $form->removeExtraClass('cms-previewable');
 
         if ($record) {
             $fieldList = FieldList::create(
