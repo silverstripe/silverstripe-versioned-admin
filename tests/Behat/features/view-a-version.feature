@@ -19,3 +19,4 @@ Feature: View a version
     When I click on the first version
     Then I should see an "#Form_versionForm_Title[readonly]" element
     And I should see an "#Form_versionForm_URLSegment[readonly]" element
+

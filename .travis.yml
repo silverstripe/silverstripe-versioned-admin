@@ -38,7 +38,7 @@ before_script:
   - export PATH=~/.composer/vendor/bin:$PATH
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
-  # Install composer
+# Install composer
   - composer validate
   - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql 2.0.x-dev; fi
   - composer require --no-update silverstripe/recipe-testing:^1 silverstripe/recipe-cms 1.2.x-dev
