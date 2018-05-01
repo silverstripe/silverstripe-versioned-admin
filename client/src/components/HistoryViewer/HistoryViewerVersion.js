@@ -110,6 +110,10 @@ HistoryViewerVersion.defaultProps = {
   version: defaultVersion,
 };
 
+function mapStateToProps() {
+  return {};
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     onSelect(id) {
@@ -121,7 +125,7 @@ function mapDispatchToProps(dispatch) {
 export { HistoryViewerVersion as Component };
 
 export default compose(
-  connect(() => {}, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   inject(
     ['HistoryViewerVersionState', 'FormAction'],
     (StateComponent, FormActionComponent) => ({

@@ -3,6 +3,7 @@ import HISTORY_VIEWER from './HistoryViewerActionTypes';
 const initialState = {
   currentVersion: 0,
   loading: false,
+  messages: [],
 };
 
 /**
@@ -18,6 +19,30 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       return {
         ...state,
         currentVersion: payload.id,
+      };
+    }
+
+    case HISTORY_VIEWER.ADD_MESSAGE: {
+      return {
+        ...state,
+        messages: [
+          payload,
+          ...state.messages,
+        ],
+      };
+    }
+
+    case HISTORY_VIEWER.CLEAR_MESSAGES: {
+      return {
+        ...state,
+        messages: [],
+      };
+    }
+
+    case HISTORY_VIEWER.REFETCH_VERSIONS: {
+      return {
+        ...state,
+        refetchVersions: true,
       };
     }
 

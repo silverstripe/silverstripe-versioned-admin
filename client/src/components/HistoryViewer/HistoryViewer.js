@@ -111,6 +111,7 @@ class HistoryViewer extends Component {
 
     const props = {
       isPreviewable,
+      recordId,
       schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
       version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
     };
@@ -245,6 +246,7 @@ HistoryViewer.defaultProps = {
 
 function mapStateToProps(state) {
   const { currentVersion } = state.versionedAdmin.historyViewer;
+
   return {
     currentVersion,
   };

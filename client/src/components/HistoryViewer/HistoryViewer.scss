@@ -62,6 +62,10 @@
   }
 }
 
+.history-viewer__messages {
+  margin: $panel-padding-y 0 0 0;
+}
+
 // Todo: remove this when the CMS is React driven and we don't need this hack
 .history-viewer__preview {
   margin-top: -54px;
