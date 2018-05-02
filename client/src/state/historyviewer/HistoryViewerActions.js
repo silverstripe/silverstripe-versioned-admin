@@ -5,6 +5,7 @@ import HISTORY_VIEWER from './HistoryViewerActionTypes';
  * version in the viewer, i.e. a detail or comparison view
  *
  * @param {int} id
+ * @returns {function}
  */
 export function setCurrentVersion(id) {
   return (dispatch) => {
@@ -16,16 +17,16 @@ export function setCurrentVersion(id) {
 }
 
 /**
- * Cause the history viewer to reset and refetch the version list.
+ * Set the current pagination page number for the list of history viewer versions
  *
- * PLEASE NOTE: This is a temporary action, and will be removed in future when replaced
- * with React router: https://github.com/silverstripe/silverstripe-versioned-admin/issues/1
+ * @param {int} page
+ * @returns {function}
  */
-export function refetchVersions() {
+export function setCurrentPage(page) {
   return (dispatch) => {
     dispatch({
-      type: HISTORY_VIEWER.REFETCH_VERSIONS,
-      payload: {},
+      type: HISTORY_VIEWER.SET_CURRENT_PAGE,
+      payload: { page },
     });
   };
 }

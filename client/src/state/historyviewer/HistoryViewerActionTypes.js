@@ -3,7 +3,7 @@
 
 export default [
   'SET_CURRENT_VERSION',
+  'SET_CURRENT_PAGE',
   'ADD_MESSAGE',
   'CLEAR_MESSAGES',
-  'REFETCH_VERSIONS',
 ].reduce((obj, item) => Object.assign(obj, { [item]: `HISTORY_VIEWER.${item}` }), {});

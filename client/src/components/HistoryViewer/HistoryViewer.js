@@ -4,12 +4,11 @@ import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Griddle from 'griddle-react';
-import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
-import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { setCurrentPage, setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 
 /**
@@ -59,10 +58,10 @@ class HistoryViewer extends Component {
   handleSetPage(page) {
     // Note: data from Griddle is zero-indexed
     const newPage = page + 1;
-    const { onPageChange, actions } = this.props;
+    const { onSetPage, actions } = this.props;
     actions.versions.goToPage(newPage);
-    if (typeof onPageChange === 'function') {
-      onPageChange(newPage);
+    if (typeof onSetPage === 'function') {
+      onSetPage(newPage);
     }
   }
 
@@ -70,16 +69,18 @@ class HistoryViewer extends Component {
    * Handler for incrementing the set page
    */
   handleNextPage() {
+    const { page } = this.props;
     // Note: data for Griddle needs to be zero-indexed, so don't add 1 to this
-    this.handleSetPage(this.props.page);
+    this.handleSetPage(page);
   }
 
   /**
    * Handler for decrementing the set page
    */
   handlePrevPage() {
+    const { page } = this.props;
     // Note: data for Griddle needs to be zero-indexed
-    const currentPage = this.props.page - 1;
+    const currentPage = page - 1;
     if (currentPage < 1) {
       this.handleSetPage(currentPage);
       return;
@@ -227,6 +228,7 @@ HistoryViewer.propTypes = {
   schemaUrl: PropTypes.string,
   actions: PropTypes.object,
   onSelect: PropTypes.func,
+  onSetPage: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
@@ -245,9 +247,10 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const { currentVersion } = state.versionedAdmin.historyViewer;
+  const { currentPage, currentVersion } = state.versionedAdmin.historyViewer;
 
   return {
+    page: currentPage,
     currentVersion,
   };
 }
@@ -257,6 +260,9 @@ function mapDispatchToProps(dispatch) {
     onSelect(id) {
       dispatch(setCurrentVersion(id));
     },
+    onSetPage(page) {
+      dispatch(setCurrentPage(page));
+    },
   };
 }
 
@@ -265,7 +271,6 @@ export { HistoryViewer as Component };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   historyViewerConfig,
-  historyStateRouter,
   inject(
     ['HistoryViewerVersionList', 'HistoryViewerVersionDetail'],
     (HistoryViewerVersionList, HistoryViewerVersionDetail) => ({

@@ -1,6 +1,7 @@
 import HISTORY_VIEWER from './HistoryViewerActionTypes';
 
 const initialState = {
+  currentPage: 1,
   currentVersion: 0,
   loading: false,
   messages: [],
@@ -15,6 +16,13 @@ const initialState = {
  */
 export default function historyViewerReducer(state = initialState, { type, payload } = {}) {
   switch (type) {
+    case HISTORY_VIEWER.SET_CURRENT_PAGE: {
+      return {
+        ...state,
+        currentPage: payload.page,
+      };
+    }
+
     case HISTORY_VIEWER.SET_CURRENT_VERSION: {
       return {
         ...state,
@@ -36,13 +44,6 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       return {
         ...state,
         messages: [],
-      };
-    }
-
-    case HISTORY_VIEWER.REFETCH_VERSIONS: {
-      return {
-        ...state,
-        refetchVersions: true,
       };
     }
 
