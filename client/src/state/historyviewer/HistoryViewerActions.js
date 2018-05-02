@@ -1,4 +1,5 @@
 import HISTORY_VIEWER from './HistoryViewerActionTypes';
+import uuidv1 from 'uuid/v1';
 
 /**
  * Setting the current version will enable context views for a specific record
@@ -42,7 +43,7 @@ export function addMessage(message, type = 'success') {
   return (dispatch) => {
     dispatch({
       type: HISTORY_VIEWER.ADD_MESSAGE,
-      payload: { message, type },
+      payload: { id: uuidv1(), message, type },
     });
   };
 }

@@ -1,6 +1,5 @@
 import React, { PropTypes, PureComponent } from 'react';
 import classnames from 'classnames';
-import FormAlert from 'components/FormAlert/FormAlert';
 import i18n from 'i18n';
 import { clearMessages } from 'state/historyviewer/HistoryViewerActions';
 import { connect } from 'react-redux';
@@ -39,7 +38,7 @@ class HistoryViewerVersionList extends PureComponent {
    * @returns {DOMElement}
    */
   renderMessages() {
-    const { messages } = this.props;
+    const { FormAlertComponent, messages } = this.props;
 
     if (!messages.length) {
       return null;
@@ -48,10 +47,9 @@ class HistoryViewerVersionList extends PureComponent {
     return (
       <div className="history-viewer__messages">
         {
-          messages.map((data, key) => (
-            <FormAlert
-              // eslint-disable-next-line react/no-array-index-key
-              key={key}
+          messages.map((data) => (
+            <FormAlertComponent
+              key={data.id}
               type={data.type}
               value={data.message}
               closeLabel={i18n._t('HistoryViewerVersionList.CLOSE', 'Close')}
@@ -92,6 +90,7 @@ class HistoryViewerVersionList extends PureComponent {
 
 HistoryViewerVersionList.propTypes = {
   extraClass: PropTypes.string,
+  FormAlertComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   HeadingComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   isActive: PropTypes.bool,
   messages: PropTypes.arrayOf(messageType),
@@ -129,8 +128,9 @@ export { HistoryViewerVersionList as Component };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   inject(
-    ['HistoryViewerHeading', 'HistoryViewerVersion'],
-    (HistoryViewerHeading, HistoryViewerVersion) => ({
+    ['FormAlert', 'HistoryViewerHeading', 'HistoryViewerVersion'],
+    (FormAlert, HistoryViewerHeading, HistoryViewerVersion) => ({
+      FormAlertComponent: FormAlert,
       HeadingComponent: HistoryViewerHeading,
       VersionComponent: HistoryViewerVersion,
     }),
