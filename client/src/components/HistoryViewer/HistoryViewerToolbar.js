@@ -46,6 +46,7 @@ HistoryViewerToolbar.propTypes = {
   actions: PropTypes.shape({
     revertToVersion: PropTypes.func.isRequired,
   }),
+  FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   onAfterRevert: PropTypes.func.isRequired,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
