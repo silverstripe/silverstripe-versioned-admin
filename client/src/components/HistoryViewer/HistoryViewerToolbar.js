@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
-import { addMessage, setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { addMessage, setCurrentPage, setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerToolbar extends Component {
   constructor(props) {
@@ -59,14 +59,16 @@ function mapStateToProps() {
 function mapDispatchToProps(dispatch) {
   return {
     onAfterRevert(versionId) {
-      dispatch(setCurrentVersion(0));
-
       dispatch(addMessage(
         i18n.sprintf(
           i18n._t('HistoryViewerToolbar.REVERTED_MESSAGE', 'Successfully reverted to version %s'),
           versionId
         )
       ));
+
+      // Send user back to the list view, on the first page
+      dispatch(setCurrentPage(0));
+      dispatch(setCurrentVersion(0));
     },
   };
 }

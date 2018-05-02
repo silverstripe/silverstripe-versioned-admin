@@ -26,12 +26,26 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Manually handle state changes in the page number, because Griddle doesn't support Redux.
+   * See: https://github.com/GriddleGriddle/Griddle/issues/626
+   *
+   * @param {object} prevProps
+   */
+  componentDidUpdate(prevProps) {
+    const { page: prevPage } = prevProps;
+    const { page: currentPage, actions: { versions } } = this.props;
+
+    if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
+      versions.goToPage(currentPage);
+    }
+  }
+
+  /**
    * Reset the selected version when unmounting HistoryViewer to prevent data leaking
    * between instances
    */
   componentWillUnmount() {
     const { onSelect } = this.props;
-
     if (typeof onSelect === 'function') {
       onSelect(0);
     }
@@ -56,12 +70,10 @@ class HistoryViewer extends Component {
    * @param {number} page
    */
   handleSetPage(page) {
-    // Note: data from Griddle is zero-indexed
-    const newPage = page + 1;
-    const { onSetPage, actions } = this.props;
-    actions.versions.goToPage(newPage);
+    const { onSetPage } = this.props;
     if (typeof onSetPage === 'function') {
-      onSetPage(newPage);
+      // Note: data from Griddle is zero-indexed
+      onSetPage(page + 1);
     }
   }
 
