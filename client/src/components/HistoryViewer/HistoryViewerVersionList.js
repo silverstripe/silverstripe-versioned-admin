@@ -1,6 +1,7 @@
 import React, { PropTypes, PureComponent } from 'react';
 import classnames from 'classnames';
 import FormAlert from 'components/FormAlert/FormAlert';
+import i18n from 'i18n';
 import { clearMessages } from 'state/historyviewer/HistoryViewerActions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -53,6 +54,7 @@ class HistoryViewerVersionList extends PureComponent {
               key={key}
               type={data.type}
               value={data.message}
+              closeLabel={i18n._t('HistoryViewerVersionList.CLOSE', 'Close')}
             />
           ))
         }
