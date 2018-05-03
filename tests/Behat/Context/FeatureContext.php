@@ -26,29 +26,56 @@ class FeatureContext extends SilverStripeContext
      */
     public function iShouldSeeAListOfVersionsInDescendingOrder()
     {
-        $page = $this->getSession()->getPage();
-        $versions = $page->findAll('css', '.history-viewer .table tbody tr td:nth-of-type(1)');
-
-        $previous = null;
-        foreach ($versions as $version) {
-            /** @var NodeElement $version */
-            if ($previous) {
-                assert($version->getValue() < $previous);
-            }
-            $previous = $version->getValue();
-        }
+        $versions = $this->getVersions();
+        $this->clickVersion(current($versions));
     }
 
     /**
-     * @When I click on the first version
+     * @When I click on version :versionNo
      */
-    public function iClickOnTheFirstVersion()
+    public function iClickOnVersion($versionNo)
     {
-        assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
-        $this->getLatestVersion()->click();
+        $versions = $this->getVersions(' td:first-child');
+        $desiredVersion = null;
+        foreach ($versions as $version) {
+            /** @var NodeElement $version */
+            if ($version->getText() == $versionNo) {
+                $desiredVersion = $version;
+                break;
+            }
+        }
+        assertNotNull($desiredVersion, 'Desired version ' . $versionNo . ' was not found in the page.');
+        $this->clickVersion($desiredVersion);
+    }
+
+    /**
+     * Click on the given version
+     *
+     * @param NodeElement $version
+     */
+    protected function clickVersion(NodeElement $version)
+    {
+        $version->click();
 
         // Wait for the form builder to load
-        $this->getSession()->wait(3000);
+        $this->getSession()->wait(3000, 'window.jQuery("#Form_versionForm").length > 0');
+    }
+
+    /**
+     * Returns the versions from the history viewer list (table rows)
+     *
+     * @param string $modifier Optional CSS selector modifier
+     * @return NodeElement[]
+     */
+    protected function getVersions($modifier = '')
+    {
+        $versions = $this
+            ->getSession()
+            ->getPage()
+            ->findAll('css', '.history-viewer .table tbody tr' . $modifier);
+
+        assertNotEmpty($versions, 'I see a list of versions');
+        return $versions;
     }
 
     /**
