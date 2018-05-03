@@ -62,6 +62,7 @@ class HistoryViewerVersionDetail extends PureComponent {
 
   render() {
     const {
+      isLatestVersion,
       isPreviewable,
       ListComponent,
       recordId,
@@ -93,6 +94,7 @@ class HistoryViewerVersionDetail extends PureComponent {
 
           <ToolbarComponent
             identifier="HistoryViewer.VersionDetail.Toolbar"
+            isLatestVersion={isLatestVersion}
             recordId={recordId}
             versionId={version.Version}
           />
@@ -105,6 +107,7 @@ class HistoryViewerVersionDetail extends PureComponent {
 }
 
 HistoryViewerVersionDetail.propTypes = {
+  isLatestVersion: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   PreviewComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
@@ -115,6 +118,7 @@ HistoryViewerVersionDetail.propTypes = {
 };
 
 HistoryViewerVersionDetail.defaultProps = {
+  isLatestVersion: false,
   isPreviewable: false,
 };
 

@@ -24,7 +24,7 @@ class HistoryViewerToolbar extends Component {
   }
 
   render() {
-    const { FormActionComponent } = this.props;
+    const { FormActionComponent, isLatestVersion } = this.props;
 
     return (
       <div className="toolbar toolbar--south">
@@ -33,8 +33,14 @@ class HistoryViewerToolbar extends Component {
             onClick={this.handleRevert}
             icon="back-in-time"
             name="revert"
-            data={{ buttonStyle: 'warning' }}
-            title={i18n._t('HistoryViewerVersionDetail.REVERT_TO_VERSION', 'Revert to this version')}
+            attributes={{
+              title: i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version'),
+            }}
+            data={{
+              buttonStyle: 'warning'
+            }}
+            disabled={isLatestVersion}
+            title={i18n._t('HistoryViewerToolbar.REVERT_TO_VERSION', 'Revert to this version')}
           />
         </div>
       </div>
@@ -47,11 +53,15 @@ HistoryViewerToolbar.propTypes = {
     revertToVersion: PropTypes.func.isRequired,
   }),
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  isLatestVersion: PropTypes.bool,
   onAfterRevert: PropTypes.func.isRequired,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
 };
 
+HistoryViewerToolbar.defaultProps = {
+  isLatestVersion: false,
+};
 
 function mapStateToProps() {
   return {};

@@ -65,6 +65,29 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Get the latest (highest) version number from the list available. If we are not on page
+   * zero then it's always false, because there are higher versions that we aren't aware of
+   * in this context.
+   *
+   * @returns {object}
+   */
+  getLatestVersion() {
+    const { page } = this.props;
+
+    if (page > 1) {
+      return false;
+    }
+
+    return this.getVersions()
+      .reduce((prev, current) => {
+        if (prev.Version > current.Version) {
+          return prev;
+        }
+        return current;
+      });
+  }
+
+  /**
    * Handles setting the pagination page number
    *
    * @param {number} page
@@ -122,11 +145,16 @@ class HistoryViewer extends Component {
       ':version': currentVersion,
     };
 
+    const version = this.getVersions()
+      .filter((eachVersion) => eachVersion.Version === currentVersion)[0];
+    const latestVersion = this.getLatestVersion();
+
     const props = {
+      isLatestVersion: latestVersion && latestVersion.Version === version.Version,
       isPreviewable,
       recordId,
       schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
-      version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
+      version,
     };
 
     return (
