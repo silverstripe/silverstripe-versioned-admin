@@ -21,6 +21,7 @@ jQuery.entwine('ss', ($) => {
         <HistoryViewerComponent
           recordId={this.data('record-id')}
           recordClass={this.data('record-class')}
+          contextKey={this.data('context-key')}
           isPreviewable={!!parseInt(this.data('preview-enabled'), 10)}
           limit={30}
           offset={0}

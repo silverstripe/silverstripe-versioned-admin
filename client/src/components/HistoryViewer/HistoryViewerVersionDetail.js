@@ -131,5 +131,5 @@ export default inject(
     ToolbarComponent,
     PreviewComponent,
   }),
-  ({ version }) => `VersionedAdmin.HistoryViewer.HistoryViewerVersionDetail.${version.Version}`
+  ({ version }, context) => `${context}.HistoryViewerVersionDetail.${version.Version}`
 )(HistoryViewerVersionDetail);

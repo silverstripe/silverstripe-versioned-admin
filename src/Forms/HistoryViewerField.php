@@ -16,6 +16,13 @@ class HistoryViewerField extends FormField
      */
     protected $schemaComponent = 'PageHistoryViewer';
 
+    /**
+     * Unique context key used to differentiate the different use cases for HistoryViewer
+     *
+     * @var string
+     */
+    protected $contextKey;
+
     public function __construct($name, $title = null, $value = null)
     {
         Requirements::javascript('silverstripe/versioned-admin:client/dist/js/bundle.js');
@@ -44,5 +51,21 @@ class HistoryViewerField extends FormField
         $record = $this->getSourceRecord();
 
         return $record && $record instanceof CMSPreviewable;
+    }
+
+    public function getContextKey()
+    {
+        if ($this->contextKey) {
+            return $this->contextKey;
+        }
+
+        // Default to using the DataObject's DB table name as the unique identifier
+        return DataObject::getSchema()->baseDataTable(get_class($this->getSourceRecord()));
+    }
+
+    public function setContextKey($contextKey)
+    {
+        $this->contextKey = (string) $contextKey;
+        return $this;
     }
 }

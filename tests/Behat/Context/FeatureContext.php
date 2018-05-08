@@ -31,6 +31,17 @@ class FeatureContext extends SilverStripeContext
     }
 
     /**
+     * @When I click on the first version
+     */
+    public function iClickOnTheFirstVersion()
+    {
+        assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
+        $this->getLatestVersion()->click();
+        // Wait for the form builder to load
+        $this->getSession()->wait(3000);
+    }
+
+    /**
      * @When I click on version :versionNo
      */
     public function iClickOnVersion($versionNo)

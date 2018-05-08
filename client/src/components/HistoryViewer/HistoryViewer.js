@@ -247,6 +247,7 @@ class HistoryViewer extends Component {
 }
 
 HistoryViewer.propTypes = {
+  contextKey: PropTypes.string,
   limit: PropTypes.number,
   ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   offset: PropTypes.number,
@@ -272,6 +273,7 @@ HistoryViewer.propTypes = {
 };
 
 HistoryViewer.defaultProps = {
+  contextKey: '',
   currentVersion: 0,
   isPreviewable: false,
   schemaUrl: '',
@@ -317,6 +319,6 @@ export default compose(
       ListComponent: HistoryViewerVersionList,
       VersionDetailComponent: HistoryViewerVersionDetail,
     }),
-    () => 'VersionedAdmin.HistoryViewer.HistoryViewer'
+    ({ contextKey }) => `VersionedAdmin.HistoryViewer.${contextKey}`
   )
 )(HistoryViewer);
