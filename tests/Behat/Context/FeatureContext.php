@@ -16,9 +16,7 @@ class FeatureContext extends SilverStripeContext
      */
     public function iShouldSeeAListOfVersions()
     {
-        $page = $this->getSession()->getPage();
-        $versionsTable = $page->find('css', '.history-viewer .table');
-        assertNotNull($versionsTable, 'I should see a list of versions');
+        $this->getVersions();
     }
 
     /**
@@ -33,10 +31,10 @@ class FeatureContext extends SilverStripeContext
 
         foreach ($versions as $version) {
             /** @var NodeElement $version */
-        if ($previous) {
-        assert($version->getValue() < $previous);
-        }
-        $previous = $version->getValue();
+            if ($previous) {
+                assert($version->getValue() < $previous);
+            }
+            $previous = $version->getValue();
         }
     }
 
@@ -88,8 +86,10 @@ class FeatureContext extends SilverStripeContext
      */
     protected function getVersions($modifier = '')
     {
-        $versions = $this
-            ->getSession()
+        // Wait for the table to be visible
+        $this->getSession()->wait(3000, 'window.jQuery(".history-viewer .table").length > 0');
+
+        $versions = $this->getSession()
             ->getPage()
             ->findAll('css', '.history-viewer .table tbody tr' . $modifier);
 
@@ -158,19 +158,21 @@ class FeatureContext extends SilverStripeContext
      */
     protected function getLatestVersion()
     {
-        $page = $this->getSession()->getPage();
-        return $page->find('css', '.history-viewer .table tbody tr');
+        $versions = $this->getVersions();
+        return current($versions);
     }
 
     /**
      * Returns the table row that holds information on the selected version.
      *
      * @param int $versionNumber
+     * @return NodeElement
      */
     protected function getSpecificVersion($versionNumber)
     {
-        $versionColumns = $this->getSession()->getPage()->findAll('css', '.history-viewer tbody tr');
-        foreach ($versionColumns as $version) {
+        $versions = $this->getVersions();
+        foreach ($versions as $version) {
+            /** @var NodeElement $version */
             if (strpos($version->getText(), $versionNumber) !== false) {
                 return $version;
             }
