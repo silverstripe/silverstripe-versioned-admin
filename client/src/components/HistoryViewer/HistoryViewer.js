@@ -74,10 +74,10 @@ class HistoryViewer extends Component {
   getLatestVersion() {
     const { page } = this.props;
 
-    if (page > 1) {
+    // Page numbers are 0 based
+    if (page > 0) {
       return false;
     }
-
     return this.getVersions()
       .reduce((prev, current) => {
         if (prev.Version > current.Version) {
@@ -145,8 +145,8 @@ class HistoryViewer extends Component {
       ':version': currentVersion,
     };
 
-    const version = this.getVersions()
-      .filter((eachVersion) => eachVersion.Version === currentVersion)[0];
+    // eslint-disable-next-line no-shadow
+    const version = this.getVersions().find(version => version.Version === currentVersion);
     const latestVersion = this.getLatestVersion();
 
     const props = {

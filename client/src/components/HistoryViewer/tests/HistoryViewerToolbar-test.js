@@ -7,14 +7,14 @@ import { Component as HistoryViewerToolbar } from '../HistoryViewerToolbar';
 describe('HistoryViewerToolbar', () => {
   let component = null;
   const mockRevertMutation = jest.fn();
-  const mockOnAfterRevert = jest.fn();
+  const mockOnRevert = jest.fn();
   const FormActionComponent = () => <div />;
 
   describe('render()', () => {
-    it('calls revert function then onAfterRevert, and it renders', () => {
+    it('calls revert function then onRevert, and it renders', () => {
       component = ReactTestUtils.renderIntoDocument(
         <HistoryViewerToolbar
-          onAfterRevert={mockOnAfterRevert}
+          onRevert={mockOnRevert}
           actions={{ revertToVersion: mockRevertMutation }}
           FormActionComponent={FormActionComponent}
           recordId={123}

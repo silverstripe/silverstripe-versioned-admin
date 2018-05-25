@@ -16,11 +16,11 @@ class HistoryViewerToolbar extends Component {
    * Triggers a revert action to be performed for the current record's version
    */
   handleRevert() {
-    const { actions: { revertToVersion }, onAfterRevert, recordId, versionId } = this.props;
+    const { actions: { revertToVersion }, onRevert, recordId, versionId } = this.props;
 
     revertToVersion(recordId, versionId, 'DRAFT', 'DRAFT');
 
-    onAfterRevert(versionId);
+    onRevert(versionId);
   }
 
   render() {
@@ -54,7 +54,7 @@ HistoryViewerToolbar.propTypes = {
   }),
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   isLatestVersion: PropTypes.bool,
-  onAfterRevert: PropTypes.func.isRequired,
+  onRevert: PropTypes.func.isRequired,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
 };
@@ -69,7 +69,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onAfterRevert(versionId) {
+    onRevert(versionId) {
       dispatch(addMessage(
         i18n.sprintf(
           i18n._t('HistoryViewerToolbar.REVERTED_MESSAGE', 'Successfully reverted to version %s'),

@@ -63,6 +63,36 @@ describe('HistoryViewer', () => {
     });
   });
 
+  describe('getLatestVersion()', () => {
+    it('returns the latest version from page zero', () => {
+      component = ReactTestUtils.renderIntoDocument(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          versions={versions}
+          recordId={1}
+          limit={100}
+          page={0}
+        />
+      );
+      expect(component.getLatestVersion().Version).toEqual(14);
+    });
+
+    it('returns null if we are not on page zero', () => {
+      component = ReactTestUtils.renderIntoDocument(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          versions={versions}
+          recordId={1}
+          limit={100}
+          page={1}
+        />
+      );
+    expect(component.getLatestVersion()).toEqual(false);
+    });
+  });
+
   describe('render()', () => {
     it('shows a loading state while loading results', () => {
       component = ReactTestUtils.renderIntoDocument(

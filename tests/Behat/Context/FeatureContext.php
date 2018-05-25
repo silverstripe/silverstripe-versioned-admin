@@ -27,7 +27,17 @@ class FeatureContext extends SilverStripeContext
     public function iShouldSeeAListOfVersionsInDescendingOrder()
     {
         $versions = $this->getVersions();
-        $this->clickVersion(current($versions));
+        assertNotEmpty($versions, 'I see a list of versions');
+
+        $previous = null;
+
+        foreach ($versions as $version) {
+            /** @var NodeElement $version */
+        if ($previous) {
+        assert($version->getValue() < $previous);
+        }
+        $previous = $version->getValue();
+        }
     }
 
     /**
@@ -37,8 +47,6 @@ class FeatureContext extends SilverStripeContext
     {
         assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
         $this->getLatestVersion()->click();
-        // Wait for the form builder to load
-        $this->getSession()->wait(3000);
     }
 
     /**
@@ -85,7 +93,6 @@ class FeatureContext extends SilverStripeContext
             ->getPage()
             ->findAll('css', '.history-viewer .table tbody tr' . $modifier);
 
-        assertNotEmpty($versions, 'I see a list of versions');
         return $versions;
     }
 

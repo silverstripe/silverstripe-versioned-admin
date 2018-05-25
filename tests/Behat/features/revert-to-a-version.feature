@@ -12,6 +12,7 @@ Feature: Revert to a version
     And I fill in the "Content" HTML field with "<p>Second version</p>"
     And I press the "Save" button
     And I go to "/admin/pages/history/show/1"
+    And I wait for 3 seconds
     Then I should see a list of versions
 
   Scenario: I can revert to the initial version
@@ -25,5 +26,6 @@ Feature: Revert to a version
 
   Scenario: The latest version cannot be reverted to
     When I click on the first version
+    And I wait for 3 seconds
     Then I should see "Revert to this version"
     And the "Revert to this version" button should be disabled
