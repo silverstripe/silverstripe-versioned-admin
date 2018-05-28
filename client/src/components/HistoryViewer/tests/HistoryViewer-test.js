@@ -64,21 +64,7 @@ describe('HistoryViewer', () => {
   });
 
   describe('getLatestVersion()', () => {
-    it('returns the latest version from page zero', () => {
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          versions={versions}
-          recordId={1}
-          limit={100}
-          page={0}
-        />
-      );
-      expect(component.getLatestVersion().Version).toEqual(14);
-    });
-
-    it('returns null if we are not on page zero', () => {
+    it('returns the latest version from page one', () => {
       component = ReactTestUtils.renderIntoDocument(
         <HistoryViewer
           ListComponent={ListComponent}
@@ -87,6 +73,20 @@ describe('HistoryViewer', () => {
           recordId={1}
           limit={100}
           page={1}
+        />
+      );
+      expect(component.getLatestVersion().Version).toEqual(14);
+    });
+
+    it('returns null if we are not on page one', () => {
+      component = ReactTestUtils.renderIntoDocument(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          versions={versions}
+          recordId={1}
+          limit={100}
+          page={2}
         />
       );
     expect(component.getLatestVersion()).toEqual(false);

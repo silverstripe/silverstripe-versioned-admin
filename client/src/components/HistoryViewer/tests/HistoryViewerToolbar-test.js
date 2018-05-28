@@ -5,16 +5,21 @@ import ReactTestUtils from 'react-addons-test-utils';
 import { Component as HistoryViewerToolbar } from '../HistoryViewerToolbar';
 
 describe('HistoryViewerToolbar', () => {
-  let component = null;
-  const mockRevertMutation = jest.fn();
-  const mockOnRevert = jest.fn();
   const FormActionComponent = () => <div />;
+  let component = null;
+  let mockRevertMutation;
+  let revertHandler;
+
+  beforeEach(() => {
+    mockRevertMutation = jest.fn((recordID, versionID) => Promise.resolve(versionID));
+    revertHandler = jest.fn();
+  });
 
   describe('render()', () => {
-    it('calls revert function then onRevert, and it renders', () => {
+    it('calls revert function then onAfterRevert on success, and it renders', () => {
       component = ReactTestUtils.renderIntoDocument(
         <HistoryViewerToolbar
-          onRevert={mockOnRevert}
+          onAfterRevert={revertHandler}
           actions={{ revertToVersion: mockRevertMutation }}
           FormActionComponent={FormActionComponent}
           recordId={123}
@@ -22,11 +27,14 @@ describe('HistoryViewerToolbar', () => {
         />
       );
 
-      component.handleRevert();
-
-      expect(mockRevertMutation.mock.calls.length).toBe(1);
-      expect(mockRevertMutation.mock.calls[0][0]).toBe(123);
-      expect(mockRevertMutation.mock.calls[0][1]).toBe(234);
+      return component.handleRevert()
+        .then(() => {
+          expect(mockRevertMutation.mock.calls.length).toBe(1);
+          expect(mockRevertMutation.mock.calls[0][0]).toBe(123);
+          expect(mockRevertMutation.mock.calls[0][1]).toBe(234);
+          expect(revertHandler.mock.calls.length).toBe(1);
+          expect(revertHandler.mock.calls[0][0]).toBe(234);
+        });
     });
   });
 });

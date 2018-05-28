@@ -74,8 +74,8 @@ class HistoryViewer extends Component {
   getLatestVersion() {
     const { page } = this.props;
 
-    // Page numbers are 0 based
-    if (page > 0) {
+    // Page numbers are not zero based as they come from GriddlePage numbers
+    if (page > 1) {
       return false;
     }
     return this.getVersions()
