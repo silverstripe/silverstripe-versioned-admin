@@ -6,7 +6,8 @@ Feature: View a list of versions
   Background:
     # Test date cannot be in the past or the version list numbers won't be descending
     Given the current date is "2100-01-01"
-    Given a "page" "Home" with "Content"="Background"
+    And I have a config file "enable-historyviewer.yml"
+    And a "page" "Home" with "Content"="Background"
 
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
@@ -14,6 +15,7 @@ Feature: View a list of versions
 
   Scenario: A list of versions is displayed
     Given I click on "History" in the header tabs
+    And I put a breakpoint
     Then I should see a list of versions
 
   Scenario: List shows the publish state, publish date and the author

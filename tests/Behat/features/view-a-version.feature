@@ -5,6 +5,8 @@ Feature: View a version
 
   Background:
     Given a "page" "Home" with "Content"="Welcome to my website"
+    And I have a config file "enable-historyviewer.yml"
+
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
     And I click on "Home" in the tree

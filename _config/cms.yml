@@ -5,7 +5,8 @@ Only:
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\CMS\Controllers\CMSPageHistoryController:
-    class: SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController
+    factory:
+      SilverStripe\VersionedAdmin\Controllers\HistoryControllerFactory
 
 SilverStripe\CMS\Controllers\CMSMain:
   extensions:

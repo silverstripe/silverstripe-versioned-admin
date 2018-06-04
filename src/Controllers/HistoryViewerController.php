@@ -12,8 +12,12 @@ use SilverStripe\Forms\FormFactory;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Forms\DataObjectVersionFormFactory;
 
+/**
+ * The HistoryViewerController provides AJAX endpoints for React to enable functionality, such as retrieving the form
+ * schema.
+ */
 class HistoryViewerController extends LeftAndMain
-{
+
     private static $url_segment = 'historyviewer';
 
     private static $url_rule = '/$Action';

@@ -19,6 +19,7 @@ class CMSPageHistoryViewerControllerTest extends SapphireTest
         $id = $this->idFromFixture(SiteTree::class, 'page_one');
 
         $controller = CMSPageHistoryViewerController::create();
+
         $controller->setRequest(
             (new HTTPRequest('GET', '/'))
                 ->setSession(new Session([]))

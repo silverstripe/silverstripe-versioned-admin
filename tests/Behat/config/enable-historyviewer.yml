@@ -1,0 +1,6 @@
+---
+Name: testonly-enable-historyviewer
+---
+SilverStripe\VersionedAdmin\Controllers\HistoryControllerFactory:
+  extensions:
+    - SilverStripe\VersionedAdmin\Tests\Behat\Stub\EnableHistoryViewerExtension
