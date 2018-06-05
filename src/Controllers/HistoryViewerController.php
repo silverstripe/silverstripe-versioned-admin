@@ -17,6 +17,7 @@ use SilverStripe\VersionedAdmin\Forms\DataObjectVersionFormFactory;
  * schema.
  */
 class HistoryViewerController extends LeftAndMain
+{
 
     private static $url_segment = 'historyviewer';
 
