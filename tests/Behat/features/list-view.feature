@@ -15,7 +15,6 @@ Feature: View a list of versions
 
   Scenario: A list of versions is displayed
     Given I click on "History" in the header tabs
-    And I put a breakpoint
     Then I should see a list of versions
 
   Scenario: List shows the publish state, publish date and the author
