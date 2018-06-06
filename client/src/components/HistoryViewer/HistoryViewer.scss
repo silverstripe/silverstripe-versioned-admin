@@ -62,6 +62,16 @@
   }
 }
 
+.history-viewer__messages .message-box {
+  &:first-child {
+    margin-top: $panel-padding-y;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
 // Todo: remove this when the CMS is React driven and we don't need this hack
 .history-viewer__preview {
   margin-top: -54px;

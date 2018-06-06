@@ -16,9 +16,7 @@ class FeatureContext extends SilverStripeContext
      */
     public function iShouldSeeAListOfVersions()
     {
-        $page = $this->getSession()->getPage();
-        $versionsTable = $page->find('css', '.history-viewer .table');
-        assertNotNull($versionsTable, 'I should see a list of versions');
+        $this->getVersions();
     }
 
     /**
@@ -26,10 +24,11 @@ class FeatureContext extends SilverStripeContext
      */
     public function iShouldSeeAListOfVersionsInDescendingOrder()
     {
-        $page = $this->getSession()->getPage();
-        $versions = $page->findAll('css', '.history-viewer .table tbody tr td:nth-of-type(1)');
+        $versions = $this->getVersions();
+        assertNotEmpty($versions, 'I see a list of versions');
 
         $previous = null;
+
         foreach ($versions as $version) {
             /** @var NodeElement $version */
             if ($previous) {
@@ -46,9 +45,55 @@ class FeatureContext extends SilverStripeContext
     {
         assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
         $this->getLatestVersion()->click();
+    }
+
+    /**
+     * @When I click on version :versionNo
+     */
+    public function iClickOnVersion($versionNo)
+    {
+        $versions = $this->getVersions(' td:first-child');
+        $desiredVersion = null;
+        foreach ($versions as $version) {
+            /** @var NodeElement $version */
+            if ($version->getText() == $versionNo) {
+                $desiredVersion = $version;
+                break;
+            }
+        }
+        assertNotNull($desiredVersion, 'Desired version ' . $versionNo . ' was not found in the page.');
+        $this->clickVersion($desiredVersion);
+    }
+
+    /**
+     * Click on the given version
+     *
+     * @param NodeElement $version
+     */
+    protected function clickVersion(NodeElement $version)
+    {
+        $version->click();
 
         // Wait for the form builder to load
-        $this->getSession()->wait(3000);
+        $this->getSession()->wait(3000, 'window.jQuery("#Form_versionForm").length > 0');
+    }
+
+    /**
+     * Returns the versions from the history viewer list (table rows)
+     *
+     * @param string $modifier Optional CSS selector modifier
+     * @return NodeElement[]
+     */
+    protected function getVersions($modifier = '')
+    {
+        // Wait for the table to be visible
+        $this->getSession()->wait(3000, 'window.jQuery(".history-viewer .table").length > 0');
+
+        $versions = $this->getSession()
+            ->getPage()
+            ->findAll('css', '.history-viewer .table tbody tr' . $modifier);
+
+        return $versions;
     }
 
     /**
@@ -113,19 +158,21 @@ class FeatureContext extends SilverStripeContext
      */
     protected function getLatestVersion()
     {
-        $page = $this->getSession()->getPage();
-        return $page->find('css', '.history-viewer .table tbody tr');
+        $versions = $this->getVersions();
+        return current($versions);
     }
 
     /**
      * Returns the table row that holds information on the selected version.
      *
      * @param int $versionNumber
+     * @return NodeElement
      */
     protected function getSpecificVersion($versionNumber)
     {
-        $versionColumns = $this->getSession()->getPage()->findAll('css', '.history-viewer tbody tr');
-        foreach ($versionColumns as $version) {
+        $versions = $this->getVersions();
+        foreach ($versions as $version) {
+            /** @var NodeElement $version */
             if (strpos($version->getText(), $versionNumber) !== false) {
                 return $version;
             }

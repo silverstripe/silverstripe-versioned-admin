@@ -24,6 +24,7 @@ Feature: View a list of versions
     Then I should see a "Published 'Home' successfully." notice
     # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
     And I go to "/admin/pages/history/show/1"
+    And I wait for 3 seconds
     Then I should see a list of versions
     And I should see "ADMIN User" in the author column in version 1
     And I should see "Published" in the record column in version 1
@@ -37,6 +38,7 @@ Feature: View a list of versions
     Then I should see a "Saved 'Home' successfully." notice
     # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
     And I go to "/admin/pages/history/show/1"
+    And I wait for 3 seconds
     Then I should see a list of versions
     And I should see "ADMIN User" in the author column in version 1
     And I should see "Saved" in the record column in version 1
@@ -50,4 +52,5 @@ Feature: View a list of versions
     Then I should see a "Published 'Home' successfully." notice
     # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
     And I go to "/admin/pages/history/show/1"
+    And I wait for 3 seconds
     Then I should see a list of versions in descending order

@@ -1,8 +1,8 @@
 /* global document */
 
 import React, { PropTypes, PureComponent } from 'react';
+import classnames from 'classnames';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
-import Preview from 'components/Preview/Preview';
 import { inject } from 'lib/Injector';
 import { versionType } from 'types/versionType';
 
@@ -21,14 +21,14 @@ class HistoryViewerVersionDetail extends PureComponent {
    * @returns {Preview|null}
    */
   getPreview() {
-    const { version, isPreviewable } = this.props;
+    const { isPreviewable, version, PreviewComponent } = this.props;
 
     if (!isPreviewable) {
       return null;
     }
 
     return (
-      <Preview
+      <PreviewComponent
         className="history-viewer__preview flexbox-area-grow" // removes default: fill-height
         itemLinks={{
           preview: {
@@ -61,16 +61,26 @@ class HistoryViewerVersionDetail extends PureComponent {
   }
 
   render() {
-    const { isPreviewable, ListComponent, schemaUrl, version } = this.props;
+    const {
+      isLatestVersion,
+      isPreviewable,
+      ListComponent,
+      recordId,
+      schemaUrl,
+      ToolbarComponent,
+      version
+    } = this.props;
+
+    const containerClasses = isPreviewable ? 'panel panel--padded panel--padded-side panel--scrollable' : '';
 
     return (
       <div className="flexbox-area-grow fill-width">
         <div className="flexbox-area-grow fill-height">
-          <div className={isPreviewable ? 'panel panel--padded panel--padded-side panel--scrollable' : ''}>
+          <div className={classnames(containerClasses, 'flexbox-area-grow')}>
             <ListComponent
               extraClass="history-viewer__table--current"
-              versions={[version]}
               isActive
+              versions={[version]}
             />
 
             <div className="history-viewer__version-detail">
@@ -80,6 +90,13 @@ class HistoryViewerVersionDetail extends PureComponent {
               />
             </div>
           </div>
+
+          <ToolbarComponent
+            identifier="HistoryViewer.VersionDetail.Toolbar"
+            isLatestVersion={isLatestVersion}
+            recordId={recordId}
+            versionId={version.Version}
+          />
         </div>
 
         {this.getPreview()}
@@ -89,20 +106,29 @@ class HistoryViewerVersionDetail extends PureComponent {
 }
 
 HistoryViewerVersionDetail.propTypes = {
+  isLatestVersion: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  schemaUrl: React.PropTypes.string.isRequired,
+  PreviewComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  recordId: PropTypes.number.isRequired,
+  schemaUrl: PropTypes.string.isRequired,
+  ToolbarComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   version: versionType.isRequired,
 };
 
 HistoryViewerVersionDetail.defaultProps = {
+  isLatestVersion: false,
   isPreviewable: false,
 };
 
 export { HistoryViewerVersionDetail as Component };
 
 export default inject(
-  ['HistoryViewerVersionList'],
-  (HistoryViewerVersionList) => ({ ListComponent: HistoryViewerVersionList }),
-  ({ version }) => `VersionedAdmin.HistoryViewer.HistoryViewerVersionDetail.${version.Version}`
+  ['HistoryViewerVersionList', 'HistoryViewerToolbar', 'Preview'],
+  (ListComponent, ToolbarComponent, PreviewComponent) => ({
+    ListComponent,
+    ToolbarComponent,
+    PreviewComponent,
+  }),
+  ({ version }, context) => `${context}.HistoryViewerVersionDetail.${version.Version}`
 )(HistoryViewerVersionDetail);

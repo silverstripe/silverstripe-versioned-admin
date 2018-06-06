@@ -4,12 +4,11 @@ import React, { Component, PropTypes } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Griddle from 'griddle-react';
-import historyStateRouter from 'containers/HistoryViewer/HistoryViewerStateRouter';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
-import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 
 /**
@@ -27,12 +26,26 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Manually handle state changes in the page number, because Griddle doesn't support Redux.
+   * See: https://github.com/GriddleGriddle/Griddle/issues/626
+   *
+   * @param {object} prevProps
+   */
+  componentDidUpdate(prevProps) {
+    const { page: prevPage } = prevProps;
+    const { page: currentPage, actions: { versions } } = this.props;
+
+    if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
+      versions.goToPage(currentPage);
+    }
+  }
+
+  /**
    * Reset the selected version when unmounting HistoryViewer to prevent data leaking
    * between instances
    */
   componentWillUnmount() {
     const { onSelect } = this.props;
-
     if (typeof onSelect === 'function') {
       onSelect(0);
     }
@@ -52,17 +65,38 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Get the latest (highest) version number from the list available. If we are not on page
+   * zero then it's always false, because there are higher versions that we aren't aware of
+   * in this context.
+   *
+   * @returns {object}
+   */
+  getLatestVersion() {
+    const { page } = this.props;
+
+    // Page numbers are not zero based as they come from GriddlePage numbers
+    if (page > 1) {
+      return false;
+    }
+    return this.getVersions()
+      .reduce((prev, current) => {
+        if (prev.Version > current.Version) {
+          return prev;
+        }
+        return current;
+      });
+  }
+
+  /**
    * Handles setting the pagination page number
    *
    * @param {number} page
    */
   handleSetPage(page) {
-    // Note: data from Griddle is zero-indexed
-    const newPage = page + 1;
-    const { onPageChange, actions } = this.props;
-    actions.versions.goToPage(newPage);
-    if (typeof onPageChange === 'function') {
-      onPageChange(newPage);
+    const { onSetPage } = this.props;
+    if (typeof onSetPage === 'function') {
+      // Note: data from Griddle is zero-indexed
+      onSetPage(page + 1);
     }
   }
 
@@ -70,16 +104,18 @@ class HistoryViewer extends Component {
    * Handler for incrementing the set page
    */
   handleNextPage() {
+    const { page } = this.props;
     // Note: data for Griddle needs to be zero-indexed, so don't add 1 to this
-    this.handleSetPage(this.props.page);
+    this.handleSetPage(page);
   }
 
   /**
    * Handler for decrementing the set page
    */
   handlePrevPage() {
+    const { page } = this.props;
     // Note: data for Griddle needs to be zero-indexed
-    const currentPage = this.props.page - 1;
+    const currentPage = page - 1;
     if (currentPage < 1) {
       this.handleSetPage(currentPage);
       return;
@@ -109,10 +145,16 @@ class HistoryViewer extends Component {
       ':version': currentVersion,
     };
 
+    // eslint-disable-next-line no-shadow
+    const version = this.getVersions().find(version => version.Version === currentVersion);
+    const latestVersion = this.getLatestVersion();
+
     const props = {
+      isLatestVersion: latestVersion && latestVersion.Version === version.Version,
       isPreviewable,
+      recordId,
       schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
-      version: this.getVersions().filter((version) => version.Version === currentVersion)[0],
+      version,
     };
 
     return (
@@ -205,6 +247,7 @@ class HistoryViewer extends Component {
 }
 
 HistoryViewer.propTypes = {
+  contextKey: PropTypes.string,
   limit: PropTypes.number,
   ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   offset: PropTypes.number,
@@ -226,9 +269,11 @@ HistoryViewer.propTypes = {
   schemaUrl: PropTypes.string,
   actions: PropTypes.object,
   onSelect: PropTypes.func,
+  onSetPage: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
+  contextKey: '',
   currentVersion: 0,
   isPreviewable: false,
   schemaUrl: '',
@@ -244,8 +289,10 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const { currentVersion } = state.versionedAdmin.historyViewer;
+  const { currentPage, currentVersion } = state.versionedAdmin.historyViewer;
+
   return {
+    page: currentPage,
     currentVersion,
   };
 }
@@ -253,7 +300,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onSelect(id) {
-      dispatch(setCurrentVersion(id));
+      dispatch(showVersion(id));
+    },
+    onSetPage(page) {
+      dispatch(setCurrentPage(page));
     },
   };
 }
@@ -263,13 +313,12 @@ export { HistoryViewer as Component };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   historyViewerConfig,
-  historyStateRouter,
   inject(
     ['HistoryViewerVersionList', 'HistoryViewerVersionDetail'],
     (HistoryViewerVersionList, HistoryViewerVersionDetail) => ({
       ListComponent: HistoryViewerVersionList,
       VersionDetailComponent: HistoryViewerVersionDetail,
     }),
-    () => 'VersionedAdmin.HistoryViewer.HistoryViewer'
+    ({ contextKey }) => `VersionedAdmin.HistoryViewer.${contextKey}`
   )
 )(HistoryViewer);

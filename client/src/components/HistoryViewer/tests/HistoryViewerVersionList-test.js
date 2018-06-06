@@ -5,11 +5,13 @@ import ReactTestUtils from 'react-addons-test-utils';
 import { Component as HistoryViewerVersionList } from '../HistoryViewerVersionList';
 
 describe('HistoryViewerVersionList', () => {
+  const FormAlertComponent = () => <div />;
   const HeadingComponent = () => <tr />;
   const VersionComponent = () => <div />;
 
   const component = ReactTestUtils.renderIntoDocument(
     <HistoryViewerVersionList
+      FormAlertComponent={FormAlertComponent}
       HeadingComponent={HeadingComponent}
       VersionComponent={VersionComponent}
       versions={[]}
