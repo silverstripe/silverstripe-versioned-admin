@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { inject } from 'lib/Injector';
 import { versionType, defaultVersion } from 'types/versionType';
-import { setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { showVersion } from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerVersion extends Component {
   constructor(props) {
@@ -113,7 +113,7 @@ HistoryViewerVersion.defaultProps = {
 function mapDispatchToProps(dispatch) {
   return {
     onSelect(id) {
-      dispatch(setCurrentVersion(id));
+      dispatch(showVersion(id));
     },
   };
 }

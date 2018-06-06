@@ -80,7 +80,6 @@ class HistoryViewerVersionDetail extends PureComponent {
             <ListComponent
               extraClass="history-viewer__table--current"
               isActive
-              shouldClearMessages={false}
               versions={[version]}
             />
 

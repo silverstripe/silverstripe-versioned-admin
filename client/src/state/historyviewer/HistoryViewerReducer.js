@@ -23,10 +23,18 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       };
     }
 
-    case HISTORY_VIEWER.SET_CURRENT_VERSION: {
+    case HISTORY_VIEWER.SHOW_VERSION: {
       return {
         ...state,
         currentVersion: payload.id,
+      };
+    }
+
+    case HISTORY_VIEWER.SHOW_LIST: {
+      return {
+        ...state,
+        currentVersion: 0,
+        currentPage: 0,
       };
     }
 
@@ -41,10 +49,14 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     }
 
     case HISTORY_VIEWER.CLEAR_MESSAGES: {
-      return {
-        ...state,
-        messages: [],
-      };
+      if (state.messages.length) {
+        return {
+          ...state,
+          messages: [],
+        };
+      }
+
+      return state;
     }
 
     default:

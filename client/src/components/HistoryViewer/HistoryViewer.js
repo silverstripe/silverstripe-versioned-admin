@@ -8,7 +8,7 @@ import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
-import { setCurrentPage, setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 
 /**
@@ -300,7 +300,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onSelect(id) {
-      dispatch(setCurrentVersion(id));
+      dispatch(showVersion(id));
     },
     onSetPage(page) {
       dispatch(setCurrentPage(page));

@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
-import { addMessage, setCurrentPage, setCurrentVersion } from 'state/historyviewer/HistoryViewerActions';
+import { addMessage, showList } from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerToolbar extends Component {
   constructor(props) {
@@ -76,10 +76,7 @@ function mapDispatchToProps(dispatch) {
           versionId
         )
       ));
-
-      // Send user back to the list view, on the first page
-      dispatch(setCurrentPage(0));
-      dispatch(setCurrentVersion(0));
+      dispatch(showList());
     },
   };
 }

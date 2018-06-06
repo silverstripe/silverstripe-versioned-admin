@@ -1,7 +1,6 @@
 import React, { PropTypes, PureComponent } from 'react';
 import classnames from 'classnames';
 import i18n from 'i18n';
-import { clearMessages } from 'state/historyviewer/HistoryViewerActions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { inject } from 'lib/Injector';
@@ -9,19 +8,6 @@ import { messageType } from 'types/messageType';
 import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionList extends PureComponent {
-  /**
-   * Clear any messages so they aren't re-rendered again later. This is controlled by a
-   * boolean property, since the list is also used in the detail context where we don't
-   * want to clear messages from.
-   */
-  componentWillUnmount() {
-    const { onClearMessages, shouldClearMessages } = this.props;
-
-    if (shouldClearMessages) {
-      onClearMessages();
-    }
-  }
-
   /**
    * Return a string of HTML class names for the table element
    *
@@ -94,8 +80,6 @@ HistoryViewerVersionList.propTypes = {
   HeadingComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   isActive: PropTypes.bool,
   messages: PropTypes.arrayOf(messageType),
-  onClearMessages: PropTypes.func,
-  shouldClearMessages: PropTypes.bool,
   VersionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.arrayOf(versionType),
 };
@@ -104,7 +88,6 @@ HistoryViewerVersionList.defaultProps = {
   extraClass: 'table-hover',
   isActive: false,
   messages: [],
-  shouldClearMessages: true,
   versions: [],
 };
 
@@ -115,18 +98,10 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    onClearMessages() {
-      dispatch(clearMessages());
-    }
-  };
-}
-
 export { HistoryViewerVersionList as Component };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
   inject(
     ['FormAlert', 'HistoryViewerHeading', 'HistoryViewerVersion'],
     (FormAlert, HistoryViewerHeading, HistoryViewerVersion) => ({

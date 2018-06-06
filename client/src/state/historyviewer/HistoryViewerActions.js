@@ -8,11 +8,26 @@ import uuidv1 from 'uuid/v1';
  * @param {int} id
  * @returns {function}
  */
-export function setCurrentVersion(id) {
+export function showVersion(id) {
   return (dispatch) => {
     dispatch({
-      type: HISTORY_VIEWER.SET_CURRENT_VERSION,
+      type: HISTORY_VIEWER.SHOW_VERSION,
       payload: { id },
+    });
+    dispatch({
+      type: HISTORY_VIEWER.CLEAR_MESSAGES,
+    });
+  };
+}
+
+/**
+ * Return to list view
+ * @returns {function}
+ */
+export function showList() {
+  return (dispatch) => {
+    dispatch({
+      type: HISTORY_VIEWER.SHOW_LIST,
     });
   };
 }
