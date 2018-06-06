@@ -44,5 +44,4 @@ class HistoryControllerFactory implements Factory
         $enabledResults = array_filter($this->extend('updateIsEnabled', $record));
         return (!empty($enabledResults) && max($enabledResults) === true);
     }
-
 }
