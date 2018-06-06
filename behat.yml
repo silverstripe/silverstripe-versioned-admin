@@ -21,7 +21,7 @@ default:
             - %paths.modules.versioned-admin%/tests/behat/files/
         -
           SilverStripe\Framework\Tests\Behaviour\ConfigContext:
-            - %paths.modules.versioned-admin%/tests/behat/files/
+            - %paths.modules.versioned-admin%/tests/Behat/config
   extensions:
     SilverStripe\BehatExtension\MinkExtension:
       default_session: facebook_web_driver

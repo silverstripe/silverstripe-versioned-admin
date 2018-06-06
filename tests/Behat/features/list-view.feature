@@ -6,7 +6,8 @@ Feature: View a list of versions
   Background:
     # Test date cannot be in the past or the version list numbers won't be descending
     Given the current date is "2100-01-01"
-    Given a "page" "Home" with "Content"="Background"
+    And I have a config file "enable-historyviewer.yml"
+    And a "page" "Home" with "Content"="Background"
 
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"

@@ -30,6 +30,10 @@
         "squizlabs/php_codesniffer": "^3",
         "silverstripe/cms": "^4.2@dev"
     },
+    "scripts": {
+        "lint": "phpcs src/ tests/",
+        "lint-clean": "phpcbf src/ tests/"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"
