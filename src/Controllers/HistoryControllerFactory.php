@@ -1,7 +1,4 @@
 <?php
-/**
- *
- */
 
 namespace SilverStripe\VersionedAdmin\Controllers;
 
@@ -11,7 +8,12 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Versioned\Versioned;
 
+/**
+ * The history controller factory decides which CMS history controller to use, out of the default from the
+ * silverstripe/cms module or the history viewer controller from this module, depending on the current page type
+ */
 class HistoryControllerFactory implements Factory
 {
     use Extensible;
@@ -22,7 +24,12 @@ class HistoryControllerFactory implements Factory
         $id = $request->param('ID');
 
         if ($id) {
+            // Ensure we read from the draft stage at this position
+            $originalStage = Versioned::get_stage();
+            Versioned::set_stage(Versioned::DRAFT);
             $page = SiteTree::get()->byID($id);
+            Versioned::set_stage($originalStage);
+
             if ($page && $this->isEnabled($page)) {
                 return Injector::inst()->create(CMSPageHistoryViewerController::class);
             }
