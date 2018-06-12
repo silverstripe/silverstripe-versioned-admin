@@ -20,6 +20,10 @@ class HistoryControllerFactory implements Factory
 
     public function create($service, array $params = array())
     {
+        // If no request is available yet, return the default controller
+        if (!Injector::inst()->has(HTTPRequest::class)) {
+            return new CMSPageHistoryController();
+        }
         $request = Injector::inst()->get(HTTPRequest::class);
         $id = $request->param('ID');
 
