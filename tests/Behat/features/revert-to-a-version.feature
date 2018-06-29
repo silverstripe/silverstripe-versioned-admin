@@ -6,6 +6,8 @@ Feature: Revert to a version
 
   Background:
     Given a "page" "Home" with "Content"="Initial version"
+    And I have a config file "enable-historyviewer.yml"
+
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
     And I click on "Home" in the tree
