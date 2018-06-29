@@ -40,8 +40,8 @@ before_script:
 
   # Install composer
   - composer validate
-  - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql 2.0.x-dev; fi
-  - composer require --no-update silverstripe/recipe-testing:^1 silverstripe/recipe-cms 5.x-dev
+  - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql 3.x-dev; fi
+  - composer require --no-update silverstripe/recipe-testing:^2 silverstripe/recipe-cms 5.x-dev
   - composer install --prefer-source
 
   # Behat bootstrapping
