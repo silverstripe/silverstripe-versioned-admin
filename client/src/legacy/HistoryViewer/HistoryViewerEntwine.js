@@ -44,4 +44,34 @@ jQuery.entwine('ss', ($) => {
       this._super(e);
     }
   });
+
+  // Work arounds for the CMS not rendering entirely in react yet
+  // When loading from e.g. GridFieldDetailForm both button sets
+  // save/publish _and_ the "revert" button were rendered.
+  // Enabling this functionality requires a developer to add
+  // $tab->addExtraClass('tab--history-viewer')
+  // to the tab the HistoryViewerField is rendered into.
+  // c.f. dnadesign/silverstripe-elemental BaseElement::getCMSFields
+  $('.tab.tab--history-viewer[aria-hidden=false]').entwine({
+    onmatch() {
+      $('.toolbar--south.cms-content-actions').hide();
+    },
+    onunmatch() {
+      $('.toolbar--south.cms-content-actions').show();
+    }
+  });
+  $('.tab.tab--history-viewer .history-viewer__version-detail').entwine({
+    onmatch() {
+      this
+        .parent()
+        .css('padding-bottom', '3rem')
+        .next('.toolbar--south')
+        .css({
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0
+        });
+    }
+  });
 });
