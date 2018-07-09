@@ -1,0 +1,30 @@
+---
+Name: archiveadmin
+---
+SilverStripe\Versioned\VersionedGridFieldItemRequest:
+  extensions:
+    - SilverStripe\VersionedAdmin\Extensions\ArchiveRestoreAction
+---
+Name: pagesarchive
+Only:
+  moduleexists: silverstripe/cms
+---
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    - SilverStripe\VersionedAdmin\Extensions\SiteTreeArchiveExtension
+---
+Name: filesarchive
+Only:
+  moduleexists: silverstripe/assets
+---
+SilverStripe\Assets\File:
+  extensions:
+    - SilverStripe\VersionedAdmin\Extensions\FileArchiveExtension
+---
+Name: blocksarchive
+Only:
+  moduleexists: dnadesign/silverstripe-elemental
+---
+DNADesign\Elemental\Models\BaseElement:
+  extensions:
+    - SilverStripe\VersionedAdmin\Extensions\BlockArchiveExtension
