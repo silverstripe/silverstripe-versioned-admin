@@ -4,5 +4,8 @@
 // Thirdparty
 @import "~bootstrap/scss/mixins";
 
+// Legacy
+@import "legacy/ArchiveAdmin";
+
 // Components
 @import "../components/HistoryViewer/HistoryViewer";
