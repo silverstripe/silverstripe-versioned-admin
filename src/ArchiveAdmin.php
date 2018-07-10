@@ -99,7 +99,10 @@ class ArchiveAdmin extends ModelAdmin
         )->setHTMLID('Form_EditForm');
         $form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
         $form->setAttribute('data-pjax-fragment', 'CurrentForm');
-        $form->addExtraClass('ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow ' . $this->BaseCSSClasses());
+        $form->addExtraClass(
+            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow '.
+            $this->BaseCSSClasses()
+        );
         $form->setFormAction(Controller::join_links(
             $this->Link($this->sanitiseClassName($this->modelClass)),
             'EditForm'
