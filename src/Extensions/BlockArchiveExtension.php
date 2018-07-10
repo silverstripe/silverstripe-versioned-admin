@@ -9,6 +9,9 @@ use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\ArchiveViewProvider;
 
+/**
+ * Adds a archive view for Elemental blocks
+ */
 class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
     /**
