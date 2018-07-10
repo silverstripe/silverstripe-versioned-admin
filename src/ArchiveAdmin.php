@@ -26,8 +26,11 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 
 /**
- * Archive admin is a section of the CMS that displays archived records from versioned objects
- * and allows for users to restore them
+ * Archive admin is a section of the CMS that displays archived records
+ * from versioned objects and allows for users to restore them.
+ *
+ * Shows tabs for any implementors of {@link ArchiveViewProvider} and
+ * display any other versioned objects in a dropdown
  */
 class ArchiveAdmin extends ModelAdmin
 {
@@ -64,7 +67,7 @@ class ArchiveAdmin extends ModelAdmin
             $listField = Injectable::singleton($this->modelClass)->getArchiveField();
             $fields->push($listField);
         } else {
-            $modelSelectField = $this->getOtherModelSelector($modelClass);
+            $modelSelectField = $this->getOtherModelSelectorField($modelClass);
             $fields->push($modelSelectField);
 
             // If a valid other model name is passed via a request param
@@ -96,7 +99,7 @@ class ArchiveAdmin extends ModelAdmin
         )->setHTMLID('Form_EditForm');
         $form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
         $form->setAttribute('data-pjax-fragment', 'CurrentForm');
-        $form->addExtraClass('cms-edit-form cms-panel-padded center flexbox-area-grow discardchanges ss-tabset cms-tabset ' . $this->BaseCSSClasses());
+        $form->addExtraClass('ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow ' . $this->BaseCSSClasses());
         $form->setFormAction(Controller::join_links(
             $this->Link($this->sanitiseClassName($this->modelClass)),
             'EditForm'
@@ -144,11 +147,11 @@ class ArchiveAdmin extends ModelAdmin
      * or 'other' and is exposed through the 'Others' tab, returns all
      * by default
      *
-     * @param string $filter 'main' or 'other'
-     * @param boolean $forDisplay
+     * @param string|null $filter Filter by 'main' or 'other'
+     * @param boolean $forDisplay Include titles as values in the returned array
      * @return array
      */
-    public function getVersionedModels($filter = '', $forDisplay = false)
+    public function getVersionedModels($filter = null, $forDisplay = false)
     {
         $archiveProviders = ClassInfo::implementorsOf(ArchiveViewProvider::class);
         $archiveProviderClasses = [];
@@ -204,9 +207,10 @@ class ArchiveAdmin extends ModelAdmin
     /**
      * Creates a dropdown field that displays other archived models
      *
+     * @param string $currentModel The model that is currently selected
      * @return DropdownField
      */
-    public function getOtherModelSelector($modelClass = '')
+    public function getOtherModelSelectorField($currentModel = '')
     {
         $otherVersionedObjects = $this->getVersionedModels('other', true);
 
@@ -214,7 +218,7 @@ class ArchiveAdmin extends ModelAdmin
             'OtherDropdown',
             _t(__CLASS__ . '.SELECT_TYPE', 'Select a content type'),
             $otherVersionedObjects,
-            $modelClass
+            $currentModel
         );
         $modelSelectField->setAttribute(
             'data-others-archive-url',
@@ -225,6 +229,21 @@ class ArchiveAdmin extends ModelAdmin
         $modelSelectField->setHasEmptyDefault(true);
 
         return $modelSelectField;
+    }
+
+    /**
+     * Use 'Archives' as the top title rather than the model title
+     *
+     * @param bool $unlinked
+     * @return ArrayList
+     */
+    public function Breadcrumbs($unlinked = false)
+    {
+        $items = parent::Breadcrumbs($unlinked);
+
+        $items[0]->Title = $this->menu_title();
+
+        return $items;
     }
 
     /**

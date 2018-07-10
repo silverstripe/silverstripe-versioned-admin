@@ -11,6 +11,9 @@ use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\ArchiveViewProvider;
 
+/**
+ * Adds a archive view for Files
+ */
 class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
     /**
