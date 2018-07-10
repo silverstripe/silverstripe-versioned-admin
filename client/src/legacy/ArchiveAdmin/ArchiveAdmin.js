@@ -11,7 +11,7 @@ jQuery.entwine('ss', ($) => {
     }
   });
 
-  $('.other-model-selector select').entwine({
+  $('.ArchiveAdmin .other-model-selector select').entwine({
     /**
      * Reacts to the user changing the content type.
      */

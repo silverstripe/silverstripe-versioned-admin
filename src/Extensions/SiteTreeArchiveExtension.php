@@ -9,6 +9,9 @@ use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\ArchiveViewProvider;
 
+/**
+ * Adds a archive view for Pages
+ */
 class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
     /**

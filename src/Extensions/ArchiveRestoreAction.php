@@ -26,7 +26,6 @@ class ArchiveRestoreAction extends DataExtension
     public function updateItemEditForm(Form $form)
     {
         $record = $this->owner->getRecord();
-        $admin = $this->owner->popupController;
 
         if (!DataObject::has_extension($record, Versioned::class)) {
             throw new ValidationException(
@@ -37,7 +36,7 @@ class ArchiveRestoreAction extends DataExtension
             );
         }
 
-        if ($admin instanceof ArchiveAdmin && $record->canRestoreToDraft()) {
+        if ($this->shouldDisplayAction($record)) {
             $restoreToRoot = RestoreAction::shouldRestoreToRoot($record);
 
             $title = $restoreToRoot
@@ -63,6 +62,18 @@ class ArchiveRestoreAction extends DataExtension
 
             $form->unsetValidator();
         }
+    }
+
+    /**
+     * Returns whether the restore action should be displayed
+     *
+     * @param $record
+     * @return bool
+     */
+    public function shouldDisplayAction($record)
+    {
+        $admin = $this->owner->popupController;
+        return ($admin instanceof ArchiveAdmin && $record->canRestoreToDraft());
     }
 
     /**

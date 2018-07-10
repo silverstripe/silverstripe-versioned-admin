@@ -4,10 +4,11 @@ en:
     RESTORE_FALIURE_PERMISSION: 'Insufficient permission to restore item'
     RESTORE_FALIURE_STATE: 'This item already exists and cannot be restored'
     RESTORE_SUCCESS: 'Successfully restored the {model} "{id}"'
-    COLUMN_TYPE: 'Type'
+    COLUMN_TYPE: Type
     COLUMN_DATEARCHIVED: 'Date Archived'
-    COLUMN_ORIGIN: 'Origin'
+    COLUMN_ORIGIN: Origin
     COLUMN_ARCHIVEDBY: 'Archived By'
     SELECT_TYPE: 'Select a content type'
-    SELECT_EMPTY: 'Select…'
-    TAB_OTHERS: 'Others'
+    SELECT_EMPTY: Select…
+    TAB_OTHERS: Others
+    MENUTITLE: Archives

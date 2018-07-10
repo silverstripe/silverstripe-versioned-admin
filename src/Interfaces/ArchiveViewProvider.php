@@ -6,9 +6,11 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataObject;
 
+/**
+ * A provider of a view for the archive admin
+ */
 interface ArchiveViewProvider
 {
-
     /**
      * Returns the classname of the objects displayed in the field
      *
