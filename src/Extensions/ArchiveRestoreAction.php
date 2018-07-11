@@ -5,10 +5,10 @@ namespace SilverStripe\VersionedAdmin\Extensions;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RestoreAction;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Versioned\RestoreAction;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 

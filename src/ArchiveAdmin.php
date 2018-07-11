@@ -14,11 +14,11 @@ use SilverStripe\Forms\GridField\GridField_ActionMenu;
 use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\GridField\GridFieldRestoreAction;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
 use SilverStripe\VersionedAdmin\ArchiveViewProvider;
@@ -48,6 +48,8 @@ class ArchiveAdmin extends ModelAdmin
 
         Requirements::javascript('silverstripe/versioned-admin:client/dist/js/bundle.js');
         Requirements::css('silverstripe/versioned-admin:client/dist/styles/bundle.css');
+        Requirements::javascript('silverstripe/cms: client/dist/js/bundle.js');
+        Requirements::css('silverstripe/cms: client/dist/styles/bundle.css');
     }
 
     /**
