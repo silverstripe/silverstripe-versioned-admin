@@ -43,13 +43,13 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
                     $breadcrumbs = SiteTree::get_by_id($val)->getBreadcrumbItems(2);
                     $breadcrumbString = '../';
                     foreach ($breadcrumbs as $item) {
-                        $breadcrumbString = $breadcrumbString . $item->Title . '/';
+                        $breadcrumbString = $breadcrumbString . $item->URLSegment . '/';
                     };
                     return $breadcrumbString;
                 }
             },
             'AuthorID' => function ($val, $item) {
-                return Member::get_by_id($val)->Name;
+                return Member::get_by_id($val) ?: Member::get_by_id($val)->Name;
             },
         ]);
 

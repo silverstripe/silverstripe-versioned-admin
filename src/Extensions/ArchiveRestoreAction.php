@@ -22,13 +22,14 @@ class ArchiveRestoreAction extends DataExtension
      *
      * @param Form $form
      * @return mixed
+     * @throws LogicException If the record is not versioned
      */
     public function updateItemEditForm(Form $form)
     {
         $record = $this->owner->getRecord();
 
         if (!DataObject::has_extension($record, Versioned::class)) {
-            throw new ValidationException(
+            throw new LogicException(
                 _t(
                     'SilverStripe\\Admin\\ArchiveAdmin.EXTENSION_FALIURE',
                     'This \'ArchiveRestoreAction\' extension can only be applied to a \'DataObject\' with the \'Versioned\' extension'
@@ -70,14 +71,14 @@ class ArchiveRestoreAction extends DataExtension
      * @param $record
      * @return bool
      */
-    public function shouldDisplayAction($record)
+    protected function shouldDisplayAction($record)
     {
         $admin = $this->owner->popupController;
         return ($admin instanceof ArchiveAdmin && $record->canRestoreToDraft());
     }
 
     /**
-     * Restore the record to it's original place or top level if that's not possible
+     * Restore the record to its original place or top level if that's not possible
      *
      * @param array $data
      * @param Form $form

@@ -44,7 +44,7 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
                 return ucfirst($val ?: $item->i18n_singular_name());
             },
             'AuthorID' => function ($val, $item) {
-                return Member::get_by_id($val)->Name;
+                return Member::get_by_id($val) ?: Member::get_by_id($val)->Name;
             },
         ]);
 

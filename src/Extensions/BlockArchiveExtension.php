@@ -44,7 +44,7 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
                 return $parent ? $parent->Breadcrumbs() : null;
             },
             'AuthorID' => function ($val, $item) {
-                return Member::get_by_id($val)->Name;
+                return Member::get_by_id($val) ?: Member::get_by_id($val)->Name;
             },
         ]);
 

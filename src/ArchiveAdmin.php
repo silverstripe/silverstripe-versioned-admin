@@ -62,13 +62,13 @@ class ArchiveAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $fields = new FieldList();
-        $otherVersionedObjects = $this->getVersionedModels('other');
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
 
         if (ClassInfo::hasMethod(Injectable::singleton($this->modelClass), 'getArchiveField')) {
             $listField = Injectable::singleton($this->modelClass)->getArchiveField();
             $fields->push($listField);
         } else {
+            $otherVersionedObjects = $this->getVersionedModels('other');
             $modelSelectField = $this->getOtherModelSelectorField($modelClass);
             $fields->push($modelSelectField);
 
@@ -79,7 +79,7 @@ class ArchiveAdmin extends ModelAdmin
 
                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
                 $listColumns->setDisplayFields([
-                    'Name' => _t(__CLASS__ . '.COLUMN_NAME', 'Name'),
+                    'Title' => _t(__CLASS__ . '.COLUMN_TITLE', 'Title'),
                     'LastEdited.Ago' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
                     'AuthorID' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
                 ]);
@@ -158,44 +158,55 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getVersionedModels($filter = null, $forDisplay = false)
     {
-        $archiveProviders = ClassInfo::implementorsOf(ArchiveViewProvider::class);
-        $archiveProviderClasses = [];
-        $handledClasses = [];
-
-        // Get the classes that are decalred as handled by ArchiveViewProviders
-        foreach ($archiveProviders as $provider) {
-            $archiveProviderClass = Injectable::singleton($provider)->getArchiveFieldClass();
-            $archiveProviderClasses[] = $archiveProviderClass;
-        }
-
-        // Get any subclasses that would also be handled by those providers
-        foreach ($archiveProviderClasses as $archiveProviderClass) {
-            $handledClasses = array_merge($handledClasses, array_keys(ClassInfo::subclassesFor($archiveProviderClass)));
-        }
-
-        // Get dataobjects that have versioned as an extension
+        // Get dataobjects with staged versioning
         $versionedClasses = array_filter(
             ClassInfo::subclassesFor(DataObject::class),
-            function ($class) use ($filter, $archiveProviderClasses, $handledClasses) {
-                switch ($filter) {
-                    case 'main':
-                        $include = array_search($class, $archiveProviderClasses) !== false;
-                        break;
-
-                    case 'other':
-                        $include = array_search(strtolower($class), $handledClasses) === false;
-                        break;
-
-                    default:
-                        $include = true;
-                        break;
-                }
+            function ($class) {
                 return (
                     DataObject::has_extension($class, Versioned::class) &&
-                    $include
+                    DataObject::singleton($class)->hasStages()
                 );
             }
         );
+
+        // If there is a valid filter passed
+        if ($filter && in_array($filter, ['main', 'other'])) {
+            $archiveProviders = ClassInfo::implementorsOf(ArchiveViewProvider::class);
+            $archiveProviderClasses = [];
+
+            // Get the classes that are decalred as handled by ArchiveViewProviders
+            foreach ($archiveProviders as $provider) {
+                $archiveProviderClass = Injectable::singleton($provider)->getArchiveFieldClass();
+                $archiveProviderClasses[] = $archiveProviderClass;
+            }
+
+            switch ($filter) {
+                case 'other':
+                    $handledClasses = [];
+                    // Get any subclasses that would also be handled by those providers
+                    foreach ($archiveProviderClasses as $archiveProviderClass) {
+                        $handledClasses = array_merge(
+                            $handledClasses,
+                            array_keys(ClassInfo::subclassesFor($archiveProviderClass))
+                        );
+                    }
+                    $versionedClasses = array_filter(
+                        $versionedClasses,
+                        function ($class) use ($handledClasses) {
+                            return !in_array(strtolower($class), $handledClasses);
+                        }
+                    );
+                    break;
+                default: // 'main'
+                    $versionedClasses = array_filter(
+                        $versionedClasses,
+                        function ($class) use ($archiveProviderClasses) {
+                            return in_array($class, $archiveProviderClasses);
+                        }
+                    );
+                    break;
+            }
+        }
 
         // Formats array as [$className => i18n_plural_name]
         if ($forDisplay) {
