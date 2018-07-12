@@ -49,7 +49,8 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
                 }
             },
             'AuthorID' => function ($val, $item) {
-                return Member::get_by_id($val) ?: Member::get_by_id($val)->Name;
+                $member = Member::get_by_id($val);
+                return $member ? $member->Name : null;
             },
         ]);
 
