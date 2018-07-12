@@ -1,0 +1,12 @@
+en:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    EXTENSION_FALIURE: 'The ''ArchiveRestoreAction'' extension can only be applied to a ''DataObject'' with the ''Versioned'' extension'
+    COLUMN_TITLE: Title
+    COLUMN_TYPE: Type
+    COLUMN_DATEARCHIVED: 'Date Archived'
+    COLUMN_ORIGIN: Origin
+    COLUMN_ARCHIVEDBY: 'Archived By'
+    SELECT_TYPE: 'Select a content type'
+    SELECT_EMPTY: Select…
+    TAB_OTHERS: Others
+    MENUTITLE: Archives
