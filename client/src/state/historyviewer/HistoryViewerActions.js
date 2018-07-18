@@ -76,3 +76,48 @@ export function clearMessages() {
     });
   };
 }
+
+/**
+ * Enables or disables the comparison mode
+ *
+ * @param {boolean} enabled
+ * @returns {function}
+ */
+export function setCompareMode(enabled) {
+  return (dispatch) => {
+    dispatch({
+      type: HISTORY_VIEWER.SET_COMPARISON_MODE,
+      payload: { enabled },
+    });
+  };
+}
+
+/**
+ * Sets the comparison mode 'from' a version
+ *
+ * @param {int} version
+ * @returns {function}
+ */
+export function setCompareFrom(version) {
+  return (dispatch) => {
+    dispatch({
+      type: HISTORY_VIEWER.SET_COMPARE_FROM,
+      payload: { version },
+    });
+  };
+}
+
+/**
+ * Sets the comparison mode 'to' a version
+ *
+ * @param {int} version
+ * @returns {function}
+ */
+export function setCompareTo(version) {
+  return (dispatch) => {
+    dispatch({
+      type: HISTORY_VIEWER.SET_COMPARE_TO,
+      payload: { version },
+    });
+  };
+}

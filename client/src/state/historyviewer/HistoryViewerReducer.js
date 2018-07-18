@@ -3,6 +3,9 @@ import HISTORY_VIEWER from './HistoryViewerActionTypes';
 const initialState = {
   currentPage: 1,
   currentVersion: 0,
+  compareFrom: 0,
+  compareTo: 0,
+  compareMode: false,
   loading: false,
   messages: [],
 };
@@ -57,6 +60,27 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       }
 
       return state;
+    }
+
+    case HISTORY_VIEWER.SET_COMPARE_MODE: {
+      return {
+        ...state,
+        compareMode: payload.enabled,
+      };
+    }
+
+    case HISTORY_VIEWER.SET_COMPARE_FROM: {
+      return {
+        ...state,
+        compareFrom: payload.version,
+      };
+    }
+
+    case HISTORY_VIEWER.SET_COMPARE_TO: {
+      return {
+        ...state,
+        compareTo: payload.version,
+      };
     }
 
     default:
