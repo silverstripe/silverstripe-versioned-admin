@@ -41,6 +41,7 @@
   text-align: right;
   width: 1%;
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 // Bring any CMS tabs in the detail view closer to the table above it
@@ -48,6 +49,12 @@
   .nav-tabs {
     margin-top: -$panel-padding-y;
   }
+}
+
+.history-viewer__compare-button {
+  border: 1px solid $white;
+  color: $white;
+  margin-right: 1rem;
 }
 
 .history-viewer__close-button {

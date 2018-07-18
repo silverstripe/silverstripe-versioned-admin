@@ -86,7 +86,7 @@ export function clearMessages() {
 export function setCompareMode(enabled) {
   return (dispatch) => {
     dispatch({
-      type: HISTORY_VIEWER.SET_COMPARISON_MODE,
+      type: HISTORY_VIEWER.SET_COMPARE_MODE,
       payload: { enabled },
     });
   };

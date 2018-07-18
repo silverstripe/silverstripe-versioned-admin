@@ -3,7 +3,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { inject } from 'lib/Injector';
 import { versionType, defaultVersion } from 'types/versionType';
-import { showVersion } from 'state/historyviewer/HistoryViewerActions';
+import { showVersion, setCompareMode, setCompareFrom } from 'state/historyviewer/HistoryViewerActions';
+import i18n from 'i18n';
 
 class HistoryViewerVersion extends Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class HistoryViewerVersion extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleCompare = this.handleCompare.bind(this);
   }
 
   /**
@@ -54,6 +56,11 @@ class HistoryViewerVersion extends Component {
     onSelect(0);
   }
 
+  handleCompare() {
+    const { onCompare, version } = this.props;
+    onCompare(version.Version);
+  }
+
   /**
    * Return a "clear" button to close the version, for example when used in a "detail view"
    * context. This is shown when this version is "active", displayed with a blue background.
@@ -61,13 +68,24 @@ class HistoryViewerVersion extends Component {
    * @returns {FormAction|null}
    */
   renderClearButton() {
-    const { isActive, FormActionComponent } = this.props;
+    const { isActive, showCompareButton, FormActionComponent } = this.props;
     if (!isActive) {
       return null;
     }
 
+    const compareButton = showCompareButton ?
+      (<FormActionComponent
+        onClick={this.handleCompare}
+        title={i18n._t('HistoryViewerVersion.COMPARE', 'Compare')}
+        extraClass="history-viewer__compare-button"
+      >
+        {i18n._t('HistoryViewerVersion.COMPARE', 'Compare')}
+      </FormActionComponent>)
+      : null;
+
     return (
       <td className="history-viewer__actions">
+        {compareButton}
         <FormActionComponent
           onClick={this.handleClose}
           icon="cancel"
@@ -99,7 +117,9 @@ class HistoryViewerVersion extends Component {
 
 HistoryViewerVersion.propTypes = {
   isActive: React.PropTypes.bool,
+  showCompareButton: React.PropTypes.bool,
   onSelect: React.PropTypes.func,
+  onCompare: React.PropTypes.func,
   StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   version: versionType,
@@ -110,10 +130,20 @@ HistoryViewerVersion.defaultProps = {
   version: defaultVersion,
 };
 
+function mapStateToProps(state) {
+  return {
+    showCompareButton: !state.versionedAdmin.historyViewer.compareMode,
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     onSelect(id) {
       dispatch(showVersion(id));
+    },
+    onCompare(id) {
+        dispatch(setCompareMode(true));
+        dispatch(setCompareFrom(id));
     },
   };
 }
@@ -121,7 +151,7 @@ function mapDispatchToProps(dispatch) {
 export { HistoryViewerVersion as Component };
 
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   inject(
     ['HistoryViewerVersionState', 'FormAction'],
     (StateComponent, FormActionComponent) => ({
