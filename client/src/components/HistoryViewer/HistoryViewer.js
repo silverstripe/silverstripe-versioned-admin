@@ -259,12 +259,24 @@ class HistoryViewer extends Component {
       </div>
     );
   }
+  
+  renderCompareMode() {
+    const { compareFrom, compareTo } = this.props;
+    if (compareFrom && compareTo) {
+        return this.renderVersionDetail();
+    }
+    return this.renderVersionList();
+  }
 
   render() {
-    const { loading, currentVersion } = this.props;
+    const { loading, compareMode, currentVersion } = this.props;
 
     if (loading) {
       return <Loading />;
+    }
+    
+    if (compareMode) {
+      return this.renderCompareMode();
     }
 
     if (currentVersion) {
@@ -319,12 +331,14 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const { currentPage, currentVersion, compareMode } = state.versionedAdmin.historyViewer;
+  const { currentPage, currentVersion, compareMode, compareFrom, compareTo } = state.versionedAdmin.historyViewer;
 
   return {
     page: currentPage,
     currentVersion,
     compareMode,
+    compareFrom,
+    compareTo,
   };
 }
 
