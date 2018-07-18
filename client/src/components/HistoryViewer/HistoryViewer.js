@@ -8,7 +8,7 @@ import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
-import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerActions';
+import { setCurrentPage, showVersion, setCompareMode } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 
 /**
@@ -23,6 +23,7 @@ class HistoryViewer extends Component {
     this.handleSetPage = this.handleSetPage.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePrevPage = this.handlePrevPage.bind(this);
+    this.handleDismissCompare = this.handleDismissCompare.bind(this);
   }
 
   /**
@@ -123,6 +124,33 @@ class HistoryViewer extends Component {
     this.handleSetPage(currentPage - 1);
   }
 
+  handleDismissCompare() {
+    this.props.onDismissCompare();
+  }
+
+  /**
+   * Renders a notice indicating the user is in compare mode (iff compare mode is active)
+   *
+   * @returns {string}
+   */
+  renderCompareWarning() {
+    if (!this.props.compareMode) {
+      return '';
+    }
+
+    return (
+      <div className="history-viewer__compare-notice">
+        <span className="notice-message">
+          <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
+          {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
+        </span>
+        <button className="btn dismiss-button font-icon-cancel" onClick={this.handleDismissCompare}>
+          {i18n._t('HistoryViewer.EXIT', 'Exit')}
+        </button>
+      </div>
+    );
+  }
+
   /**
    * Renders the detail form for a selected version
    *
@@ -217,6 +245,7 @@ class HistoryViewer extends Component {
 
     return (
       <div className="history-viewer fill-height">
+        {this.renderCompareWarning()}
         <div className={isPreviewable ? 'panel panel--padded panel--scrollable' : ''}>
           <ListComponent
             onSelect={onSelect}
@@ -253,6 +282,7 @@ HistoryViewer.propTypes = {
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.number,
+  compareMode: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.shape({
@@ -289,11 +319,12 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const { currentPage, currentVersion } = state.versionedAdmin.historyViewer;
+  const { currentPage, currentVersion, compareMode } = state.versionedAdmin.historyViewer;
 
   return {
     page: currentPage,
     currentVersion,
+    compareMode,
   };
 }
 
@@ -304,6 +335,9 @@ function mapDispatchToProps(dispatch) {
     },
     onSetPage(page) {
       dispatch(setCurrentPage(page));
+    },
+    onDismissCompare() {
+      dispatch(setCompareMode(false));
     },
   };
 }
