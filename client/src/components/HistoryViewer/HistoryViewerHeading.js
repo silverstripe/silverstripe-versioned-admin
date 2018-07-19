@@ -23,12 +23,14 @@ class HistoryViewerHeading extends Component {
     }));
   }
 
-  handleCompareModeChange(event) {
-    const checkbox = event.target;
-    if (checkbox.checked) {
-      this.props.onCompareModeSelect();
-    } else {
-      this.props.onCompareModeUnSelect();
+  handleCompareModeChange() {
+
+    const { compareModeSelected, onCompareModeUnselect, onCompareModeSelect } = this.props;
+    if (compareModeSelected) {
+      onCompareModeUnselect();
+    }
+    else {
+      onCompareModeSelect();
     }
   }
 
@@ -48,12 +50,12 @@ class HistoryViewerHeading extends Component {
             className="compare-dropdown"
           >
             <DropdownToggle className="font-icon-sliders" />
-            <DropdownMenu>
+            <DropdownMenu right>
               <div className="form-check">
                 <input
                   id="history-viewer-compare-two"
                   type="checkbox"
-                  className="no-change-track"
+                  className="no-change-track compare-mode__checkbox"
                   checked={compareModeSelected}
                   onChange={this.handleCompareModeChange}
                 />
@@ -71,8 +73,10 @@ class HistoryViewerHeading extends Component {
 }
 
 HistoryViewerHeading.propTypes = {
-  hasActions: PropTypes.bool,
-  compareModeSelected: PropTypes.bool,
+  hasActions: React.PropTypes.bool,
+  compareModeSelected: React.PropTypes.bool,
+  onCompareModeSelect: React.PropTypes.func,
+  onCompareModeUnselect: React.PropTypes.func,
 };
 
 HistoryViewerHeading.defaultProps = {
@@ -90,7 +94,7 @@ function mapDispatchToProps(dispatch) {
     onCompareModeSelect() {
       dispatch(setCompareMode(true));
     },
-    onCompareModeUnSelect() {
+    onCompareModeUnselect() {
       dispatch(setCompareMode(false));
     },
   };
