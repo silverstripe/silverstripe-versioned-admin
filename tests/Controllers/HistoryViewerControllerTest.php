@@ -28,13 +28,14 @@ class HistoryViewerControllerTest extends SapphireTest
         $clientConfig = $controller->getClientConfig();
 
         $this->assertArrayHasKey('versionForm', $clientConfig['form']);
+        $this->assertArrayHasKey('compareForm', $clientConfig['form']);
         $this->assertArrayHasKey('schemaUrl', $clientConfig['form']['versionForm']);
     }
 
     public function testSchema()
     {
         $controllerMock = $this->getMockBuilder(HistoryViewerController::class)
-            ->setMethods(['getVersionForm', 'getSchemaResponse'])
+            ->setMethods(['getVersionForm', 'getCompareForm', 'getSchemaResponse'])
             ->getMock();
 
         $controllerMock->expects($this->once())->method('getVersionForm')->with([
@@ -43,21 +44,41 @@ class HistoryViewerControllerTest extends SapphireTest
             'RecordVersion' => 234,
         ]);
 
-        $controllerMock->expects($this->once())->method('getSchemaResponse')->willReturn(true);
+        $controllerMock->expects($this->once())->method('getCompareForm')->with([
+            'RecordClass' => 'Page',
+            'RecordID' => 123,
+            'RecordVersionFrom' => 234,
+            'RecordVersionTo' => 236,
+        ]);
+
+        $controllerMock->expects($this->exactly(2))->method('getSchemaResponse')->willReturn(true);
 
         $request = $this->getMockBuilder(HTTPRequest::class)
             ->setConstructorArgs(['GET', '/'])
             ->setMethods(['param'])
             ->getMock();
-
         $request->expects($this->once())->method('param')->with('FormName')->willReturn('versionForm');
-
         $request->offsetSet('RecordClass', 'Page');
         $request->offsetSet('RecordID', 123);
         $request->offsetSet('RecordVersion', 234);
 
         $controllerMock->schema($request);
+        /** @var HTTPResponse $result */
+        $result = $controllerMock->getResponse();
+        $this->assertSame('application/json', $result->getHeader('Content-Type'));
 
+        $request = $this->getMockBuilder(HTTPRequest::class)
+            ->setConstructorArgs(['GET', '/'])
+            ->setMethods(['param'])
+            ->getMock();
+        $request->expects($this->once())->method('param')->with('FormName')->willReturn('compareForm');
+        $request->offsetSet('RecordClass', 'Page');
+        $request->offsetSet('RecordID', 123);
+        $request->offsetSet('RecordVersion', 234);
+        $request->offsetSet('RecordVersionFrom', 234);
+        $request->offsetSet('RecordVersionTo', 236);
+
+        $controllerMock->schema($request);
         /** @var HTTPResponse $result */
         $result = $controllerMock->getResponse();
         $this->assertSame('application/json', $result->getHeader('Content-Type'));
@@ -137,6 +158,16 @@ class HistoryViewerControllerTest extends SapphireTest
     {
         $controller = new HistoryViewerController();
         $controller->versionForm(null);
+    }
+
+    /**
+     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
+     * @expectedExceptionCode 400
+     */
+    public function testCompareFormThrowsExceptionWithoutRequest()
+    {
+        $controller = new HistoryViewerController();
+        $controller->compareForm(null);
     }
 
     /**
