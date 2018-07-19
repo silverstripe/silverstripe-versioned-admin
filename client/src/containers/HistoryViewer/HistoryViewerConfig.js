@@ -9,10 +9,31 @@ const historyViewerConfig = (HistoryViewer) => {
       return Config.getSection(sectionKey);
     }
 
+    getSchemaUrlDetails() {
+      const { compareMode } = this.props;
+      if (compareMode) {
+        return {
+          formName: 'compareForm',
+          queryParts: [
+            'RecordVersionFrom=:from',
+            'RecordVersionTo=:to',
+          ],
+        };
+      }
+      return {
+        formName: 'versionForm',
+        queryParts: [
+          'RecordVersion=:version',
+        ],
+      };
+    }
+
     getSchemaUrl() {
-      const schemaUrlBase = `${this.getConfig().form.versionForm.schemaUrl}/:id`;
-      const schemaQueryString = 'RecordClass=:class&RecordID=:id&RecordVersion=:version';
-      return `${schemaUrlBase}?${schemaQueryString}`;
+      const config = this.getConfig();
+      const { formName, queryParts } = this.getSchemaUrlDetails();
+      const schemaUrlBase = `${config.form[formName].schemaUrl}/:id`;
+      const schemaUrlQuery = queryParts.concat('RecordClass=:class&RecordID=:id').join('&');
+      return `${schemaUrlBase}?${schemaUrlQuery}`;
     }
 
     render() {

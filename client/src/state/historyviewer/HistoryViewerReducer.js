@@ -98,10 +98,10 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       let { compareFrom, compareTo } = state;
       compareTo = payload.version;
 
-      // Comparisons are always oldest to newest version, version IDs are always positive
-      // and in creation order.
-      // Different from a normal `diff` which is always what it takes turn FROM into TO
-      if (compareFrom && compareTo < compareFrom) {
+      // A normal `diff` always shows what it takes turn FROM into TO
+      // Here, comparisons are always FROM oldest TO newest version
+      // Version IDs are always positive & in creation order.
+      if (compareTo && compareFrom && compareTo < compareFrom) {
         compareFrom = compareTo;
         compareTo = state.compareFrom;
       }

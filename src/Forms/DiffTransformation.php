@@ -96,9 +96,9 @@ class DiffTransformation extends FormTransformation
         }
 
         // Do not "compare apples with oranges"
-        if (!isset($data[$name])) {
-            throw new LogicException("No comparison information set for field \"$name\"");
-        }
+#        if (!isset($data[$name])) {
+#            throw new LogicException("No comparison information set for field \"$name\"");
+#        }
 
         try {
             // First check if a field implements performDiffTransformation()

@@ -23,21 +23,18 @@ class HistoryViewerHeading extends Component {
     }));
   }
 
-  handleCompareModeChange() {
-
-    const { compareModeSelected, onCompareModeUnselect, onCompareModeSelect } = this.props;
-    if (compareModeSelected) {
-      onCompareModeUnselect();
-    }
-    else {
-      onCompareModeSelect();
+  handleCompareModeChange(event) {
+    const checkbox = event.target;
+    if (checkbox.checked) {
+      this.props.onCompareModeSelect();
+    } else {
+      this.props.onCompareModeUnSelect();
     }
   }
 
   render() {
     const { compareModeSelected, hasActions } = this.props;
     const { dropdownOpen } = this.state;
-
     return (
       <tr className="history-viewer__heading">
         <th>#</th>

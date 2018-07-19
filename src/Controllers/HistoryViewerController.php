@@ -13,6 +13,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormFactory;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Forms\DataObjectVersionFormFactory;
+use SilverStripe\VersionedAdmin\Forms\DiffTransformation;
 
 /**
  * The HistoryViewerController provides AJAX endpoints for React to enable functionality, such as retrieving the form
@@ -128,18 +129,8 @@ class HistoryViewerController extends LeftAndMain
         }
 
         // Load record and perform a canView check
-        $record = Versioned::get_version($recordClass, $recordId, $recordVersion);
+        $record = $this->getRecordVersion($recordClass, $recordId, $recordVersion);
         if (!$record) {
-            $this->jsonError(404);
-            return null;
-        }
-
-        if (!$record->canView()) {
-            $this->jsonError(403, _t(
-                __CLASS__.'.ErrorItemViewPermissionDenied',
-                "You don't have the necessary permissions to view {ObjectTitle}",
-                ['ObjectTitle' => $record->i18n_singular_name()]
-            ));
             return null;
         }
 
@@ -155,6 +146,35 @@ class HistoryViewerController extends LeftAndMain
 
         return $form;
     }
+    
+    /**
+     * Fetches record version and checks canView permission for result
+     *
+     * @param string $recordClass
+     * @param int $recordId
+     * @param int $recordVersion
+     * @return DataObject|null
+     */
+    protected function getRecordVersion($recordClass, $recordId, $recordVersion)
+    {
+        $record = Versioned::get_version($recordClass, $recordId, $recordVersion);
+        
+        if (!$record) {
+            $this->jsonError(404);
+            return null;
+        }
+        
+        if (!$record->canView()) {
+            $this->jsonError(403, _t(
+                __CLASS__.'.ErrorItemViewPermissionDenied',
+                "You don't have the necessary permissions to view {ObjectTitle}",
+                ['ObjectTitle' => $record->i18n_singular_name()]
+            ));
+            return null;
+        }
+        
+        return $record;
+    }
 
     /**
      * Returns a {@link Form} containing the comparison {@link DiffTransformation} view for a record
@@ -165,8 +185,54 @@ class HistoryViewerController extends LeftAndMain
      */
     public function getCompareForm(array $context)
     {
-        // @todo write the code
-        return new Form($this, 'CompareForm', FieldList::create(), FieldList::create());
+        // Check context
+        if (!isset(
+            $context['RecordClass'],
+            $context['RecordID'],
+            $context['RecordVersionFrom'],
+            $context['RecordVersionTo']
+        )) {
+            throw new InvalidArgumentException('Missing RecordID / RecordVersion / RecordClass for this form');
+        }
+
+        $recordClass = $context['RecordClass'];
+        $recordId = $context['RecordID'];
+        $recordVersionFrom = $context['RecordVersionFrom'];
+        $recordVersionTo = $context['RecordVersionTo'];
+
+        if (!$recordClass || !$recordId || !$recordVersionFrom || !$recordVersionTo) {
+            $this->jsonError(404);
+            return null;
+        }
+
+        // Load record and perform a canView check
+        $recordFrom = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
+        $recordTo = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
+        if (!$recordFrom || !$recordTo) {
+            return null;
+        }
+
+        $effectiveContext = array_merge($context, ['Record' => $recordFrom]);
+        /** @var FormFactory $scaffolder */
+        $scaffolder = Injector::inst()->get(DataObjectVersionFormFactory::class);
+        $form = $scaffolder->getForm($this, 'compareForm', $effectiveContext);
+        $comparisonTransformation = DiffTransformation::create($recordTo);
+        $form->transform($comparisonTransformation);
+
+        // Set form handler with class name, ID and VersionID
+        $form->setRequestHandler(
+            LeftAndMainFormRequestHandler::create(
+                $form,
+                [
+                    $recordClass,
+                    $recordId,
+                    $recordVersionFrom,
+                    $recordVersionTo
+                ]
+            )
+        );
+
+        return $form;
     }
 
     public function versionForm(HTTPRequest $request = null)
@@ -207,7 +273,7 @@ class HistoryViewerController extends LeftAndMain
             return null;
         }
 
-        return $this->getVersionForm([
+        return $this->getCompareForm([
             'RecordClass' => $recordClass,
             'RecordID' => $recordId,
             'RecordVersionFrom' => $recordVersionFrom,
