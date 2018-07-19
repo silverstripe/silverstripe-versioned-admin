@@ -65,13 +65,13 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     case HISTORY_VIEWER.SET_COMPARE_MODE: {
       const updateState = {
         compareMode: payload.enabled,
-      }
-      
+      };
+
       if (!updateState.compareMode) {
           updateState.compareFrom = 0;
           updateState.compareTo = 0;
       }
-      
+
       return {
         ...state,
         ...updateState,
@@ -81,12 +81,12 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     case HISTORY_VIEWER.SET_COMPARE_FROM: {
       let { compareFrom, compareTo } = state;
       compareFrom = payload.version;
-      
+
       if (!payload.version) {
         compareFrom = compareTo;
         compareTo = 0;
       }
-      
+
       return {
         ...state,
         compareFrom,
@@ -97,14 +97,15 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     case HISTORY_VIEWER.SET_COMPARE_TO: {
       let { compareFrom, compareTo } = state;
       compareTo = payload.version;
-      
-      // Comparisons are always oldest to newest version, version IDs are always positive and in creation order.
+
+      // Comparisons are always oldest to newest version, version IDs are always positive
+      // and in creation order.
       // Different from a normal `diff` which is always what it takes turn FROM into TO
       if (compareFrom && compareTo < compareFrom) {
         compareFrom = compareTo;
         compareTo = state.compareFrom;
       }
-      
+
       return {
         ...state,
         compareFrom,

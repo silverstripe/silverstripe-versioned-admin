@@ -259,7 +259,7 @@ class HistoryViewer extends Component {
       </div>
     );
   }
-  
+
   renderCompareMode() {
     const { compareFrom, compareTo } = this.props;
     if (compareFrom && compareTo) {
@@ -274,7 +274,7 @@ class HistoryViewer extends Component {
     if (loading) {
       return <Loading />;
     }
-    
+
     if (compareMode) {
       return this.renderCompareMode();
     }
@@ -331,7 +331,13 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const { currentPage, currentVersion, compareMode, compareFrom, compareTo } = state.versionedAdmin.historyViewer;
+  const {
+    currentPage,
+    currentVersion,
+    compareMode,
+    compareFrom,
+    compareTo
+  } = state.versionedAdmin.historyViewer;
 
   return {
     page: currentPage,

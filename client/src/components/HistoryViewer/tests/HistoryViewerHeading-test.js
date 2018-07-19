@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import HistoryViewerHeading from '../HistoryViewerHeading';
+import { Component as HistoryViewerHeading } from '../HistoryViewerHeading';
 
 class HeadingWrapper extends React.PureComponent {
   render() {

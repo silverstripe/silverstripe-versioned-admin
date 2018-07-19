@@ -1,9 +1,9 @@
 import i18n from 'i18n';
 import React, { PropTypes, Component } from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { setCompareMode } from 'state/historyviewer/HistoryViewerActions';
-import { compose } from "redux";
-import { connect } from "react-redux";
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 class HistoryViewerHeading extends Component {
   constructor(props) {
@@ -46,7 +46,6 @@ class HistoryViewerHeading extends Component {
             isOpen={dropdownOpen}
             toggle={this.toggle}
             className="compare-dropdown"
-            right
           >
             <DropdownToggle className="font-icon-sliders" />
             <DropdownMenu>
@@ -54,17 +53,18 @@ class HistoryViewerHeading extends Component {
                 <input
                   id="history-viewer-compare-two"
                   type="checkbox"
+                  className="no-change-track"
                   checked={compareModeSelected}
                   onChange={this.handleCompareModeChange}
                 />
                 <label className="form-check-label" htmlFor="history-viewer-compare-two">
-                  {i18n._t('HistoryViewerHeading.COMPARE_VERSIONS', 'Compare 2 versions')}
+                  {i18n._t('HistoryViewerHeading.COMPARE_VERSIONS', 'Compare two versions')}
                 </label>
               </div>
             </DropdownMenu>
           </Dropdown>
         </th>
-        {hasActions ? <th/> : null}
+        {hasActions ? <th /> : null}
       </tr>
     );
   }
@@ -92,8 +92,8 @@ function mapDispatchToProps(dispatch) {
     },
     onCompareModeUnSelect() {
       dispatch(setCompareMode(false));
-    }
-  }
+    },
+  };
 }
 
 export { HistoryViewerHeading as Component };

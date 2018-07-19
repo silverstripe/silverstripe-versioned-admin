@@ -56,42 +56,74 @@ class HistoryViewerVersion extends Component {
     onSelect(0);
   }
 
+  /**
+   * When the compare mode button is selected, pass the selected version to the Redux store
+   */
   handleCompare() {
     const { onCompare, version } = this.props;
     onCompare(version.Version);
   }
 
   /**
-   * Return a "clear" button to close the version, for example when used in a "detail view"
-   * context. This is shown when this version is "active", displayed with a blue background.
+   * Renders a "compare mode" button which will allow the user to start selecting versions to
+   * compare differences between. This is usually rendered in the "more actions" menu.
    *
    * @returns {FormAction|null}
    */
-  renderClearButton() {
+  renderCompareButton() {
     const { isActive, showCompareButton, FormActionComponent } = this.props;
-    if (!isActive) {
+
+    if (!isActive || !showCompareButton) {
       return null;
     }
 
-    const compareButton = showCompareButton ?
-      (<FormActionComponent
+    return (
+      <FormActionComponent
         onClick={this.handleCompare}
         title={i18n._t('HistoryViewerVersion.COMPARE', 'Compare')}
         extraClass="history-viewer__compare-button"
       >
         {i18n._t('HistoryViewerVersion.COMPARE', 'Compare')}
-      </FormActionComponent>)
-      : null;
+      </FormActionComponent>
+    );
+  }
+
+  /**
+   * Renders a "clear" button to close the version, for example when used in a "detail view"
+   * context. This is shown when this version is "active", displayed with a blue background.
+   *
+   * @returns {FormAction|null}
+   */
+  renderClearButton() {
+    const { FormActionComponent } = this.props;
+
+    return (
+      <FormActionComponent
+        onClick={this.handleClose}
+        icon="cancel"
+        title={null}
+        extraClass="history-viewer__close-button"
+      />
+    );
+  }
+
+  /**
+   * Renders the "actions" menu for the detail view. This menu may contain a compare mode toggle
+   * and/or a "clear" button to clear the current selected version
+   *
+   * @returns {DOMElement}
+   */
+  renderActions() {
+    const { isActive } = this.props;
+
+    if (!isActive) {
+      return null;
+    }
 
     return (
       <td className="history-viewer__actions">
-        {compareButton}
-        <FormActionComponent
-          onClick={this.handleClose}
-          icon="cancel"
-          title={null}
-          extraClass="history-viewer__close-button"
-        />
+        {this.renderCompareButton()}
+        {this.renderClearButton()}
       </td>
     );
   }
@@ -109,7 +141,7 @@ class HistoryViewerVersion extends Component {
           />
         </td>
         <td>{this.getAuthor()}</td>
-        { this.renderClearButton() }
+        {this.renderActions()}
       </tr>
     );
   }
@@ -127,6 +159,7 @@ HistoryViewerVersion.propTypes = {
 
 HistoryViewerVersion.defaultProps = {
   isActive: false,
+  showCompareButton: true,
   version: defaultVersion,
 };
 
