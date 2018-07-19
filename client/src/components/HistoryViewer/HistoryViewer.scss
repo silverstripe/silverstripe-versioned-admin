@@ -90,13 +90,17 @@
 }
 
 .history-viewer__compare-notice {
-  margin: 0 auto;
+  align-self: center;
   background-color: lighten($color-notice, 13%);
   color: darken($color-notice, 35%);
   border: 1px solid $color-notice;
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
+
+  &.fixed {
+    position: absolute;
+  }
 
   .notice-message {
     padding: .4rem 1rem .4rem 1.5rem;

@@ -68,7 +68,8 @@ class HistoryViewerVersionDetail extends PureComponent {
       recordId,
       schemaUrl,
       ToolbarComponent,
-      version
+      CompareWarningComponent,
+      version,
     } = this.props;
 
     const containerClasses = isPreviewable ? 'panel panel--padded panel--padded-side panel--scrollable' : '';
@@ -97,6 +98,8 @@ class HistoryViewerVersionDetail extends PureComponent {
             recordId={recordId}
             versionId={version.Version}
           />
+
+          <CompareWarningComponent fixed />
         </div>
 
         {this.getPreview()}
@@ -124,11 +127,12 @@ HistoryViewerVersionDetail.defaultProps = {
 export { HistoryViewerVersionDetail as Component };
 
 export default inject(
-  ['HistoryViewerVersionList', 'HistoryViewerToolbar', 'Preview'],
-  (ListComponent, ToolbarComponent, PreviewComponent) => ({
+  ['HistoryViewerVersionList', 'HistoryViewerToolbar', 'Preview', 'HistoryViewerCompareWarning'],
+  (ListComponent, ToolbarComponent, PreviewComponent, CompareWarningComponent) => ({
     ListComponent,
     ToolbarComponent,
     PreviewComponent,
+    CompareWarningComponent,
   }),
   ({ version }, context) => `${context}.HistoryViewerVersionDetail.${version.Version}`
 )(HistoryViewerVersionDetail);
