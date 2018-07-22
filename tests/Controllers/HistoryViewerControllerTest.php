@@ -86,7 +86,7 @@ class HistoryViewerControllerTest extends SapphireTest
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Missing RecordID / RecordVersion / RecordClass for this form
+     * @expectedExceptionMessageRegExp /Missing required field/
      */
     public function testGetVersionFormThrowsExceptionWhenArgsAreMissing()
     {
@@ -95,8 +95,8 @@ class HistoryViewerControllerTest extends SapphireTest
     }
 
     /**
-     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
-     * @expectedExceptionCode 404
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Missing required field/
      */
     public function testGetVersionFormThrowsExceptionWhenArgsAreFalsy()
     {
@@ -171,8 +171,8 @@ class HistoryViewerControllerTest extends SapphireTest
     }
 
     /**
-     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
-     * @expectedExceptionCode 404
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Missing required field/
      */
     public function testVersionFormThrowsExceptionWhenArgsAreFalsy()
     {
