@@ -39,14 +39,12 @@ class HistoryViewerHeading extends Component {
       <tr className="history-viewer__heading">
         <th>#</th>
         <th>{i18n._t('HistoryViewer.Record', 'Record')}</th>
-        <th>
-          <span className="author-span">{i18n._t('HistoryViewer.Author', 'Author')}</span>
-        </th>
-        <th className="author-compare-toggle__container">
+        <th>{i18n._t('HistoryViewer.Author', 'Author')}</th>
+        <th className="history-viewer-heading__toggle">
           <Dropdown
             isOpen={dropdownOpen}
             toggle={this.toggle}
-            className="compare-dropdown"
+            className="history-viewer-heading__toggle-dropdown"
           >
             <DropdownToggle className="font-icon-sliders" />
             <DropdownMenu right>
@@ -54,7 +52,7 @@ class HistoryViewerHeading extends Component {
                 <input
                   id="history-viewer-compare-two"
                   type="checkbox"
-                  className="no-change-track compare-mode__checkbox"
+                  className="no-change-track history-viewer-heading__compare-mode-checkbox"
                   checked={compareModeSelected}
                   onChange={this.handleCompareModeChange}
                 />

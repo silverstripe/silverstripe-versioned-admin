@@ -24,7 +24,7 @@ describe('HistoryViewerHeading', () => {
       );
 
       it('should dispatch an action to disable the compare mode', () => {
-        wrapper.find('.compare-mode__checkbox').at(0).simulate('change');
+        wrapper.find('.history-viewer-heading__compare-mode-checkbox').at(0).simulate('change');
         expect(mockOnCompareModeUnselect).toHaveBeenCalled();
       });
     });
@@ -39,7 +39,7 @@ describe('HistoryViewerHeading', () => {
       );
 
       it('should dispatch an action to enable the compare mode', () => {
-        wrapper.find('.compare-mode__checkbox').at(0).simulate('change');
+        wrapper.find('.history-viewer-heading__compare-mode-checkbox').at(0).simulate('change');
         expect(mockOnCompareModeSelect).toHaveBeenCalled();
       });
     });

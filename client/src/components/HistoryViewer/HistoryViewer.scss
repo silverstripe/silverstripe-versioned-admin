@@ -12,6 +12,11 @@
   cursor: pointer;
 }
 
+// In detail views, pulls the content (and content tabs) closer to the selected version table
+.history-viewer__table--current {
+  margin-bottom: $panel-padding-y / 2;
+}
+
 // Used in conjunction with .panel--padded, removes top and bottom padding
 .panel--padded-side {
   padding-bottom: 0;
@@ -36,12 +41,6 @@
   .text-muted {
     color: $white !important;
   }
-}
-
-.history-viewer__table--compare {
-  margin-left: 0;
-  margin-right: 0;
-  min-width: 100%;
 }
 
 .history-viewer__version-detail--compare {
@@ -133,37 +132,32 @@
   }
 }
 
-.history-viewer__heading {
-  .author-compare-toggle__container {
-    display: flex;
+// Don't let the actions column take up an equal portion of the calculated table width,
+// and ensure that its height doesn't push out the heading
+.table th.history-viewer-heading__toggle {
+  width: 1%;
+  padding-top: 0;
+  padding-bottom: 0;
+  vertical-align: middle;
+  text-align: right;
+}
 
-    .author-span {
-      align-self: flex-end;
-    }
+// Labels are capitalised by default
+.history-viewer-heading__toggle-dropdown .form-check-label {
+  text-transform: none;
+}
 
-    .compare-dropdown {
-      margin-left: auto;
+.history-viewer-heading__toggle-dropdown {
+  .btn[class*=font-icon-]:before {
+    margin-right: 0;
+  }
 
-      button {
-        &::before {
-          margin-right: 0;
-        }
-      }
+  &.show .dropdown-menu {
+    min-width: 14rem;
+  }
 
-      &.show {
-        .dropdown-menu {
-          min-width: 14rem;
-        }
-      }
-
-      .form-check {
-        margin-top: .5rem;
-      }
-    }
-
-    .form-check-label {
-      text-transform: none;
-    }
+  .form-check {
+    margin-top: .5rem;
   }
 }
 
