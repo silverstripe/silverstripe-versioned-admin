@@ -8,11 +8,11 @@ import { versionType } from 'types/versionType';
 
 class HistoryViewerVersionDetail extends PureComponent {
   componentWillMount() {
-    this.toggleToolbarClass();
+    this.toggleToolbarClass(true);
   }
 
   componentWillUnmount() {
-    this.toggleToolbarClass();
+    this.toggleToolbarClass(false);
   }
 
   /**
@@ -52,15 +52,20 @@ class HistoryViewerVersionDetail extends PureComponent {
   /**
    * Until the CMS is fully React driven, we must control certain aspects of the CMS DOM with
    * manual CSS tweaks. @todo remove this when React drives the CMS.
+   *
+   * @param {boolean} add
    */
-  toggleToolbarClass() {
+  toggleToolbarClass(add = true) {
     const selector = document
       .querySelector('.CMSPageHistoryViewerController div:not(.cms-content-tools) .cms-content-header');
+    const className = 'history-viewer__toolbar--condensed';
 
     if (selector && this.isPreviewable()) {
-      selector
-        .classList
-        .toggle('history-viewer__toolbar--condensed');
+      if (add) {
+        selector.classList.add(className);
+      } else {
+        selector.classList.remove(className);
+      }
     }
   }
 
@@ -99,9 +104,11 @@ class HistoryViewerVersionDetail extends PureComponent {
    */
   renderToolbar() {
     const { ToolbarComponent, isLatestVersion, recordId, version } = this.props;
+
     if (this.isCompareMode()) {
       return null;
     }
+
     return (
       <ToolbarComponent
         identifier="HistoryViewer.VersionDetail.Toolbar"

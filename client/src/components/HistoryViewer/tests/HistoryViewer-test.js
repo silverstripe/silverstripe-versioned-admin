@@ -1,10 +1,11 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* global jest, describe, it, expect */
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import { Component as HistoryViewer } from '../HistoryViewer';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from "enzyme-adapter-react-15.4/build/index";
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-15.4/build/index';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -12,6 +13,7 @@ describe('HistoryViewer', () => {
   let component = null;
   const ListComponent = () => <table />;
   const VersionDetailComponent = () => <div />;
+  const CompareWarningComponent = () => <div />;
 
   const versions = {
     Versions: {
@@ -57,6 +59,7 @@ describe('HistoryViewer', () => {
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
           versions={versions}
           recordId={1}
           limit={100}
@@ -73,6 +76,7 @@ describe('HistoryViewer', () => {
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
           versions={versions}
           recordId={1}
           limit={100}
@@ -87,6 +91,7 @@ describe('HistoryViewer', () => {
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
           versions={versions}
           recordId={1}
           limit={100}
@@ -103,6 +108,7 @@ describe('HistoryViewer', () => {
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
           versions={versions}
           recordId={1}
           limit={100}

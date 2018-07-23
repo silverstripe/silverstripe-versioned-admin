@@ -158,7 +158,9 @@ class HistoryViewer extends Component {
 
     const filterVersions = (wantedID) => (potential => potential.Version === wantedID);
 
-    const version = this.getVersions().find(filterVersions(currentVersion));
+    const version = this.getVersions().find(
+      filterVersions(compareMode ? compareFrom : currentVersion)
+    );
     const latestVersion = this.getLatestVersion();
     const compare = compareMode ? {
       versionFrom: this.getVersions().find(filterVersions(compareFrom)),

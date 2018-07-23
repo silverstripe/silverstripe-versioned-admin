@@ -8,6 +8,10 @@
   }
 }
 
+.history-viewer__table:not(.history-viewer__table--current) tbody tr:hover {
+  cursor: pointer;
+}
+
 // Used in conjunction with .panel--padded, removes top and bottom padding
 .panel--padded-side {
   padding-bottom: 0;

@@ -1,7 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* global jest, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
 import { Component as HistoryViewerHeading } from '../HistoryViewerHeading';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-15.4/build/index';
@@ -45,32 +45,6 @@ describe('HistoryViewerHeading', () => {
         expect(mockOnCompareModeSelect).toHaveBeenCalled();
       });
     });
-  });
-
-
-  class HeadingWrapper extends React.PureComponent {
-    render() {
-      return (
-        <table>
-          <thead>
-            <HistoryViewerHeading {...this.props} />
-          </thead>
-        </table>
-      );
-    }
-  }
-
-  it('has four columns when hasActions is true', () => {
-    const component = ReactTestUtils.renderIntoDocument(
-      <HeadingWrapper hasActions />
-    );
-
-    const result = ReactTestUtils.scryRenderedDOMComponentsWithTag(
-      component,
-      'th'
-    );
-
-    expect(result.length).toBe(4);
   });
 });
 
