@@ -106,6 +106,21 @@ describe('HistoryViewerReducer', () => {
 
       expect(result.compare).toBe(false);
     });
+
+    it('leaves the existing value for compareFrom when enabling', () => {
+      state = {
+        ...state,
+        compare: { ...state.compare, versionFrom: 1 },
+      };
+
+      const result = historyViewerReducer(state, {
+        type: 'HISTORY_VIEWER.SET_COMPARE_MODE',
+        payload: { enabled: true },
+      });
+
+      expect(result.compare.versionFrom).toBe(1);
+      expect(result.compare.versionTo).toBe(0);
+    });
   });
 
   describe('SET_COMPARE_FROM', () => {

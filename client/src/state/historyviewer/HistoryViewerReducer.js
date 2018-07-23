@@ -68,6 +68,7 @@ export default function historyViewerReducer(state = initialState, { type, paylo
         compare = {
           versionFrom: 0,
           versionTo: 0,
+          ...state.compare,
         };
       }
 
