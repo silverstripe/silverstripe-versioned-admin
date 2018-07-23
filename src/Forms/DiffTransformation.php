@@ -110,7 +110,7 @@ class DiffTransformation extends FormTransformation
                 Diff::compareHTML($field->Value(), isset($this->data[$name]) ? $this->data[$name] : '')
             );
 
-            $diffField->addExtraClass($field->extraClass());
+            $diffField->addExtraClass($field->extraClass() . " history-viewer__version-detail-diff");
             $diffField->setDescription($field->getDescription());
 
             return $diffField;

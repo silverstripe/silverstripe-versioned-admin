@@ -167,7 +167,17 @@
     .form-check-label {
       text-transform: none;
     }
+  }
+}
 
+.history-viewer__version-detail-diff {
+  del {
+    color: #f44;
+  }
+
+  ins {
+    background-color: #dfd;
+    text-decoration: none;
   }
 }
 
