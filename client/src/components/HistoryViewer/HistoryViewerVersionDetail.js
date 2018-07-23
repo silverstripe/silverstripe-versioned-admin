@@ -124,17 +124,20 @@ class HistoryViewerVersionDetail extends PureComponent {
 
     const containerClasses = this.isPreviewable() ? 'panel panel--padded panel--padded-side panel--scrollable' : '';
 
+    const extraListClasses = classnames({ 'history-viewer__table--compare': this.isCompareMode() }, 'history-viewer__table--current');
+    const formClasses = classnames({ 'history-viewer__version-detail--compare': this.isCompareMode() }, 'history-viewer__version-detail');
+
     return (
       <div className="flexbox-area-grow fill-width">
         <div className="flexbox-area-grow fill-height">
           <div className={classnames(containerClasses, 'flexbox-area-grow')}>
             <ListComponent
-              extraClass="history-viewer__table--current"
+              extraClass={extraListClasses}
               isActive
               versions={this.getListVersions()}
             />
 
-            <div className="history-viewer__version-detail">
+            <div className={formClasses}>
               <FormBuilderLoader
                 identifier="HistoryViewer.VersionDetail"
                 schemaUrl={schemaUrl}

@@ -38,6 +38,13 @@
   }
 }
 
+.history-viewer__table--current {
+  &.history-viewer__table--compare {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 // Table cell containing action buttons, e.g. compare and close
 .table .history-viewer__actions {
   padding: 0;
@@ -47,8 +54,13 @@
   white-space: nowrap;
 }
 
-// Bring any CMS tabs in the detail view closer to the table above it
 .history-viewer__version-detail {
+  &.history-viewer__version-detail--compare {
+    margin-left: $panel-padding-x;
+    margin-right: $panel-padding-x;
+  }
+
+  // Bring any CMS tabs in the detail view closer to the table above it
   .nav-tabs {
     margin-top: -$panel-padding-y;
   }

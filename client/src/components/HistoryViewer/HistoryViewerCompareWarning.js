@@ -16,7 +16,7 @@ class HistoryViewerCompareWarning extends Component {
   }
 
   /**
-   * Renders a notice indicating the user is in compare mode (iff compare mode is active)
+   * Renders a notice indicating the user is in compare mode (if compare mode is active)
    *
    * @returns {string}
    */
