@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { inject } from 'lib/Injector';
 import { messageType } from 'types/messageType';
 import { versionType } from 'types/versionType';
+import { compareType } from 'types/compareType';
 
 class HistoryViewerVersionList extends PureComponent {
   /**
@@ -27,12 +28,12 @@ class HistoryViewerVersionList extends PureComponent {
    * @returns {boolean}
    */
   isVersionActive(version) {
-    const { isActive, compareFrom, compareTo } = this.props;
+    const { isActive, compare } = this.props;
     if (isActive) {
       return true;
     }
 
-    return version.Version === compareFrom || version.Version === compareTo;
+    return version.Version === compare.versionFrom || version.Version === compare.versionTo;
   }
 
   /**
@@ -99,8 +100,7 @@ HistoryViewerVersionList.propTypes = {
   messages: PropTypes.arrayOf(messageType),
   VersionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.arrayOf(versionType),
-  compareFrom: versionType,
-  compareTo: versionType,
+  compare: compareType
 };
 
 HistoryViewerVersionList.defaultProps = {
@@ -111,9 +111,10 @@ HistoryViewerVersionList.defaultProps = {
 };
 
 function mapStateToProps(state) {
-  const { messages, compareFrom, compareTo } = state.versionedAdmin.historyViewer;
+  const { messages, compare } = state.versionedAdmin.historyViewer;
   return {
-    messages, compareFrom, compareTo
+    messages,
+    compare
   };
 }
 

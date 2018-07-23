@@ -1,6 +1,7 @@
 /* global jest, describe, it, expect */
 
 import historyViewerReducer from 'state/historyviewer/HistoryViewerReducer';
+import { defaultCompare } from 'types/compareType';
 
 describe('HistoryViewerReducer', () => {
   let state = {};
@@ -8,9 +9,7 @@ describe('HistoryViewerReducer', () => {
     state = {
       currentPage: 1,
       currentVersion: 0,
-      compareFrom: 0,
-      compareTo: 0,
-      compareMode: false,
+      compare: defaultCompare,
       loading: false,
       messages: [],
     };
@@ -80,12 +79,10 @@ describe('HistoryViewerReducer', () => {
   });
 
   describe('SET_COMPARE_MODE', () => {
-    it('sets compareMode to true when enabling compare mode', () => {
+    it('sets compare to the default enabled value when enabling compare mode', () => {
       state = {
         ...state,
-        compareFrom: 2,
-        compareTo: 5,
-        compareMode: false,
+        compare: false,
       };
 
       const result = historyViewerReducer(state, {
@@ -93,17 +90,13 @@ describe('HistoryViewerReducer', () => {
         payload: { enabled: true },
       });
 
-      expect(result.compareMode).toBe(true);
-      expect(result.compareFrom).toBe(2);
-      expect(result.compareTo).toBe(5);
+      expect(result.compare).toEqual({ versionFrom: 0, versionTo: 0 });
     });
 
     it('resets the compare from/to versions when not in compare mode', () => {
       state = {
         ...state,
-        compareFrom: 1,
-        compareTo: 2,
-        compareMode: true,
+        compare: { versionFrom: 1, versionTo: 2 },
       };
 
       const result = historyViewerReducer(state, {
@@ -111,25 +104,29 @@ describe('HistoryViewerReducer', () => {
         payload: { enabled: false },
       });
 
-      expect(result.compareMode).toBe(false);
+      expect(result.compare).toBe(false);
     });
   });
 
   describe('SET_COMPARE_FROM', () => {
     it('sets the compareFrom to the version', () => {
+      state = {
+        ...state,
+        compare: { versionFrom: 0, versionTo: 0 },
+      };
+
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_FROM',
         payload: { version: 47 },
       });
 
-      expect(result.compareFrom).toBe(47);
+      expect(result.compare.versionFrom).toBe(47);
     });
 
     it('uses compareTo for compareFrom when version is zero', () => {
       state = {
         ...state,
-        compareFrom: 50,
-        compareTo: 80,
+        compare: { versionFrom: 50, versionTo: 80 },
       };
 
       const result = historyViewerReducer(state, {
@@ -137,8 +134,8 @@ describe('HistoryViewerReducer', () => {
         payload: { version: 0 },
       });
 
-      expect(result.compareFrom).toBe(80);
-      expect(result.compareTo).toBe(0);
+      expect(result.compare.versionFrom).toBe(80);
+      expect(result.compare.versionTo).toBe(0);
     });
   });
 
@@ -149,14 +146,13 @@ describe('HistoryViewerReducer', () => {
         payload: { version: 85 },
       });
 
-      expect(result.compareTo).toBe(85);
+      expect(result.compare.versionTo).toBe(85);
     });
 
     it('flips the versions if a lower version "to" is selected', () => {
       state = {
         ...state,
-        compareFrom: 50,
-        compareTo: 100,
+        compare: { versionFrom: 50, versionTo: 100 },
       };
 
       const result = historyViewerReducer(state, {
@@ -164,8 +160,8 @@ describe('HistoryViewerReducer', () => {
         payload: { version: 25 },
       });
 
-      expect(result.compareFrom).toBe(25);
-      expect(result.compareTo).toBe(50);
+      expect(result.compare.versionFrom).toBe(25);
+      expect(result.compare.versionTo).toBe(50);
     });
   });
 });

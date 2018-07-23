@@ -10,6 +10,7 @@ import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
 import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
+import { compareType } from 'types/compareType';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
@@ -166,9 +167,7 @@ class HistoryViewer extends Component {
       recordClass,
       schemaUrl,
       VersionDetailComponent,
-      compareMode,
-      compareFrom,
-      compareTo,
+      compare,
     } = this.props;
 
     // Insert variables into the schema URL via regex replacements
@@ -180,21 +179,21 @@ class HistoryViewer extends Component {
     const schemaCompareReplacements = {
       ':id': recordId,
       ':class': recordClass,
-      ':from': compareFrom,
-      ':to': compareTo,
+      ':from': compare ? compare.versionFrom : 0,
+      ':to': compare ? compare.versionTo : 0,
     };
-    const schemaSearch = compareMode ? /:id|:class|:from|:to/g : /:id|:class|:version/g;
-    const schemaReplacements = compareMode ? schemaCompareReplacements : schemaVersionReplacements;
+    const schemaSearch = compare ? /:id|:class|:from|:to/g : /:id|:class|:version/g;
+    const schemaReplacements = compare ? schemaCompareReplacements : schemaVersionReplacements;
 
     const filterVersions = (wantedID) => (potential => potential.Version === wantedID);
 
     const version = this.getVersions().find(
-      filterVersions(compareMode ? compareFrom : currentVersion)
+      filterVersions(compare ? compare.versionFrom : currentVersion)
     );
     const latestVersion = this.getLatestVersion();
-    const compare = compareMode ? {
-      versionFrom: this.getVersions().find(filterVersions(compareFrom)),
-      versionTo: this.getVersions().find(filterVersions(compareTo)),
+    const compareProps = compare ? {
+      versionFrom: this.getVersions().find(filterVersions(compare.versionFrom)),
+      versionTo: this.getVersions().find(filterVersions(compare.versionTo)),
     } : false;
 
     const props = {
@@ -203,7 +202,7 @@ class HistoryViewer extends Component {
       recordId,
       schemaUrl: schemaUrl.replace(schemaSearch, (match) => schemaReplacements[match]),
       version,
-      compare,
+      compare: compareProps,
     };
 
     return (
@@ -281,22 +280,22 @@ class HistoryViewer extends Component {
   }
 
   renderCompareMode() {
-    const { compareFrom, compareTo } = this.props;
+    const { compare } = this.props;
 
-    if (compareFrom && compareTo) {
+    if (compare && compare.versionFrom && compare.versionTo) {
         return this.renderVersionDetail();
     }
     return this.renderVersionList();
   }
 
   render() {
-    const { loading, compareMode, currentVersion } = this.props;
+    const { loading, compare, currentVersion } = this.props;
 
     if (loading) {
       return <Loading />;
     }
 
-    if (compareMode) {
+    if (compare) {
       return this.renderCompareMode();
     }
 
@@ -315,9 +314,7 @@ HistoryViewer.propTypes = {
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.number,
-  compareMode: PropTypes.bool,
-  compareFrom: PropTypes.number,
-  compareTo: PropTypes.number,
+  compare: compareType,
   isPreviewable: PropTypes.bool,
   VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   CompareWarningComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
@@ -359,17 +356,13 @@ function mapStateToProps(state) {
   const {
     currentPage,
     currentVersion,
-    compareMode,
-    compareFrom,
-    compareTo,
+    compare,
   } = state.versionedAdmin.historyViewer;
 
   return {
     page: currentPage,
     currentVersion,
-    compareMode,
-    compareFrom,
-    compareTo,
+    compare
   };
 }
 

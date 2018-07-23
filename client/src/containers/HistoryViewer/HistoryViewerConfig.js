@@ -10,8 +10,8 @@ const historyViewerConfig = (HistoryViewer) => {
     }
 
     getSchemaUrlDetails() {
-      const { compareMode } = this.props;
-      if (compareMode) {
+      const { compare } = this.props;
+      if (compare) {
         return {
           formName: 'compareForm',
           queryParts: [

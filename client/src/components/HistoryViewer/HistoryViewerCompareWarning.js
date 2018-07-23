@@ -21,9 +21,9 @@ class HistoryViewerCompareWarning extends Component {
    * @returns {string}
    */
   render() {
-    const { compareMode, fixed } = this.props;
+    const { isCompare, fixed } = this.props;
 
-    if (!compareMode) {
+    if (!isCompare) {
       return null;
     }
 
@@ -48,7 +48,7 @@ class HistoryViewerCompareWarning extends Component {
 }
 
 HistoryViewerCompareWarning.propTypes = {
-  compareMode: PropTypes.bool.isRequired,
+  isCompare: PropTypes.bool.isRequired,
   fixed: PropTypes.bool.isRequired,
 };
 
@@ -58,11 +58,11 @@ HistoryViewerCompareWarning.defaultProps = {
 
 function mapStateToProps(state) {
   const {
-    compareMode,
+    compare,
   } = state.versionedAdmin.historyViewer;
 
   return {
-    compareMode,
+    isCompare: !!compare,
   };
 }
 

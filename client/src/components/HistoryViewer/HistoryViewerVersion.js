@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { inject } from 'lib/Injector';
 import { versionType, defaultVersion } from 'types/versionType';
+import { compareType } from 'types/compareType';
 import { showVersion, setCompareMode, setCompareFrom, setCompareTo } from 'state/historyviewer/HistoryViewerActions';
 import i18n from 'i18n';
 
@@ -38,15 +39,15 @@ class HistoryViewerVersion extends Component {
    * When clicking on a version, render the detail view for it via a Redux action dispatch
    */
   handleClick() {
-    const { onSelect, version, isActive, compareMode, compareFrom, onCompareSelect } = this.props;
+    const { onSelect, version, isActive, compare, onCompareSelect } = this.props;
 
     // If the clear button is shown, don't do anything when clicking on the row
     if (isActive) {
       return;
     }
 
-    if (compareMode) {
-      onCompareSelect(version.Version, !compareFrom);
+    if (compare) {
+      onCompareSelect(version.Version, !compare.versionFrom);
     } else {
       onSelect(version.Version);
     }
@@ -56,9 +57,9 @@ class HistoryViewerVersion extends Component {
    * When closing the version, return back to the list view via Redux action dispatch
    */
   handleClose() {
-    const { onSelect, compareMode, compareFrom, onCompareSelect, version } = this.props;
-    if (compareMode) {
-      onCompareSelect(0, version.Version === compareFrom);
+    const { onSelect, compare, onCompareSelect, version } = this.props;
+    if (compare) {
+      onCompareSelect(0, version.Version === compare.versionFrom);
     } else {
       onSelect(0);
     }
@@ -163,10 +164,10 @@ class HistoryViewerVersion extends Component {
 
 HistoryViewerVersion.propTypes = {
   isActive: React.PropTypes.bool,
-  compareMode: React.PropTypes.bool,
   onSelect: React.PropTypes.func,
   onCompare: React.PropTypes.func,
   onCompareSelect: React.PropTypes.func,
+  compare: compareType,
   StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   version: versionType,
@@ -179,11 +180,8 @@ HistoryViewerVersion.defaultProps = {
 };
 
 function mapStateToProps(state) {
-  const { compareMode, compareFrom } = state.versionedAdmin.historyViewer;
-
   return {
-    compareMode,
-    compareFrom,
+    compare: state.versionedAdmin.historyViewer.compare,
   };
 }
 

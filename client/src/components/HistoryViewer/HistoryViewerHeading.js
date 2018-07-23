@@ -78,7 +78,7 @@ HistoryViewerHeading.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    compareModeSelected: state.versionedAdmin.historyViewer.compareMode,
+    compareModeSelected: !!state.versionedAdmin.historyViewer.compare,
   };
 }
 

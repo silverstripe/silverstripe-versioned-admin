@@ -1,11 +1,10 @@
 import HISTORY_VIEWER from './HistoryViewerActionTypes';
+import { defaultCompare } from 'types/compareType';
 
 const initialState = {
   currentPage: 1,
   currentVersion: 0,
-  compareFrom: 0,
-  compareTo: 0,
-  compareMode: false,
+  compare: defaultCompare,
   loading: false,
   messages: [],
 };
@@ -63,53 +62,51 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     }
 
     case HISTORY_VIEWER.SET_COMPARE_MODE: {
-      const updateState = {
-        compareMode: payload.enabled,
-      };
+      let compare = false;
 
-      if (!updateState.compareMode) {
-          updateState.compareFrom = 0;
-          updateState.compareTo = 0;
+      if (payload.enabled) {
+        compare = {
+          versionFrom: 0,
+          versionTo: 0,
+        };
       }
 
       return {
         ...state,
-        ...updateState,
+        compare,
       };
     }
 
     case HISTORY_VIEWER.SET_COMPARE_FROM: {
-      let { compareFrom, compareTo } = state;
-      compareFrom = payload.version;
+      let { compare: { versionFrom, versionTo } } = state;
+      versionFrom = payload.version;
 
       if (!payload.version) {
-        compareFrom = compareTo;
-        compareTo = 0;
+        versionFrom = versionTo;
+        versionTo = 0;
       }
 
       return {
         ...state,
-        compareFrom,
-        compareTo,
+        compare: { versionFrom, versionTo },
       };
     }
 
     case HISTORY_VIEWER.SET_COMPARE_TO: {
-      let { compareFrom, compareTo } = state;
-      compareTo = payload.version;
+      let { compare: { versionFrom, versionTo } } = state;
+      versionTo = payload.version;
 
       // A normal `diff` always shows what it takes turn FROM into TO
       // Here, comparisons are always FROM oldest TO newest version
       // Version IDs are always positive & in creation order.
-      if (compareTo && compareFrom && compareTo < compareFrom) {
-        compareFrom = compareTo;
-        compareTo = state.compareFrom;
+      if (versionTo && versionFrom && versionTo < versionFrom) {
+        versionFrom = versionTo;
+        versionTo = state.compare.versionFrom;
       }
 
       return {
         ...state,
-        compareFrom,
-        compareTo,
+        compare: { versionFrom, versionTo },
       };
     }
 
