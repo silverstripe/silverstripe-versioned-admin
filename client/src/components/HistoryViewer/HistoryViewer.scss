@@ -38,11 +38,15 @@
   }
 }
 
-.history-viewer__table--current {
-  &.history-viewer__table--compare {
-    margin-left: 0;
-    margin-right: 0;
-  }
+.history-viewer__table--compare {
+  margin-left: 0;
+  margin-right: 0;
+  min-width: 100%;
+}
+
+.history-viewer__version-detail--compare {
+  margin-left: $panel-padding-x;
+  margin-right: $panel-padding-x;
 }
 
 // Table cell containing action buttons, e.g. compare and close
@@ -54,16 +58,9 @@
   white-space: nowrap;
 }
 
-.history-viewer__version-detail {
-  &.history-viewer__version-detail--compare {
-    margin-left: $panel-padding-x;
-    margin-right: $panel-padding-x;
-  }
-
-  // Bring any CMS tabs in the detail view closer to the table above it
-  .nav-tabs {
-    margin-top: -$panel-padding-y;
-  }
+// Bring any CMS tabs in the detail view closer to the table above it
+.history-viewer__version-detail .nav-tabs {
+  margin-top: -$panel-padding-y;
 }
 
 .history-viewer__compare-button {
@@ -137,7 +134,6 @@
 }
 
 .history-viewer__heading {
-
   .author-compare-toggle__container {
     display: flex;
 
@@ -164,6 +160,7 @@
         margin-top: .5rem;
       }
     }
+
     .form-check-label {
       text-transform: none;
     }
