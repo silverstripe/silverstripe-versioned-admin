@@ -33,14 +33,16 @@ class HistoryViewerHeading extends Component {
   }
 
   render() {
-    const { compareModeSelected, hasActions } = this.props;
+    const { compareModeSelected } = this.props;
     const { dropdownOpen } = this.state;
     return (
       <tr className="history-viewer__heading">
         <th>#</th>
         <th>{i18n._t('HistoryViewer.Record', 'Record')}</th>
-        <th className="author-compare-toggle__container">
+        <th>
           <span className="author-span">{i18n._t('HistoryViewer.Author', 'Author')}</span>
+        </th>
+        <th className="author-compare-toggle__container">
           <Dropdown
             isOpen={dropdownOpen}
             toggle={this.toggle}
@@ -63,21 +65,15 @@ class HistoryViewerHeading extends Component {
             </DropdownMenu>
           </Dropdown>
         </th>
-        {hasActions ? <th /> : null}
       </tr>
     );
   }
 }
 
 HistoryViewerHeading.propTypes = {
-  hasActions: React.PropTypes.bool,
-  compareModeSelected: React.PropTypes.bool,
-  onCompareModeSelect: React.PropTypes.func,
-  onCompareModeUnselect: React.PropTypes.func,
-};
-
-HistoryViewerHeading.defaultProps = {
-  hasActions: false,
+  compareModeSelected: PropTypes.bool,
+  onCompareModeSelect: PropTypes.func,
+  onCompareModeUnselect: PropTypes.func,
 };
 
 function mapStateToProps(state) {

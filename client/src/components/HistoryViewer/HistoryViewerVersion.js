@@ -103,7 +103,11 @@ class HistoryViewerVersion extends Component {
    * @returns {FormAction|null}
    */
   renderClearButton() {
-    const { FormActionComponent } = this.props;
+    const { FormActionComponent, isActive } = this.props;
+
+    if (!isActive) {
+      return null;
+    }
 
     return (
       <FormActionComponent
@@ -122,10 +126,12 @@ class HistoryViewerVersion extends Component {
    * @returns {DOMElement}
    */
   renderActions() {
-    const { isActive } = this.props;
+    const { isActive, compareMode } = this.props;
 
-    if (!isActive) {
-      return null;
+    if (!isActive && !compareMode) {
+      return (
+        <td />
+      );
     }
 
     return (
@@ -140,7 +146,7 @@ class HistoryViewerVersion extends Component {
     const { version, isActive, StateComponent } = this.props;
 
     return (
-      <tr onClick={this.handleClick}>
+      <tr className={isActive ? 'history-viewer__row--current' : ''} onClick={this.handleClick}>
         <td>{version.Version}</td>
         <td>
           <StateComponent
@@ -173,9 +179,11 @@ HistoryViewerVersion.defaultProps = {
 };
 
 function mapStateToProps(state) {
+  const { compareMode, compareFrom } = state.versionedAdmin.historyViewer;
+
   return {
-    compareMode: state.versionedAdmin.historyViewer.compareMode,
-    compareFrom: state.versionedAdmin.historyViewer.compareFrom,
+    compareMode,
+    compareFrom,
   };
 }
 
