@@ -1,0 +1,81 @@
+// Replicate Bootstrap table stylings relatively closely but using a unordered list
+.history-viewer__table {
+  padding: 0;
+
+  li {
+    display: flex;
+    list-style-type: none;
+  }
+}
+
+.history-viewer__heading,
+.history-viewer__row {
+  border-bottom: 1px solid $table-border-color;
+}
+
+// Add colours to the table rows
+.history-viewer__row {
+  background-color: $table-accent-bg;
+
+  &:hover,
+  &:active {
+    background-color: $table-hover-bg;
+  }
+}
+
+.history-viewer__version-anchor {
+  color: inherit;
+  display: flex;
+  flex-grow: 1; // use up 3 columns worth of space by default
+
+  &:hover,
+  &:active {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+// Give all columns equal width to start with, and table padding
+.history-viewer__version-no,
+.history-viewer__version-state,
+.history-viewer__author,
+.history-viewer__actions {
+  padding: $table-cell-padding;
+}
+
+.history-viewer__version-state,
+.history-viewer__author {
+  flex-grow: 1;
+  width: 50%;
+}
+
+// Remove padding in the heading's last column so it doesn't push padding in the others
+.history-viewer__actions {
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; // right alignment
+  min-width: 12rem; // big enough to fit both Compare and "X" close buttons
+}
+
+.table .history-viewer__row--current {
+  // There will only be one table row in this table state
+  &, &:hover {
+    background-color: $link-color;
+    color: $white;
+  }
+
+  .text-muted {
+    color: $white !important;
+  }
+}
+
+.history-viewer__table:not(.history-viewer__table--current) .history-viewer__version-anchor:hover {
+  cursor: pointer;
+}
+
+// In detail views, pulls the content (and content tabs) closer to the selected version table
+.history-viewer__table--current {
+  margin-bottom: $panel-padding-y / 2;
+}

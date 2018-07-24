@@ -36,15 +36,19 @@ class HistoryViewerHeading extends Component {
     const { compareModeSelected } = this.props;
     const { dropdownOpen } = this.state;
     return (
-      <tr className="history-viewer__heading">
-        <th>#</th>
-        <th>{i18n._t('HistoryViewer.Record', 'Record')}</th>
-        <th>{i18n._t('HistoryViewer.Author', 'Author')}</th>
-        <th className="history-viewer-heading__toggle">
+      <li className="history-viewer__heading">
+        <span className="history-viewer__version-no">#</span>
+        <span className="history-viewer__version-state">
+          {i18n._t('HistoryViewer.Record', 'Record')}
+        </span>
+        <span className="history-viewer__author">
+          {i18n._t('HistoryViewer.Author', 'Author')}
+        </span>
+        <span className="history-viewer__actions">
           <Dropdown
             isOpen={dropdownOpen}
             toggle={this.toggle}
-            className="history-viewer-heading__toggle-dropdown"
+            className="history-viewer__actions-dropdown"
           >
             <DropdownToggle className="font-icon-sliders" />
             <DropdownMenu right>
@@ -62,8 +66,8 @@ class HistoryViewerHeading extends Component {
               </div>
             </DropdownMenu>
           </Dropdown>
-        </th>
-      </tr>
+        </span>
+      </li>
     );
   }
 }

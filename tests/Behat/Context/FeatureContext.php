@@ -70,7 +70,7 @@ class FeatureContext extends SilverStripeContext
      */
     public function iOpenTheHistoryViewerActionsMenu()
     {
-        $button = $this->getSession()->getPage()->find('css', '.history-viewer-heading__toggle .btn');
+        $button = $this->getSession()->getPage()->find('css', '.history-viewer__heading .history-viewer__actions .btn');
         assertNotNull($button, 'History viewer actions menu not found in the page.');
 
         $button->click();

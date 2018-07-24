@@ -130,6 +130,7 @@ class HistoryViewerVersionDetail extends PureComponent {
       'panel--padded-side',
     ];
     const extraListClasses = {
+      'history-viewer__table': true,
       'history-viewer__table--current': true,
       'history-viewer__table--compare': this.isCompareMode(),
     };

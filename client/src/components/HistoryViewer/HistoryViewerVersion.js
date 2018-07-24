@@ -6,6 +6,7 @@ import { versionType, defaultVersion } from 'types/versionType';
 import { compareType } from 'types/compareType';
 import { showVersion, setCompareMode, setCompareFrom, setCompareTo } from 'state/historyviewer/HistoryViewerActions';
 import i18n from 'i18n';
+import classNames from 'classnames';
 
 class HistoryViewerVersion extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class HistoryViewerVersion extends Component {
 
     // If the clear button is shown, don't do anything when clicking on the row
     if (isActive) {
-      return;
+      return false;
     }
 
     if (compare) {
@@ -51,6 +52,8 @@ class HistoryViewerVersion extends Component {
     } else {
       onSelect(version.Version);
     }
+
+    return false;
   }
 
   /**
@@ -131,33 +134,45 @@ class HistoryViewerVersion extends Component {
 
     if (!isActive && !compareMode) {
       return (
-        <td />
+        <span className="history-viewer__actions" />
       );
     }
 
     return (
-      <td className="history-viewer__actions">
+      <span className="history-viewer__actions">
         {this.renderCompareButton()}
         {this.renderClearButton()}
-      </td>
+      </span>
     );
   }
 
   render() {
     const { version, isActive, StateComponent } = this.props;
 
+    const classnames = classNames({
+      'history-viewer__row': true,
+      'history-viewer__row--current': isActive,
+    });
+
+    const rowTitle = i18n._t('HistoryViewerVersion.GO_TO_VERSION', 'Go to version {version}');
+
     return (
-      <tr className={isActive ? 'history-viewer__row--current' : ''} onClick={this.handleClick}>
-        <td>{version.Version}</td>
-        <td>
+      <li className={classnames}>
+        <a
+          href={null}
+          className="history-viewer__version-anchor"
+          title={i18n.inject(rowTitle, { version: version.Version })}
+          onClick={this.handleClick}
+        >
+          <span className="history-viewer__version-no">{version.Version}</span>
           <StateComponent
             version={version}
             isActive={isActive}
           />
-        </td>
-        <td>{this.getAuthor()}</td>
-        {this.renderActions()}
-      </tr>
+          <span className="history-viewer__author">{this.getAuthor()}</span>
+          {this.renderActions()}
+        </a>
+      </li>
     );
   }
 }

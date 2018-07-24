@@ -1,8 +1,4 @@
 .history-viewer {
-  td:first-child {
-    width: 1%;
-  }
-
   > .panel--padded {
     padding-top: 0;
   }
@@ -10,15 +6,6 @@
   &.history-viewer__compare-mode .panel--padded {
     padding-top: 30px;
   }
-}
-
-.history-viewer__table:not(.history-viewer__table--current) tbody tr:hover {
-  cursor: pointer;
-}
-
-// In detail views, pulls the content (and content tabs) closer to the selected version table
-.history-viewer__table--current {
-  margin-bottom: $panel-padding-y / 2;
 }
 
 // Used in conjunction with .panel--padded, removes top and bottom padding
@@ -35,30 +22,9 @@
   margin-right: 10px;
 }
 
-.table .history-viewer__row--current {
-  // There will only be one table row in this table state
-  &, &:hover {
-    background-color: $link-color;
-    color: $white;
-  }
-
-  .text-muted {
-    color: $white !important;
-  }
-}
-
 .history-viewer__version-detail--compare {
   margin-left: $panel-padding-x;
   margin-right: $panel-padding-x;
-}
-
-// Table cell containing action buttons, e.g. compare and close
-.table .history-viewer__actions {
-  padding: 0;
-  text-align: right;
-  width: 1%;
-  vertical-align: middle;
-  white-space: nowrap;
 }
 
 // Bring any CMS tabs in the detail view closer to the table above it
@@ -130,35 +96,6 @@
     &:hover {
       background-color: lighten($color-notice, 18%);
     }
-  }
-}
-
-// Don't let the actions column take up an equal portion of the calculated table width,
-// and ensure that its height doesn't push out the heading
-.table th.history-viewer-heading__toggle {
-  width: 1%;
-  padding-top: 0;
-  padding-bottom: 0;
-  vertical-align: middle;
-  text-align: right;
-}
-
-// Labels are capitalised by default
-.history-viewer-heading__toggle-dropdown .form-check-label {
-  text-transform: none;
-}
-
-.history-viewer-heading__toggle-dropdown {
-  .btn[class*=font-icon-]:before {
-    margin-right: 0;
-  }
-
-  &.show .dropdown-menu {
-    min-width: 14rem;
-  }
-
-  .form-check {
-    margin-top: .5rem;
   }
 }
 
