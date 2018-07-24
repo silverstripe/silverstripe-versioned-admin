@@ -203,7 +203,7 @@ class HistoryViewerController extends LeftAndMain
             return null;
         }
 
-        $effectiveContext = array_merge($context, ['Record' => $recordFrom]);
+        $effectiveContext = array_merge($context, ['Record' => $recordTo]);
 
         $form = $this->scaffoldForm(self::FORM_NAME_COMPARE, $effectiveContext, [
             $recordClass,
@@ -213,8 +213,9 @@ class HistoryViewerController extends LeftAndMain
         ]);
 
         // Enable the "compare mode" diff view
-        $comparisonTransformation = DiffTransformation::create($recordTo);
+        $comparisonTransformation = DiffTransformation::create();
         $form->transform($comparisonTransformation);
+        $form->loadDataFrom($recordFrom);
 
         return $form;
     }

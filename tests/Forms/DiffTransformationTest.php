@@ -47,73 +47,24 @@ class DiffTransformationTest extends SapphireTest
         $this->testForm->disableSecurityToken();
     }
 
-    public function testSetComparisonData()
-    {
-        $transformation = new DiffTransformation();
-        $transformation->setComparisonData($this->testData);
-        $this->assertEquals($this->testData, $transformation->getComparisonData(), 'Arrays are accepted');
-
-        $transformation->setComparisonData(DataObject::create($this->testData));
-        $this->assertEquals($this->testData, $transformation->getComparisonData(), 'DataObjects are accepted');
-
-        $transformation->setComparisonData(ArrayData::create($this->testData));
-        $this->assertEquals($this->testData, $transformation->getComparisonData(), 'ArrayDatas are accepted');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetComparisonDataThrowsExceptionWithInvalidArgument()
-    {
-        $transformation = new DiffTransformation();
-        $transformation->setComparisonData('First', '1st');
-    }
-
-    public function testSetComparisonDataMerge()
-    {
-        $transformation = new DiffTransformation([
-            'First' => 'Once',
-            'Second' => '2nd',
-        ]);
-
-        $transformation->setComparisonData([
-            'Second' => 'Twice',
-            'Third' => 'Thrice',
-        ], $merge = true);
-
-        // will throw an exception if not enough data is set
-        $this->testForm->transform($transformation);
-    }
-
     public function testTransform()
     {
         $form = $this->testForm;
-        $update = [
+        $oldData = [
             'First' => '1st',
             'Second' => '2nd',
             'Third' => '3rd',
         ];
 
-        $expected = $this->getExpected($update);
-        $transformation = DiffTransformation::create($update);
+        $expected = $this->getExpected($oldData);
+        $transformation = DiffTransformation::create();
         $form->transform($transformation);
+        $form->loadDataFrom($oldData);
 
         foreach ($form->Fields() as $index => $field) {
             $this->assertContains($expected[$index]['before'], $field->Value(), 'Value before is shown');
             $this->assertContains($expected[$index]['after'], $field->Value(), 'Value after is shown');
         }
-    }
-
-    /**
-     * @expectedException LogicException
-     */
-    public function testTransformWithNotEnoughData()
-    {
-        $form = $this->testForm;
-        $transformation = DiffTransformation::create([
-            'First' => '1st',
-        ]);
-        $form->transform($transformation);
     }
 
     public function testTransformWithCompositeFields()
@@ -124,15 +75,16 @@ class DiffTransformationTest extends SapphireTest
                 CompositeField::create($form->Fields())
             )
         );
-        $update = [
+        $oldData = [
             'First' => 'Uno',
             'Second' => 'Dos',
             'Third' => 'Tres',
         ];
 
-        $expected = $this->getExpected($update);
-        $transformation = DiffTransformation::create($update);
+        $expected = $this->getExpected($oldData);
+        $transformation = DiffTransformation::create();
         $form->transform($transformation);
+        $form->loadDataFrom($oldData);
 
         foreach (array_values($form->Fields()->dataFields()) as $index => $field) {
             $this->assertContains($expected[$index]['before'], $field->Value(), 'Value before is shown');
@@ -143,17 +95,17 @@ class DiffTransformationTest extends SapphireTest
     /**
      * Helper method for generating the expected result for diff views between fields
      *
-     * @param array $update
+     * @param array $outdated
      * @return array
      */
-    private function getExpected($update)
+    private function getExpected($outdated)
     {
         $expected = [];
-        $original = $this->testData;
-        foreach (array_combine(array_values($update), array_values($original)) as $now => $was) {
+        $current = $this->testData;
+        foreach (array_combine(array_values($outdated), array_values($current)) as $now => $was) {
             $expected[] = [
-                'before' => "<ins>$now</ins>",
-                'after' => "<del>$was</del>",
+                'before' => "<ins>$was</ins>",
+                'after' => "<del>$now</del>",
             ];
         }
         return $expected;
