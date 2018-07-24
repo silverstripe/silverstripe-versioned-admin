@@ -6,6 +6,10 @@
   > .panel--padded {
     padding-top: 0;
   }
+
+  &.history-viewer__compare-mode .panel--padded {
+    padding-top: 30px;
+  }
 }
 
 .history-viewer__table:not(.history-viewer__table--current) tbody tr:hover {
@@ -108,10 +112,7 @@
   border-top: none;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-
-  &.fixed {
-    position: absolute;
-  }
+  position: absolute;
 
   .notice-message {
     padding: .4rem 1rem .4rem 1.5rem;

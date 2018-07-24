@@ -11,6 +11,7 @@ import Loading from 'components/Loading/Loading';
 import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 import { compareType } from 'types/compareType';
+import classNames from 'classnames';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
@@ -64,6 +65,22 @@ class HistoryViewer extends Component {
       : [];
     return edges.map((version) => version.node);
   }
+
+  /**
+   * Returns a string to be used as the "class" attribute on the history viewer container
+   *
+   * @returns {string}
+   */
+  getContainerClasses() {
+    const classes = ['history-viewer', 'fill-height'];
+
+    if (this.props.compare) {
+      classes.push('history-viewer__compare-mode');
+    }
+
+    return classNames(classes);
+  }
+
 
   /**
    * Get the latest (highest) version number from the list available. If we are not on page
@@ -176,7 +193,7 @@ class HistoryViewer extends Component {
     };
 
     return (
-      <div className="history-viewer fill-height">
+      <div className={this.getContainerClasses()}>
         <VersionDetailComponent {...props} />
       </div>
     );
@@ -233,8 +250,9 @@ class HistoryViewer extends Component {
   renderVersionList() {
     const { isPreviewable, ListComponent, CompareWarningComponent } = this.props;
 
+
     return (
-      <div className="history-viewer fill-height">
+      <div className={this.getContainerClasses()}>
         <CompareWarningComponent />
         <div className={isPreviewable ? 'panel panel--padded panel--scrollable' : ''}>
           <ListComponent

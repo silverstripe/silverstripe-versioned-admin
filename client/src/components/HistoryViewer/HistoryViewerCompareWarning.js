@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import i18n from 'i18n';
 import { setCompareMode } from 'state/historyviewer/HistoryViewerActions';
-import classNames from 'classnames';
 
 class HistoryViewerCompareWarning extends Component {
   constructor(props) {
@@ -21,20 +20,12 @@ class HistoryViewerCompareWarning extends Component {
    * @returns {string}
    */
   render() {
-    const { isCompare, fixed } = this.props;
-
-    if (!isCompare) {
+    if (!this.props.isCompare) {
       return null;
     }
 
-    const classes = ['history-viewer__compare-notice'];
-
-    if (fixed) {
-      classes.push('fixed');
-    }
-
     return (
-      <div className={classNames(classes)}>
+      <div className="history-viewer__compare-notice">
         <span className="notice-message">
           <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
           {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
@@ -49,11 +40,6 @@ class HistoryViewerCompareWarning extends Component {
 
 HistoryViewerCompareWarning.propTypes = {
   isCompare: PropTypes.bool.isRequired,
-  fixed: PropTypes.bool.isRequired,
-};
-
-HistoryViewerCompareWarning.defaultProps = {
-  fixed: false,
 };
 
 function mapStateToProps(state) {
