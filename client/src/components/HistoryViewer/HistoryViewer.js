@@ -24,7 +24,6 @@ class HistoryViewer extends Component {
     this.handleSetPage = this.handleSetPage.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePrevPage = this.handlePrevPage.bind(this);
-    this.handleDismissCompare = this.handleDismissCompare.bind(this);
   }
 
   /**
@@ -125,35 +124,6 @@ class HistoryViewer extends Component {
     this.handleSetPage(currentPage - 1);
   }
 
-  /**
-   * Handler to exit compare mode
-   */
-  handleDismissCompare() {
-    this.props.onDismissCompare();
-  }
-
-  /**
-   * Renders a notice indicating the user is in compare mode (if compare mode is active)
-   *
-   * @returns {string}
-   */
-  renderCompareWarning() {
-    if (!this.props.compareMode) {
-      return '';
-    }
-
-    return (
-      <div className="history-viewer__compare-notice">
-        <span className="notice-message">
-          <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
-          {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
-        </span>
-        <button className="btn dismiss-button font-icon-cancel" onClick={this.handleDismissCompare}>
-          {i18n._t('HistoryViewer.EXIT', 'Exit')}
-        </button>
-      </div>
-    );
-  }
   /**
    * Renders the detail form for a selected version
    *
@@ -333,7 +303,6 @@ HistoryViewer.propTypes = {
   actions: PropTypes.object,
   onSelect: PropTypes.func,
   onSetPage: PropTypes.func,
-  onDismissCompare: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
