@@ -66,6 +66,41 @@ class FeatureContext extends SilverStripeContext
     }
 
     /**
+     * @Given I open the history viewer actions menu
+     */
+    public function iOpenTheHistoryViewerActionsMenu()
+    {
+        $button = $this->getSession()->getPage()->find('css', '.history-viewer-heading__toggle .btn');
+        assertNotNull($button, 'History viewer actions menu not found in the page.');
+
+        $button->click();
+    }
+
+    /**
+     * @Then the text :text should be deleted
+     */
+    public function theTextShouldBeDeleted($text)
+    {
+        $result = $this->getSession()->getPage()->find(
+            'xpath',
+            sprintf('//del[contains(normalize-space(string(.)), \'%s\')]', $text)
+        );
+        assertNotNull($result, $text . ' was not shown as deleted');
+    }
+
+    /**
+     * @Then the text :text should be added
+     */
+    public function theTextShouldBeAdded($text)
+    {
+        $result = $this->getSession()->getPage()->find(
+            'xpath',
+            sprintf('//ins[contains(normalize-space(string(.)), \'%s\')]', $text)
+        );
+        assertNotNull($result, $text . ' was not shown as added');
+    }
+
+    /**
      * Click on the given version
      *
      * @param NodeElement $version
