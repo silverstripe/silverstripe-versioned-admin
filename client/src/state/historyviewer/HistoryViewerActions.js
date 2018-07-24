@@ -25,10 +25,8 @@ export function showVersion(id) {
  * @returns {function}
  */
 export function showList() {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.SHOW_LIST,
-    });
+  return {
+    type: HISTORY_VIEWER.SHOW_LIST,
   };
 }
 
@@ -39,11 +37,9 @@ export function showList() {
  * @returns {function}
  */
 export function setCurrentPage(page) {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.SET_CURRENT_PAGE,
-      payload: { page },
-    });
+  return {
+    type: HISTORY_VIEWER.SET_CURRENT_PAGE,
+    payload: { page },
   };
 }
 
@@ -55,11 +51,9 @@ export function setCurrentPage(page) {
  * @returns {function}
  */
 export function addMessage(message, type = 'success') {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.ADD_MESSAGE,
-      payload: { id: uuidv1(), message, type },
-    });
+  return {
+    type: HISTORY_VIEWER.ADD_MESSAGE,
+    payload: { id: uuidv1(), message, type },
   };
 }
 
@@ -69,11 +63,9 @@ export function addMessage(message, type = 'success') {
  * @returns {function}
  */
 export function clearMessages() {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.CLEAR_MESSAGES,
-      payload: {},
-    });
+  return {
+    type: HISTORY_VIEWER.CLEAR_MESSAGES,
+    payload: {},
   };
 }
 
@@ -84,11 +76,9 @@ export function clearMessages() {
  * @returns {function}
  */
 export function setCompareMode(enabled) {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.SET_COMPARE_MODE,
-      payload: { enabled },
-    });
+  return {
+    type: HISTORY_VIEWER.SET_COMPARE_MODE,
+    payload: { enabled },
   };
 }
 
@@ -99,11 +89,9 @@ export function setCompareMode(enabled) {
  * @returns {function}
  */
 export function setCompareFrom(version) {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.SET_COMPARE_FROM,
-      payload: { version },
-    });
+  return {
+    type: HISTORY_VIEWER.SET_COMPARE_FROM,
+    payload: { version },
   };
 }
 
@@ -114,10 +102,8 @@ export function setCompareFrom(version) {
  * @returns {function}
  */
 export function setCompareTo(version) {
-  return (dispatch) => {
-    dispatch({
-      type: HISTORY_VIEWER.SET_COMPARE_TO,
-      payload: { version },
-    });
+  return {
+    type: HISTORY_VIEWER.SET_COMPARE_TO,
+    payload: { version },
   };
 }
