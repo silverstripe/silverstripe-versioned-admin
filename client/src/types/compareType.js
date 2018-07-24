@@ -1,7 +1,7 @@
 import { PropTypes } from 'react';
 
 // Describes the data structure for compare version storage
-const compareType = PropTypes.oneOf([false, PropTypes.shape({
+const compareType = PropTypes.oneOfType([PropTypes.bool, PropTypes.shape({
   versionFrom: PropTypes.number,
   versionTo: PropTypes.number
 })]);
