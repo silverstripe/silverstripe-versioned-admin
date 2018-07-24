@@ -11,6 +11,19 @@ class HistoryViewerVersionDetail extends PureComponent {
     this.toggleToolbarClass(true);
   }
 
+  /**
+   * When new props are received (from Redux dispatch events), check whether the preview
+   * state changes. If so, we want to add or remove the legacy CSS modifier for the CMS
+   * north toolbar based on whether the view mode is "split" (add) or anything else (remove)
+   *
+   * @param {Object} nextProps
+   */
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.previewState !== this.props.previewState) {
+      this.toggleToolbarClass(nextProps.previewState === 'split');
+    }
+  }
+
   componentWillUnmount() {
     this.toggleToolbarClass(false);
   }
@@ -75,9 +88,10 @@ class HistoryViewerVersionDetail extends PureComponent {
    * @returns {Preview|null}
    */
   renderPreview() {
-    const { version, PreviewComponent } = this.props;
+    const { version, PreviewComponent, previewState } = this.props;
 
-    if (!this.isPreviewable()) {
+    // Don't render the preview if the view mode is "edit"
+    if (!this.isPreviewable() || previewState === 'edit') {
       return null;
     }
 
@@ -115,12 +129,23 @@ class HistoryViewerVersionDetail extends PureComponent {
         isLatestVersion={isLatestVersion}
         recordId={recordId}
         versionId={version.Version}
+        isPreviewable={this.isPreviewable()}
       />
     );
   }
 
-  render() {
-    const { ListComponent, schemaUrl, CompareWarningComponent } = this.props;
+  /**
+   * Renders the version detail view form
+   *
+   * @returns {Object}
+   */
+  renderDetails() {
+    const { ListComponent, schemaUrl, CompareWarningComponent, previewState } = this.props;
+
+    // Hide when the preview mode is explicitly enabled
+    if (this.isPreviewable() && previewState === 'preview') {
+      return null;
+    }
 
     const containerClasses = [
       'flexbox-area-grow',
@@ -140,27 +165,33 @@ class HistoryViewerVersionDetail extends PureComponent {
     };
 
     return (
-      <div className="flexbox-area-grow fill-width">
-        <div className="flexbox-area-grow fill-height">
-          <div className={classnames(containerClasses)}>
-            <ListComponent
-              extraClass={classnames(extraListClasses)}
-              isActive
-              versions={this.getListVersions()}
+      <div className="flexbox-area-grow fill-height">
+        <div className={classnames(containerClasses)}>
+          <ListComponent
+            extraClass={classnames(extraListClasses)}
+            isActive
+            versions={this.getListVersions()}
+          />
+
+          <div className={classnames(formClasses)}>
+            <FormBuilderLoader
+              identifier="HistoryViewer.VersionDetail"
+              schemaUrl={schemaUrl}
             />
-
-            <div className={classnames(formClasses)}>
-              <FormBuilderLoader
-                identifier="HistoryViewer.VersionDetail"
-                schemaUrl={schemaUrl}
-              />
-            </div>
           </div>
-
-          {this.renderToolbar()}
-          <CompareWarningComponent fixed />
         </div>
 
+        {this.renderToolbar()}
+
+        <CompareWarningComponent fixed />
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div className="flexbox-area-grow fill-width">
+        {this.renderDetails()}
         {this.renderPreview()}
       </div>
     );
@@ -183,6 +214,7 @@ HistoryViewerVersionDetail.propTypes = {
     }),
     PropTypes.bool,
   ]),
+  previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
 };
 
 HistoryViewerVersionDetail.defaultProps = {

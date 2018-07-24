@@ -12,6 +12,8 @@ import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerAc
 import { versionType } from 'types/versionType';
 import { compareType } from 'types/compareType';
 import classNames from 'classnames';
+import ResizeAware from 'react-resize-aware';
+import * as viewModeActions from 'state/viewMode/viewModeActions';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
@@ -155,6 +157,7 @@ class HistoryViewer extends Component {
       schemaUrl,
       VersionDetailComponent,
       compare,
+      previewState,
     } = this.props;
 
     // Insert variables into the schema URL via regex replacements
@@ -190,12 +193,13 @@ class HistoryViewer extends Component {
       schemaUrl: schemaUrl.replace(schemaSearch, (match) => schemaReplacements[match]),
       version,
       compare: compareProps,
+      previewState,
     };
 
     return (
-      <div className={this.getContainerClasses()}>
+      <ResizeAware style={{ position: 'relative' }} className={this.getContainerClasses()} onResize={({ width }) => this.props.onResize(width)} >
         <VersionDetailComponent {...props} />
-      </div>
+      </ResizeAware>
     );
   }
 
@@ -318,9 +322,11 @@ HistoryViewer.propTypes = {
   }),
   page: PropTypes.number,
   schemaUrl: PropTypes.string,
+  previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
   actions: PropTypes.object,
   onSelect: PropTypes.func,
   onSetPage: PropTypes.func,
+  onResize: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
@@ -346,10 +352,13 @@ function mapStateToProps(state) {
     compare,
   } = state.versionedAdmin.historyViewer;
 
+  const { activeState } = state.viewMode;
+
   return {
     page: currentPage,
     currentVersion,
-    compare
+    compare,
+    previewState: activeState,
   };
 }
 
@@ -361,6 +370,9 @@ function mapDispatchToProps(dispatch) {
     onSetPage(page) {
       dispatch(setCurrentPage(page));
     },
+    onResize(panelWidth) {
+      dispatch(viewModeActions.enableOrDisableSplitMode(panelWidth));
+    }
   };
 }
 
@@ -371,10 +383,10 @@ export default compose(
   historyViewerConfig,
   inject(
     ['HistoryViewerVersionList', 'HistoryViewerVersionDetail', 'HistoryViewerCompareWarning'],
-    (HistoryViewerVersionList, HistoryViewerVersionDetail, HistoryViewerCompareWarning) => ({
-      ListComponent: HistoryViewerVersionList,
-      VersionDetailComponent: HistoryViewerVersionDetail,
-      CompareWarningComponent: HistoryViewerCompareWarning,
+    (ListComponent, VersionDetailComponent, CompareWarningComponent) => ({
+      ListComponent,
+      VersionDetailComponent,
+      CompareWarningComponent,
     }),
     ({ contextKey }) => `VersionedAdmin.HistoryViewer.${contextKey}`
   )

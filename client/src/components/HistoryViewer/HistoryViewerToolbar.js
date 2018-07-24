@@ -24,7 +24,7 @@ class HistoryViewerToolbar extends Component {
   }
 
   render() {
-    const { FormActionComponent, isLatestVersion } = this.props;
+    const { FormActionComponent, ViewModeComponent, isLatestVersion, isPreviewable } = this.props;
 
     return (
       <div className="toolbar toolbar--south">
@@ -42,6 +42,7 @@ class HistoryViewerToolbar extends Component {
             disabled={isLatestVersion}
             title={i18n._t('HistoryViewerToolbar.REVERT_TO_VERSION', 'Revert to this version')}
           />
+          { isPreviewable && <ViewModeComponent id="history-viewer-edit-mode" area="edit" /> }
         </div>
       </div>
     );
@@ -53,7 +54,9 @@ HistoryViewerToolbar.propTypes = {
     revertToVersion: PropTypes.func.isRequired,
   }),
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  ViewModeComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   isLatestVersion: PropTypes.bool,
+  isPreviewable: PropTypes.bool,
   onAfterRevert: PropTypes.func,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
@@ -61,6 +64,7 @@ HistoryViewerToolbar.propTypes = {
 
 HistoryViewerToolbar.defaultProps = {
   isLatestVersion: false,
+  isPreviewable: false,
 };
 
 function mapStateToProps() {
@@ -86,9 +90,10 @@ export { HistoryViewerToolbar as Component };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   inject(
-    ['FormAction'],
-    (FormActionComponent) => ({
+    ['FormAction', 'ViewModeToggle'],
+    (FormActionComponent, ViewModeComponent) => ({
       FormActionComponent,
+      ViewModeComponent,
     }),
     () => 'VersionedAdmin.HistoryViewer.Toolbar'
   )
