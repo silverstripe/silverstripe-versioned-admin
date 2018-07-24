@@ -1,76 +1,75 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* global jest, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
 import { Component as HistoryViewerVersion } from '../HistoryViewerVersion';
+import Enzyme, { shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-15.4/build/index';
 
-/**
- * Wrapper class to ensure the component is nested correctly before testing it
- */
-class TestHistoryViewerVersion extends React.PureComponent {
-  render() {
-    const NullComponent = () => <div />;
-
-    return (
-      <table>
-        <tbody>
-          <HistoryViewerVersion
-            StateComponent={NullComponent}
-            FormActionComponent={NullComponent}
-            {...this.props}
-          />
-        </tbody>
-      </table>
-    );
-  }
-}
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('HistoryViewerVersion', () => {
-  let component = null;
+  const StateComponent = () => <div />;
+  const FormActionComponent = () => <div />;
+
+  let mockOnCompare;
   let version = {};
 
-  describe('getAuthor()', () => {
-    beforeEach(() => {
-      version = {
-        Version: 3,
-        Published: false,
-        Author: {
-          FirstName: 'John',
-          Surname: 'Smith',
-        },
-        Publisher: {
-          FirstName: 'Sarah',
-          Surname: 'Smith',
-        },
-      };
+  beforeEach(() => {
+    mockOnCompare = jest.fn();
+    version = {
+      Version: 3,
+      Published: false,
+      Author: {
+        FirstName: 'John',
+        Surname: 'Smith',
+      },
+      Publisher: {
+        FirstName: 'Sarah',
+        Surname: 'Smith',
+      },
+    };
+  });
+
+  describe('HistoryViewerVersion', () => {
+    it('calls onCompare to dispatch an action as the result of handleCompare call', () => {
+      const wrapper = shallow(
+        <HistoryViewerVersion
+          version={version}
+          onCompare={mockOnCompare}
+          StateComponent={StateComponent}
+          FormActionComponent={FormActionComponent}
+        />
+      );
+
+      wrapper.instance().handleCompare();
+      expect(mockOnCompare).toBeCalledWith(3);
     });
-
     it('returns the author name when unpublished', () => {
-      component = ReactTestUtils.renderIntoDocument(
-        <TestHistoryViewerVersion version={version} />
+      const wrapper = shallow(
+        <HistoryViewerVersion
+          version={version}
+          StateComponent={StateComponent}
+          FormActionComponent={FormActionComponent}
+        />
       );
 
-      const viewerVersion = ReactTestUtils.findRenderedDOMComponentWithTag(
-        component,
-        'tr'
-      );
-
-      expect(viewerVersion.textContent).toContain('John Smith');
+      expect(wrapper.instance().getAuthor()).toEqual('John Smith');
     });
 
     it('returns the publisher name when published', () => {
-      version.Published = true;
-
-      component = ReactTestUtils.renderIntoDocument(
-        <TestHistoryViewerVersion version={version} />
+      const wrapper = shallow(
+        <HistoryViewerVersion
+          version={{
+            ...version,
+            Published: true
+          }}
+          StateComponent={StateComponent}
+          FormActionComponent={FormActionComponent}
+        />
       );
 
-      const viewerVersion = ReactTestUtils.findRenderedDOMComponentWithTag(
-        component,
-        'tr'
-      );
-
-      expect(viewerVersion.textContent).toContain('Sarah Smith');
+      expect(wrapper.instance().getAuthor()).toEqual('Sarah Smith');
     });
   });
 });

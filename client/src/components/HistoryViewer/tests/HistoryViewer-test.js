@@ -2,18 +2,25 @@
 /* global jest, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
 import { Component as HistoryViewer } from '../HistoryViewer';
-import Enzyme from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-15.4/build/index';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('HistoryViewer', () => {
-  let component = null;
   const ListComponent = () => <table />;
   const VersionDetailComponent = () => <div />;
   const CompareWarningComponent = () => <div />;
+
+  // Mock select functions to replace the ones provided by mapDispatchToProps
+  let mockOnSelect;
+  let mockOnSetPage;
+
+  beforeEach(() => {
+    mockOnSelect = jest.fn();
+    mockOnSetPage = jest.fn();
+  });
 
   const versions = {
     Versions: {
@@ -55,7 +62,7 @@ describe('HistoryViewer', () => {
 
   describe('getVersions()', () => {
     it('returns the node element from each version edge', () => {
-      component = ReactTestUtils.renderIntoDocument(
+      const wrapper = shallow(
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
@@ -66,13 +73,13 @@ describe('HistoryViewer', () => {
         />
       );
 
-      expect(component.getVersions().map((version) => version.Version)).toEqual([14, 13]);
+      expect(wrapper.instance().getVersions().map((version) => version.Version)).toEqual([14, 13]);
     });
   });
 
   describe('getLatestVersion()', () => {
     it('returns the latest version from page one', () => {
-      component = ReactTestUtils.renderIntoDocument(
+      const wrapper = shallow(
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
@@ -83,11 +90,11 @@ describe('HistoryViewer', () => {
           page={1}
         />
       );
-      expect(component.getLatestVersion().Version).toEqual(14);
+      expect(wrapper.instance().getLatestVersion().Version).toEqual(14);
     });
 
     it('returns null if we are not on page one', () => {
-      component = ReactTestUtils.renderIntoDocument(
+      const wrapper = shallow(
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
@@ -98,13 +105,13 @@ describe('HistoryViewer', () => {
           page={2}
         />
       );
-    expect(component.getLatestVersion()).toEqual(false);
+    expect(wrapper.instance().getLatestVersion()).toEqual(false);
     });
   });
 
   describe('render()', () => {
     it('shows a loading state while loading results', () => {
-      component = ReactTestUtils.renderIntoDocument(
+      const wrapper = shallow(
         <HistoryViewer
           ListComponent={ListComponent}
           VersionDetailComponent={VersionDetailComponent}
@@ -116,12 +123,52 @@ describe('HistoryViewer', () => {
         />
       );
 
-      const result = ReactTestUtils.findRenderedDOMComponentWithClass(
-        component,
+      const result = wrapper.find(
         'cms-content-loading-spinner'
       );
 
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe('handlePagination()', () => {
+    it('should have called onSetPage and handlePrevPage after prev button in navigation clicked', () => {
+      const wrapper = shallow(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
+          recordId={1}
+          onSelect={mockOnSelect}
+          onSetPage={mockOnSetPage}
+          limit={1}
+          page={2}
+          versions={versions}
+        />
+    );
+      wrapper.instance().handlePrevPage();
+      expect(mockOnSetPage).toBeCalledWith(1);
+    });
+  });
+
+  describe('onSelect()', () => {
+    it('called when components unmounts', () => {
+      const wrapper = shallow(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
+          recordId={1}
+          onSelect={mockOnSelect}
+          onSetPage={mockOnSetPage}
+          limit={1}
+          page={2}
+          versions={versions}
+        />
+      );
+
+      wrapper.instance().componentWillUnmount();
+      expect(mockOnSelect).toBeCalled();
     });
   });
 });
