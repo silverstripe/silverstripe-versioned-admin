@@ -83,9 +83,9 @@ class HistoryViewerVersion extends Component {
    * @returns {FormAction|null}
    */
   renderCompareButton() {
-    const { isActive, showCompareButton, FormActionComponent } = this.props;
+    const { compare, FormActionComponent } = this.props;
 
-    if (!isActive || !showCompareButton) {
+    if (compare) {
       return null;
     }
 
@@ -190,7 +190,6 @@ HistoryViewerVersion.propTypes = {
 
 HistoryViewerVersion.defaultProps = {
   isActive: false,
-  showCompareButton: true,
   version: defaultVersion,
 };
 
