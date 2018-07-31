@@ -4,9 +4,15 @@ import { connect } from 'react-redux';
 import { inject } from 'lib/Injector';
 import { versionType, defaultVersion } from 'types/versionType';
 import { compareType } from 'types/compareType';
-import { showVersion, setCompareMode, setCompareFrom, setCompareTo } from 'state/historyviewer/HistoryViewerActions';
 import i18n from 'i18n';
 import classNames from 'classnames';
+import {
+  showVersion,
+  clearMessages,
+  setCompareMode,
+  setCompareFrom,
+  setCompareTo,
+} from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerVersion extends Component {
   constructor(props) {
@@ -37,43 +43,51 @@ class HistoryViewerVersion extends Component {
   }
 
   /**
+   * Return a string of HTML class names for the row (list item) element
+   *
+   * @returns {string}
+   */
+  getClassNames() {
+    const { extraClass, isActive, compare, compare: { compareFrom, compareTo } } = this.props;
+    const defaultClasses = {
+      'history-viewer__row': true,
+      'history-viewer__row--current': isActive,
+      'history-viewer__row--comparison-selected': compare && !(compareFrom && compareTo),
+    };
+    return classNames(defaultClasses, extraClass);
+  }
+
+  /**
    * When clicking on a version, render the detail view for it via a Redux action dispatch
+   * passed through via a closure prop (onSelect)
    */
   handleClick() {
-    const { onSelect, version, isActive, compare, onCompareSelect } = this.props;
+    const { onSelect, version, isActive, compare } = this.props;
 
     // If the clear button is shown, don't do anything when clicking on the row
     if (isActive) {
       return false;
     }
 
-    if (compare) {
-      onCompareSelect(version.Version, !compare.versionFrom);
-    } else {
-      onSelect(version.Version);
-    }
-
+    onSelect(version, compare);
     return false;
+  }
+
+  handleCompare() {
+    const { onCompareMode, version } = this.props;
+    onCompareMode(version);
   }
 
   /**
    * When closing the version, return back to the list view via Redux action dispatch
    */
   handleClose() {
-    const { onSelect, compare, onCompareSelect, version } = this.props;
-    if (compare) {
-      onCompareSelect(0, version.Version === compare.versionFrom);
-    } else {
-      onSelect(0);
+    const { onSelect, version, compare, compare: { versionFrom } } = this.props;
+    if (versionFrom && versionFrom.Version === version.Version) {
+      // Ensures we set the correct thing. C.f. logic in mapDispatchToProps -> onSelect
+      delete compare.versionFrom;
     }
-  }
-
-  /**
-   * When the compare mode button is selected, pass the selected version to the Redux store
-   */
-  handleCompare() {
-    const { onCompare, version } = this.props;
-    onCompare(version.Version);
+    onSelect(0, compare);
   }
 
   /**
@@ -84,6 +98,7 @@ class HistoryViewerVersion extends Component {
    */
   renderCompareButton() {
     const { compare, FormActionComponent } = this.props;
+    const translatedText = i18n._t('HistoryViewerVersion.COMPARE', 'Compare');
 
     if (compare) {
       return null;
@@ -92,10 +107,11 @@ class HistoryViewerVersion extends Component {
     return (
       <FormActionComponent
         onClick={this.handleCompare}
-        title={i18n._t('HistoryViewerVersion.COMPARE', 'Compare')}
+        title={translatedText}
+        buttonStyle="outline-light"
         extraClass="history-viewer__compare-button"
       >
-        {i18n._t('HistoryViewerVersion.COMPARE', 'Compare')}
+        {translatedText}
       </FormActionComponent>
     );
   }
@@ -118,6 +134,7 @@ class HistoryViewerVersion extends Component {
         onClick={this.handleClose}
         icon="cancel"
         title={null}
+        buttonStyle="outline-light"
         extraClass="history-viewer__close-button"
       />
     );
@@ -130,9 +147,9 @@ class HistoryViewerVersion extends Component {
    * @returns {DOMElement}
    */
   renderActions() {
-    const { isActive, compareMode } = this.props;
+    const { isActive, compare } = this.props;
 
-    if (!isActive && !compareMode) {
+    if (!isActive && !compare) {
       return (
         <span className="history-viewer__actions" />
       );
@@ -149,15 +166,10 @@ class HistoryViewerVersion extends Component {
   render() {
     const { version, isActive, StateComponent } = this.props;
 
-    const classnames = classNames({
-      'history-viewer__row': true,
-      'history-viewer__row--current': isActive,
-    });
-
     const rowTitle = i18n._t('HistoryViewerVersion.GO_TO_VERSION', 'Go to version {version}');
 
     return (
-      <li className={classnames}>
+      <li className={this.getClassNames()}>
         <a
           href={null}
           className="history-viewer__version-anchor"
@@ -178,50 +190,48 @@ class HistoryViewerVersion extends Component {
 }
 
 HistoryViewerVersion.propTypes = {
-  isActive: React.PropTypes.bool,
-  onSelect: React.PropTypes.func,
-  onCompare: React.PropTypes.func,
-  onCompareSelect: React.PropTypes.func,
+  extraClass: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
+  version: versionType,
+  isActive: PropTypes.bool,
+  onSelect: PropTypes.func,
+  onCompareMode: PropTypes.func,
   compare: compareType,
   StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  version: versionType,
 };
 
 HistoryViewerVersion.defaultProps = {
   isActive: false,
   version: defaultVersion,
+  compare: false,
 };
-
-function mapStateToProps(state) {
-  return {
-    compare: state.versionedAdmin.historyViewer.compare,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onSelect(id) {
-      dispatch(showVersion(id));
-    },
-    onCompare(id) {
-        dispatch(setCompareFrom(id));
-        dispatch(setCompareMode(true));
-    },
-    onCompareSelect(versionID, setFrom) {
-      if (setFrom) {
-        dispatch(setCompareFrom(versionID));
-      } else {
-        dispatch(setCompareTo(versionID));
-      }
-    },
-  };
-}
 
 export { HistoryViewerVersion as Component };
 
+function mapDispatchToProps(dispatch) {
+  return {
+    onSelect(selectedVersion, compare) {
+      const { versionFrom } = compare;
+      if (compare) {
+        if (!versionFrom) {
+          dispatch(setCompareFrom(selectedVersion));
+        } else {
+          dispatch(setCompareTo(selectedVersion));
+        }
+      } else {
+        dispatch(showVersion(selectedVersion));
+        dispatch(clearMessages());
+      }
+    },
+    onCompareMode(version) {
+      dispatch(setCompareFrom(version));
+      dispatch(setCompareMode(true));
+    }
+  };
+}
+
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(null, mapDispatchToProps),
   inject(
     ['HistoryViewerVersionState', 'FormAction'],
     (StateComponent, FormActionComponent) => ({
@@ -233,7 +243,6 @@ export default compose(
       if (version) {
         context += `.${version.Version}`;
       }
-
       return context;
     }
   )

@@ -12,43 +12,43 @@ describe('HistoryViewerVersion', () => {
   const StateComponent = () => <div />;
   const FormActionComponent = () => <div />;
 
-  let mockOnCompare;
+  let mockOnCompareMode;
   let mockOnCompareSelect;
   let mockOnSelect;
   let version = {};
 
   beforeEach(() => {
-    mockOnCompare = jest.fn();
+    mockOnCompareMode = jest.fn();
     mockOnCompareSelect = jest.fn();
     mockOnSelect = jest.fn();
 
     version = {
-      Version: 3,
-      Published: false,
       Author: {
         FirstName: 'John',
         Surname: 'Smith',
       },
+      Published: false,
       Publisher: {
         FirstName: 'Sarah',
         Surname: 'Smith',
       },
+      Version: 3,
     };
   });
 
   describe('HistoryViewerVersion', () => {
-    it('calls onCompare to dispatch an action as the result of handleCompare call', () => {
+    it('calls onCompareMode to dispatch an action as the result of handleCompare call', () => {
       const wrapper = shallow(
         <HistoryViewerVersion
           version={version}
-          onCompare={mockOnCompare}
+          onCompareMode={mockOnCompareMode}
           StateComponent={StateComponent}
           FormActionComponent={FormActionComponent}
         />
       );
 
       wrapper.instance().handleCompare();
-      expect(mockOnCompare).toBeCalledWith(3);
+      expect(mockOnCompareMode).toBeCalledWith(version);
     });
     it('returns the author name when unpublished', () => {
       const wrapper = shallow(
@@ -100,12 +100,36 @@ describe('HistoryViewerVersion', () => {
             StateComponent={StateComponent}
             FormActionComponent={FormActionComponent}
             onSelect={mockOnSelect}
+            isActive={false}
+            compare={false}
           />
         );
 
         wrapper.instance().handleClick();
         expect(mockOnCompareSelect).not.toHaveBeenCalled();
-        expect(mockOnSelect).toHaveBeenCalledWith(version.Version);
+        expect(mockOnSelect).toHaveBeenCalledWith(version, false);
+      });
+
+      it('renders version details when version clicked', () => {
+        const compare = {
+          versionFrom: 0,
+          versionTo: 0
+        };
+
+        const wrapper = shallow(
+          <HistoryViewerVersion
+            version={version}
+            StateComponent={StateComponent}
+            FormActionComponent={FormActionComponent}
+            onSelect={mockOnSelect}
+            isActive={false}
+            compare={compare}
+          />
+        );
+
+        wrapper.instance().handleClick();
+        expect(mockOnCompareSelect).not.toHaveBeenCalled();
+        expect(mockOnSelect).toHaveBeenCalledWith(version, compare);
       });
 
 
@@ -152,8 +176,8 @@ describe('HistoryViewerVersion', () => {
         );
 
         wrapper.instance().handleClick();
-        expect(mockOnCompareSelect).toHaveBeenCalled();
-        expect(mockOnSelect).not.toHaveBeenCalled();
+        expect(mockOnSelect).toHaveBeenCalled();
+        expect(mockOnCompareMode).not.toHaveBeenCalled();
       });
     });
 
@@ -166,11 +190,11 @@ describe('HistoryViewerVersion', () => {
             FormActionComponent={FormActionComponent}
             onSelect={mockOnSelect}
             isActive
+            compare={false}
           />
         );
 
         wrapper.instance().handleClose();
-        expect(mockOnCompareSelect).not.toHaveBeenCalled();
         expect(mockOnSelect).toHaveBeenCalled();
       });
 
@@ -190,8 +214,8 @@ describe('HistoryViewerVersion', () => {
         );
 
         wrapper.instance().handleClose();
-        expect(mockOnCompareSelect).toHaveBeenCalled();
-        expect(mockOnSelect).not.toHaveBeenCalled();
+        expect(mockOnSelect).toHaveBeenCalled();
+        expect(mockOnCompareMode).not.toHaveBeenCalled();
       });
     });
   });

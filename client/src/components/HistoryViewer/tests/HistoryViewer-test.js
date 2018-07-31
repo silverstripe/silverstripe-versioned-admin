@@ -70,6 +70,7 @@ describe('HistoryViewer', () => {
           versions={versions}
           recordId={1}
           limit={100}
+          compare={false}
         />
       );
 
@@ -88,6 +89,7 @@ describe('HistoryViewer', () => {
           recordId={1}
           limit={100}
           page={1}
+          compare={false}
         />
       );
       expect(wrapper.instance().getLatestVersion().Version).toEqual(14);
@@ -103,6 +105,7 @@ describe('HistoryViewer', () => {
           recordId={1}
           limit={100}
           page={2}
+          compare={false}
         />
       );
     expect(wrapper.instance().getLatestVersion()).toEqual(false);
@@ -144,6 +147,7 @@ describe('HistoryViewer', () => {
           limit={1}
           page={2}
           versions={versions}
+          compare={false}
         />
     );
       wrapper.instance().handlePrevPage();
@@ -164,6 +168,7 @@ describe('HistoryViewer', () => {
           limit={1}
           page={2}
           versions={versions}
+          compare={false}
         />
       );
 

@@ -169,7 +169,6 @@ class HistoryViewerVersionDetail extends PureComponent {
         <div className={classnames(containerClasses)}>
           <ListComponent
             extraClass={classnames(extraListClasses)}
-            isActive
             versions={this.getListVersions()}
           />
 

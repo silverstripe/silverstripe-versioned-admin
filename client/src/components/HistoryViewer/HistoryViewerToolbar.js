@@ -67,9 +67,6 @@ HistoryViewerToolbar.defaultProps = {
   isPreviewable: false,
 };
 
-function mapStateToProps() {
-  return {};
-}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -88,7 +85,7 @@ function mapDispatchToProps(dispatch) {
 export { HistoryViewerToolbar as Component };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(null, mapDispatchToProps),
   inject(
     ['FormAction', 'ViewModeToggle'],
     (FormActionComponent, ViewModeComponent) => ({

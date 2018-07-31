@@ -27,11 +27,6 @@
   margin-right: $panel-padding-x;
 }
 
-// Bring any CMS tabs in the detail view closer to the table above it
-.history-viewer__version-detail .nav-tabs {
-  margin-top: -$panel-padding-y;
-}
-
 .history-viewer__compare-button {
   border: 1px solid $white;
   color: $white;

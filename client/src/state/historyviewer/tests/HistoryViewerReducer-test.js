@@ -8,7 +8,7 @@ describe('HistoryViewerReducer', () => {
   beforeEach(() => {
     state = {
       currentPage: 1,
-      currentVersion: 0,
+      currentVersion: false,
       compare: defaultCompare,
       loading: false,
       messages: [],
@@ -30,10 +30,15 @@ describe('HistoryViewerReducer', () => {
     it('sets the current version ID to the current page', () => {
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SHOW_VERSION',
-        payload: { id: 23 },
+        payload: {
+          version:
+            {
+              Version: 23
+            }
+        },
       });
 
-      expect(result.currentVersion).toBe(23);
+      expect(result.currentVersion.Version).toBe(23);
     });
   });
 
@@ -90,7 +95,7 @@ describe('HistoryViewerReducer', () => {
         payload: { enabled: true },
       });
 
-      expect(result.compare).toEqual({ versionFrom: 0, versionTo: 0 });
+      expect(result.compare).toEqual({ versionFrom: false, versionTo: false });
     });
 
     it('resets the compare from/to versions when not in compare mode', () => {
@@ -119,7 +124,7 @@ describe('HistoryViewerReducer', () => {
       });
 
       expect(result.compare.versionFrom).toBe(1);
-      expect(result.compare.versionTo).toBe(0);
+      expect(result.compare.versionTo).toBe(false);
     });
   });
 
@@ -127,30 +132,42 @@ describe('HistoryViewerReducer', () => {
     it('sets the compareFrom to the version', () => {
       state = {
         ...state,
-        compare: { versionFrom: 0, versionTo: 0 },
+        compare: { versionFrom: false, versionTo: false },
       };
 
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_FROM',
-        payload: { version: 47 },
+        payload: {
+          version:
+            {
+              Version: 47
+            }
+        },
       });
 
-      expect(result.compare.versionFrom).toBe(47);
+      expect(result.compare.versionFrom.Version).toBe(47);
     });
 
-    it('uses compareTo for compareFrom when version is zero', () => {
+    it('uses versionTo for versionFrom when version is zero', () => {
       state = {
         ...state,
-        compare: { versionFrom: 50, versionTo: 80 },
+        compare: {
+          versionFrom: {
+            Version: 50
+          },
+          versionTo: {
+            Version: 80
+          }
+        },
       };
 
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_FROM',
-        payload: { version: 0 },
+        payload: {}
       });
 
-      expect(result.compare.versionFrom).toBe(80);
-      expect(result.compare.versionTo).toBe(0);
+      expect(result.compare.versionFrom.Version).toBe(80);
+      expect(result.compare.versionTo).toBe(false);
     });
   });
 
@@ -158,25 +175,42 @@ describe('HistoryViewerReducer', () => {
     it('sets the compareTo version', () => {
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_TO',
-        payload: { version: 85 },
+        payload: {
+          version:
+            {
+              Version:
+                85
+            }
+        },
       });
 
-      expect(result.compare.versionTo).toBe(85);
+      expect(result.compare.versionTo.Version).toBe(85);
     });
 
     it('flips the versions if a lower version "to" is selected', () => {
       state = {
         ...state,
-        compare: { versionFrom: 50, versionTo: 100 },
+        compare: {
+          versionFrom: {
+            Version: 50
+          },
+          versionTo: {
+            Version: 100
+          }
+        },
       };
 
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_TO',
-        payload: { version: 25 },
+        payload: {
+          version: {
+            Version: 25
+          }
+        },
       });
 
-      expect(result.compare.versionFrom).toBe(25);
-      expect(result.compare.versionTo).toBe(50);
+      expect(result.compare.versionFrom.Version).toBe(25);
+      expect(result.compare.versionTo.Version).toBe(50);
     });
   });
 });

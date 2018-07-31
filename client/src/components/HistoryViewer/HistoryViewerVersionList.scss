@@ -8,6 +8,17 @@
   }
 }
 
+// In compare mode, we don't want any space between the two version lists, only a small black line.
+.history-viewer__table--comparison-selected {
+  margin-bottom: 0;
+  border-bottom: 5px solid $gray-800;
+
+}
+
+.history-viewer__row--comparison-selected:last-child {
+  border-bottom: none;
+}
+
 .history-viewer__heading,
 .history-viewer__row {
   border-bottom: 1px solid $table-border-color;
@@ -60,7 +71,6 @@
 }
 
 .table .history-viewer__row--current {
-  // There will only be one table row in this table state
   &, &:hover {
     background-color: $link-color;
     color: $white;

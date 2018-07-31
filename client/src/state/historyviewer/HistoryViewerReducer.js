@@ -3,7 +3,7 @@ import { defaultCompare } from 'types/compareType';
 
 const initialState = {
   currentPage: 1,
-  currentVersion: 0,
+  currentVersion: false,
   compare: defaultCompare,
   loading: false,
   messages: [],
@@ -28,7 +28,7 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     case HISTORY_VIEWER.SHOW_VERSION: {
       return {
         ...state,
-        currentVersion: payload.id,
+        currentVersion: payload.version,
       };
     }
 
@@ -51,40 +51,32 @@ export default function historyViewerReducer(state = initialState, { type, paylo
     }
 
     case HISTORY_VIEWER.CLEAR_MESSAGES: {
-      if (state.messages.length) {
-        return {
-          ...state,
-          messages: [],
-        };
-      }
-
-      return state;
+      return {
+        ...state,
+        messages: [],
+      };
     }
 
     case HISTORY_VIEWER.SET_COMPARE_MODE: {
-      let compare = false;
-
-      if (payload.enabled) {
-        compare = {
-          versionFrom: 0,
-          versionTo: 0,
-          ...state.compare,
-        };
-      }
+      const initialCompare = {
+        versionFrom: false,
+        versionTo: false,
+        ...state.compare
+      };
 
       return {
         ...state,
-        compare,
+        compare: payload.enabled ? initialCompare : false,
       };
     }
 
     case HISTORY_VIEWER.SET_COMPARE_FROM: {
       let { compare: { versionFrom, versionTo } } = state;
-      versionFrom = payload.version;
+      versionFrom = payload.version || false;
 
-      if (!payload.version) {
+      if (!versionFrom) {
         versionFrom = versionTo;
-        versionTo = 0;
+        versionTo = false;
       }
 
       return {
@@ -95,12 +87,12 @@ export default function historyViewerReducer(state = initialState, { type, paylo
 
     case HISTORY_VIEWER.SET_COMPARE_TO: {
       let { compare: { versionFrom, versionTo } } = state;
-      versionTo = payload.version;
+      versionTo = payload.version || false;
 
       // A normal `diff` always shows what it takes turn FROM into TO
       // Here, comparisons are always FROM oldest TO newest version
-      // Version IDs are always positive & in creation order.
-      if (versionTo && versionFrom && versionTo < versionFrom) {
+      // Version IDs (versionObject.Version) are always positive & in creation order.
+      if (versionTo && versionFrom && versionTo.Version < versionFrom.Version) {
         versionFrom = versionTo;
         versionTo = state.compare.versionFrom;
       }
