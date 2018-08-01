@@ -14,9 +14,9 @@
     eslint-plugin-jsx-a11y "^5.1.1"
     eslint-plugin-react "^7.3.0"
 
-"@silverstripe/webpack-config@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@silverstripe/webpack-config/-/webpack-config-0.9.0.tgz#38da63a35d1c061d96ae3825d99561c5ed91a543"
+"@silverstripe/webpack-config@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@silverstripe/webpack-config/-/webpack-config-0.10.0.tgz#5cb3f9aeb4197f9325660c6ea5c9f15fb3ccf2a4"
   dependencies:
     autoprefixer "^6.4.0"
     babel-core "^6.24.1"

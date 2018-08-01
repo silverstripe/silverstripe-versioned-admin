@@ -17,7 +17,7 @@ import { versionType } from 'types/versionType';
 import { compareType } from 'types/compareType';
 import classNames from 'classnames';
 import ResizeAware from 'react-resize-aware';
-import * as viewModeActions from 'state/viewMode/viewModeActions';
+import * as viewModeActions from 'state/viewMode/ViewModeActions';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
