@@ -91,11 +91,11 @@
 
 .history-viewer__version-detail-diff {
   del {
-    color: #f44;
+    color: $red;
   }
 
   ins {
-    background-color: #dfd;
+    background-color: lighten($green, 70%);
     text-decoration: none;
   }
 }

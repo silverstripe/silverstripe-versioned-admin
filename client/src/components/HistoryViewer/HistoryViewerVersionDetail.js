@@ -44,7 +44,7 @@ class HistoryViewerVersionDetail extends PureComponent {
     return [version];
   }
 
-  /*
+  /**
    * Return whether or not we should be displaying the preview component
    * @returns {boolean}
    */
@@ -53,7 +53,7 @@ class HistoryViewerVersionDetail extends PureComponent {
     return isPreviewable && !this.isCompareMode();
   }
 
-  /*
+  /**
    * Return whether or not we should be comparing two versions
    * @returns {boolean}
    */

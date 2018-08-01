@@ -78,13 +78,11 @@ class HistoryViewer extends Component {
    * @returns {string}
    */
   getContainerClasses() {
-    const classes = ['history-viewer', 'fill-height'];
+    const { compare } = this.props;
 
-    if (this.props.compare) {
-      classes.push('history-viewer__compare-mode');
-    }
-
-    return classNames(classes);
+    return classNames('history-viewer', 'fill-height', {
+      'history-viewer__compare-mode': compare,
+    });
   }
 
 
