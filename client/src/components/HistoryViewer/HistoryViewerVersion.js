@@ -133,6 +133,10 @@ class HistoryViewerVersion extends Component {
       <FormActionComponent
         onClick={this.handleClose}
         icon="cancel"
+        // Provide the title as an attribute to prevent it from rendering as text on the button
+        attributes={{
+          title: i18n._t('HistoryViewerVersion.CLOSE', 'Close'),
+        }}
         title={null}
         buttonStyle="outline-light"
         extraClass="history-viewer__close-button"

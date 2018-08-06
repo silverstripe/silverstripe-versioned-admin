@@ -78,13 +78,14 @@ class HistoryViewer extends Component {
    * @returns {string}
    */
   getContainerClasses() {
-    const { compare } = this.props;
+    const { compare, isInGridField } = this.props;
 
+    // GridFieldDetailForm provides its own padding, so apply a class to counteract this.
     return classNames('history-viewer', 'fill-height', {
       'history-viewer__compare-mode': compare,
+      'history-viewer--no-margins': isInGridField && !this.isListView(),
     });
   }
-
 
   /**
    * Get the latest (highest) version number from the list available. If we are not on page
@@ -107,6 +108,33 @@ class HistoryViewer extends Component {
         }
         return current;
       });
+  }
+
+  /**
+   * List view is when either no current version is set, or only one of the two versions is
+   * set for compare mode
+   *
+   * @returns {boolean}
+   */
+  isListView() {
+    const { compare, currentVersion } = this.props;
+
+    // Nothing is set: initial list view
+    if (!currentVersion) {
+      return true;
+    }
+
+    // No compare mode data set: it's detail view
+    if (!compare) {
+      return false;
+    }
+
+    // Only part of the compare mode data is set: it's list view
+    if (compare.versionFrom && !compare.versionTo) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -194,7 +222,6 @@ class HistoryViewer extends Component {
 
     return (
       <ResizeAware
-        style={{ position: 'relative' }}
         className={this.getContainerClasses()}
         onResize={({ width }) => this.props.onResize(width)}
       >
@@ -337,6 +364,7 @@ HistoryViewer.propTypes = {
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.oneOfType([PropTypes.bool, versionType]),
   compare: compareType,
+  isInGridField: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   CompareWarningComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
@@ -352,6 +380,8 @@ HistoryViewer.propTypes = {
   }),
   page: PropTypes.number,
   schemaUrl: PropTypes.string,
+  // @todo replace this with import { VIEW_MODE_STATES } from 'state/viewMode/ViewModeStates'
+  // when webpack-config has this export available via silverstripe/admin
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
   actions: PropTypes.object,
   onSelect: PropTypes.func,
@@ -362,6 +392,7 @@ HistoryViewer.propTypes = {
 HistoryViewer.defaultProps = {
   contextKey: '',
   currentVersion: false,
+  isInGridField: false,
   isPreviewable: false,
   schemaUrl: '',
   versions: {

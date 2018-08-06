@@ -213,6 +213,8 @@ HistoryViewerVersionDetail.propTypes = {
     }),
     PropTypes.bool,
   ]),
+  // @todo replace this with import { VIEW_MODE_STATES } from 'state/viewMode/ViewModeStates'
+  // when webpack-config has this export available via silverstripe/admin
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
 };
 

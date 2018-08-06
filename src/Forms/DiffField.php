@@ -2,7 +2,6 @@
 
 namespace SilverStripe\VersionedAdmin\Forms;
 
-use LogicException;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\View\Parsers\Diff;
@@ -10,7 +9,7 @@ use SilverStripe\View\Parsers\Diff;
 /**
  * This form field is both a field object in it's own right, and a decorator for another field type.
  * It is used to render differences between two data entries into the field type it wraps
- * e.g. a TextField with the value "Old data" can be trasnformed with {@see DiffTransformation}
+ * e.g. a TextField with the value "Old data" can be transformed with {@see DiffTransformation}
  * and then having setValue called again to load in "New data" - this field will then render
  * the value "<ins>New</ins> <del>Old</del> data". Most useful in historic version comparisons
  * {@see SilverStripe\Versioned\Versioned}
@@ -64,7 +63,7 @@ class DiffField extends HTMLReadonlyField
         $newField->setValue($this->value);
         return $newField;
     }
-    
+
     public function getSchemaDataDefaults()
     {
         return array_merge(

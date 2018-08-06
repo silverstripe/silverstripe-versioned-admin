@@ -1,5 +1,5 @@
 <div
-    class="history-viewer__container fill-height"
+    class="history-viewer__container fill-height $ExtraClass"
     data-record-id="{$getSourceRecord.ID}"
     data-record-class="{$getSourceRecord.ClassName}"
     data-context-key="{$getContextKey}"

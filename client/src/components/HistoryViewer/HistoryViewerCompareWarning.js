@@ -25,7 +25,7 @@ class HistoryViewerCompareWarning extends Component {
     }
 
     return (
-      <div className="history-viewer__compare-notice">
+      <div className="history-viewer__compare-notice alert alert-info">
         <span className="notice-message">
           <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
           {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
