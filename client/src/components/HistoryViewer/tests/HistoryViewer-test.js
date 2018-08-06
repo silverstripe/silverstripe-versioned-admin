@@ -37,7 +37,7 @@ describe('HistoryViewer', () => {
             },
             Publisher: null,
             Published: false,
-            LatestDraftVersion: true,
+            LatestDraftVersion: false,
             LiveVersion: false,
             LastEdited: '2018-03-08 11:57:58'
           }
@@ -51,7 +51,7 @@ describe('HistoryViewer', () => {
             },
             Publisher: null,
             Published: false,
-            LatestDraftVersion: false,
+            LatestDraftVersion: true,
             LiveVersion: false,
             LastEdited: '2018-03-08 11:57:56'
           }
@@ -79,7 +79,7 @@ describe('HistoryViewer', () => {
   });
 
   describe('getLatestVersion()', () => {
-    it('returns the latest version from page one', () => {
+    it('returns the version marked as LatestDraftVersion', () => {
       const wrapper = shallow(
         <HistoryViewer
           ListComponent={ListComponent}
@@ -92,10 +92,11 @@ describe('HistoryViewer', () => {
           compare={false}
         />
       );
-      expect(wrapper.instance().getLatestVersion().Version).toEqual(14);
+
+      expect(wrapper.instance().getLatestVersion().Version).toEqual(13);
     });
 
-    it('returns null if we are not on page one', () => {
+    it('gives priority to the currentVersion', () => {
       const wrapper = shallow(
         <HistoryViewer
           ListComponent={ListComponent}
@@ -104,11 +105,16 @@ describe('HistoryViewer', () => {
           versions={versions}
           recordId={1}
           limit={100}
-          page={2}
+          page={1}
           compare={false}
+          currentVersion={{
+            Version: 123,
+            LatestDraftVersion: true
+          }}
         />
       );
-    expect(wrapper.instance().getLatestVersion()).toEqual(false);
+
+      expect(wrapper.instance().getLatestVersion().Version).toEqual(123);
     });
   });
 

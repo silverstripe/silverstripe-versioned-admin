@@ -88,26 +88,27 @@ class HistoryViewer extends Component {
   }
 
   /**
-   * Get the latest (highest) version number from the list available. If we are not on page
-   * zero then it's always false, because there are higher versions that we aren't aware of
-   * in this context.
+   * Get the latest version from the list available (if there is one)
    *
-   * @returns {object}
+   * @returns {object|null}
    */
   getLatestVersion() {
-    const { page } = this.props;
+    const { currentVersion } = this.props;
 
-    // Page numbers are not zero based as they come from GriddlePage numbers
-    if (page > 1) {
-      return false;
+    // Check whether the "current version" (in the store) is the latest draft
+    if (currentVersion && currentVersion.LatestDraftVersion === true) {
+      return currentVersion;
     }
-    return this.getVersions()
-      .reduce((prev, current) => {
-        if (prev.Version > current.Version) {
-          return prev;
-        }
-        return current;
-      });
+
+    // Look for one in the list of available versions
+    const latestDraftVersion = this.getVersions()
+      .filter(version => version.LatestDraftVersion === true);
+
+    if (latestDraftVersion.length) {
+      return latestDraftVersion[0];
+    }
+
+    return null;
   }
 
   /**
