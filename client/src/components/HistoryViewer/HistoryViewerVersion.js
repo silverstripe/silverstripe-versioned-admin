@@ -21,6 +21,7 @@ class HistoryViewerVersion extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleCompare = this.handleCompare.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   /**
@@ -55,6 +56,17 @@ class HistoryViewerVersion extends Component {
       'history-viewer__row--comparison-selected': compare && !(compareFrom && compareTo),
     };
     return classNames(defaultClasses, extraClass);
+  }
+
+  /**
+   * If pressing enter key, trigger click event to load detail view
+   *
+   * @param {Object} event
+   */
+  handleKeyUp(event) {
+    if (event.keyCode === 13) {
+      this.handleClick();
+    }
   }
 
   /**
@@ -155,12 +167,12 @@ class HistoryViewerVersion extends Component {
 
     if (!isActive && !compare) {
       return (
-        <span className="history-viewer__actions" />
+        <span className="history-viewer__actions" role="cell" />
       );
     }
 
     return (
-      <span className="history-viewer__actions">
+      <span className="history-viewer__actions" role="cell">
         {this.renderCompareButton()}
         {this.renderClearButton()}
       </span>
@@ -173,19 +185,25 @@ class HistoryViewerVersion extends Component {
     const rowTitle = i18n._t('HistoryViewerVersion.GO_TO_VERSION', 'Go to version {version}');
 
     return (
-      <li className={this.getClassNames()}>
+      <li className={this.getClassNames()} role="row">
         <a
           href={null}
           className="history-viewer__version-anchor"
           title={i18n.inject(rowTitle, { version: version.Version })}
           onClick={this.handleClick}
+          onKeyUp={this.handleKeyUp}
+          tabIndex={0}
         >
-          <span className="history-viewer__version-no">{version.Version}</span>
+          <span className="history-viewer__version-no" role="cell">
+            {version.Version}
+          </span>
           <StateComponent
             version={version}
             isActive={isActive}
           />
-          <span className="history-viewer__author">{this.getAuthor()}</span>
+          <span className="history-viewer__author" role="cell">
+            {this.getAuthor()}
+          </span>
           {this.renderActions()}
         </a>
       </li>

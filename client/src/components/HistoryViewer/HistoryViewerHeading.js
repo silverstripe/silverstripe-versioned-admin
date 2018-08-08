@@ -37,15 +37,15 @@ class HistoryViewerHeading extends Component {
     const { dropdownOpen } = this.state;
 
     return (
-      <li className="history-viewer__heading">
-        <span className="history-viewer__version-no">#</span>
-        <span className="history-viewer__version-state">
+      <li className="history-viewer__heading" role="row">
+        <span className="history-viewer__version-no" role="columnheader">#</span>
+        <span className="history-viewer__version-state" role="columnheader">
           {i18n._t('HistoryViewer.Record', 'Record')}
         </span>
-        <span className="history-viewer__author">
+        <span className="history-viewer__author" role="columnheader">
           {i18n._t('HistoryViewer.Author', 'Author')}
         </span>
-        <span className="history-viewer__actions">
+        <span className="history-viewer__actions" role="columnheader">
           <Dropdown
             isOpen={dropdownOpen}
             toggle={this.toggle}

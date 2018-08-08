@@ -94,7 +94,7 @@ class HistoryViewerVersionList extends PureComponent {
     return (
       <div className="history-viewer__list">
         {this.renderMessages()}
-        <ul className={this.getClassNames()}>
+        <ul className={this.getClassNames()} role="table">
           {this.renderHeader()}
           {
             versions.map((version) => (

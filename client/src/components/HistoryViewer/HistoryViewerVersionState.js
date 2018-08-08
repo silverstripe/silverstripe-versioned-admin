@@ -65,7 +65,7 @@ class HistoryViewerVersionState extends Component {
 
   render() {
     return (
-      <span className={this.getClassNames()}>
+      <span className={this.getClassNames()} role="cell">
         {this.getPublishedState()} <small className="text-muted">{this.getDate()}</small>
         {this.getBadges()}
       </span>
