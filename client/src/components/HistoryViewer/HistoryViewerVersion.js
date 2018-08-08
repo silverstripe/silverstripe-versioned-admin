@@ -186,9 +186,9 @@ class HistoryViewerVersion extends Component {
 
     return (
       <li className={this.getClassNames()} role="row">
-        <a
-          href={null}
-          className="history-viewer__version-anchor"
+        <span
+          className="history-viewer__version-link"
+          role="button"
           title={i18n.inject(rowTitle, { version: version.Version })}
           onClick={this.handleClick}
           onKeyUp={this.handleKeyUp}
@@ -205,7 +205,7 @@ class HistoryViewerVersion extends Component {
             {this.getAuthor()}
           </span>
           {this.renderActions()}
-        </a>
+        </span>
       </li>
     );
   }

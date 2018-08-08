@@ -25,24 +25,35 @@
 }
 
 // Add colours to the table rows
-.history-viewer__row {
-  background-color: $table-accent-bg;
+.history-viewer {
+  &__row {
+    background-color: $table-accent-bg;
 
-  &:hover,
-  &:active {
-    background-color: $table-hover-bg;
+    &:hover,
+    &:active {
+      background-color: $table-hover-bg;
+    }
   }
-}
 
-.history-viewer__version-anchor {
-  color: inherit;
-  display: flex;
-  flex-grow: 1; // use up 3 columns worth of space by default
-
-  &:hover,
-  &:active {
+  &__version-link {
     color: inherit;
-    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1; // use up 3 columns worth of space by default
+
+    &:hover,
+    &:active {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  &__table {
+    &--current {
+      .history-viewer__version-link:hover {
+        cursor: default;
+      }
+    }
   }
 }
 
@@ -80,10 +91,6 @@
     // Note: !important is necessary due to its use in the base Bootstrap library
     color: $white !important;
   }
-}
-
-.history-viewer__table:not(.history-viewer__table--current) .history-viewer__version-anchor:hover {
-  cursor: pointer;
 }
 
 // In detail views, pulls the content (and content tabs) closer to the selected version table
