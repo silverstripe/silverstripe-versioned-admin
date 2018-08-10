@@ -65,6 +65,11 @@
   padding: $table-cell-padding;
 }
 
+// Ensures version numbers (up to three digits) don't affect record column alignment
+.history-viewer__version-no {
+  width: 3.7%;
+}
+
 .history-viewer__version-state,
 .history-viewer__author {
   flex-grow: 1;
