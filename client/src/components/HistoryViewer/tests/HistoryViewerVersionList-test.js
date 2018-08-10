@@ -6,7 +6,7 @@ import { Component as HistoryViewerVersionList } from '../HistoryViewerVersionLi
 
 describe('HistoryViewerVersionList', () => {
   const FormAlertComponent = () => <div />;
-  const HeadingComponent = () => <tr />;
+  const HeadingComponent = () => <li />;
   const VersionComponent = () => <div />;
 
   const component = ReactTestUtils.renderIntoDocument(
@@ -19,13 +19,13 @@ describe('HistoryViewerVersionList', () => {
   );
 
   describe('render()', () => {
-    it('returns a table', () => {
+    it('returns an unordered list', () => {
       const list = ReactTestUtils.scryRenderedDOMComponentsWithTag(
         component,
-        'table'
+        'ul'
       );
 
-      expect(list[0].className).toContain('table-hover');
+      expect(list[0].className).toContain('history-viewer__table');
     });
   });
 });

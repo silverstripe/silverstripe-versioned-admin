@@ -1,0 +1,25 @@
+.history-viewer__compare-notice {
+  align-self: center;
+  border-top: none;
+  border-radius: 0 0 $border-radius-lg $border-radius-lg;
+  padding: 0;
+  position: absolute;
+
+  .notice-message {
+    padding: .4rem 1rem .4rem 1.5rem;
+    vertical-align: middle;
+  }
+
+  button {
+    background-color: inherit;
+    color: inherit;
+    border-width: 0 0 0 $border-width;
+    border-color: $color-notice;
+    margin-right: 0;
+    border-radius: 0 0 $border-radius-lg 0;
+
+    &:hover {
+      background-color: $color-notice;
+    }
+  }
+}

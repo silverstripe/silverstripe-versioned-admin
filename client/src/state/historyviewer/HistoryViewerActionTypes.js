@@ -7,4 +7,7 @@ export default [
   'SET_CURRENT_PAGE',
   'ADD_MESSAGE',
   'CLEAR_MESSAGES',
+  'SET_COMPARE_MODE',
+  'SET_COMPARE_FROM',
+  'SET_COMPARE_TO',
 ].reduce((obj, item) => Object.assign(obj, { [item]: `HISTORY_VIEWER.${item}` }), {});

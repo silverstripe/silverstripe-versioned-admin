@@ -8,8 +8,16 @@ import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
 import Loading from 'components/Loading/Loading';
-import { setCurrentPage, showVersion } from 'state/historyviewer/HistoryViewerActions';
+import {
+  setCurrentPage,
+  showVersion,
+  clearMessages,
+} from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
+import { compareType } from 'types/compareType';
+import classNames from 'classnames';
+import ResizeAware from 'react-resize-aware';
+import * as viewModeActions from 'state/viewMode/ViewModeActions';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
@@ -65,26 +73,69 @@ class HistoryViewer extends Component {
   }
 
   /**
-   * Get the latest (highest) version number from the list available. If we are not on page
-   * zero then it's always false, because there are higher versions that we aren't aware of
-   * in this context.
+   * Returns a string to be used as the "class" attribute on the history viewer container
    *
-   * @returns {object}
+   * @returns {string}
+   */
+  getContainerClasses() {
+    const { compare, isInGridField } = this.props;
+
+    // GridFieldDetailForm provides its own padding, so apply a class to counteract this.
+    return classNames('history-viewer', 'fill-height', {
+      'history-viewer__compare-mode': compare,
+      'history-viewer--no-margins': isInGridField && !this.isListView(),
+    });
+  }
+
+  /**
+   * Get the latest version from the list available (if there is one)
+   *
+   * @returns {object|null}
    */
   getLatestVersion() {
-    const { page } = this.props;
+    const { currentVersion } = this.props;
 
-    // Page numbers are not zero based as they come from GriddlePage numbers
-    if (page > 1) {
+    // Check whether the "current version" (in the store) is the latest draft
+    if (currentVersion && currentVersion.LatestDraftVersion === true) {
+      return currentVersion;
+    }
+
+    // Look for one in the list of available versions
+    const latestDraftVersion = this.getVersions()
+      .filter(version => version.LatestDraftVersion === true);
+
+    if (latestDraftVersion.length) {
+      return latestDraftVersion[0];
+    }
+
+    return null;
+  }
+
+  /**
+   * List view is when either no current version is set, or only one of the two versions is
+   * set for compare mode
+   *
+   * @returns {boolean}
+   */
+  isListView() {
+    const { compare, currentVersion } = this.props;
+
+    // Nothing is set: initial list view
+    if (!currentVersion) {
+      return true;
+    }
+
+    // No compare mode data set: it's detail view
+    if (!compare) {
       return false;
     }
-    return this.getVersions()
-      .reduce((prev, current) => {
-        if (prev.Version > current.Version) {
-          return prev;
-        }
-        return current;
-      });
+
+    // Only part of the compare mode data is set: it's list view
+    if (compare.versionFrom && !compare.versionTo) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -136,31 +187,47 @@ class HistoryViewer extends Component {
       recordClass,
       schemaUrl,
       VersionDetailComponent,
+      compare,
+      compare: { versionFrom = false, versionTo = false },
+      previewState,
     } = this.props;
 
     // Insert variables into the schema URL via regex replacements
-    const schemaReplacements = {
+    const schemaVersionReplacements = {
       ':id': recordId,
       ':class': recordClass,
-      ':version': currentVersion,
+      ':version': currentVersion.Version,
     };
+    const schemaCompareReplacements = {
+      ':id': recordId,
+      ':class': recordClass,
+      ':from': versionFrom.Version || 0,
+      ':to': versionTo.Version || 0,
+    };
+    const schemaSearch = compare ? /:id|:class|:from|:to/g : /:id|:class|:version/g;
+    const schemaReplacements = compare ? schemaCompareReplacements : schemaVersionReplacements;
 
-    // eslint-disable-next-line no-shadow
-    const version = this.getVersions().find(version => version.Version === currentVersion);
+    const version = compare ? compare.versionFrom : currentVersion;
     const latestVersion = this.getLatestVersion();
 
     const props = {
-      isLatestVersion: latestVersion && latestVersion.Version === version.Version,
+      // comparison shows two versions as one, so by nature cannot be a single 'latest' version.
+      isLatestVersion: !compare && latestVersion && latestVersion.Version === version.Version,
       isPreviewable,
       recordId,
-      schemaUrl: schemaUrl.replace(/:id|:class|:version/g, (match) => schemaReplacements[match]),
+      schemaUrl: schemaUrl.replace(schemaSearch, (match) => schemaReplacements[match]),
       version,
+      compare,
+      previewState,
     };
 
     return (
-      <div className="history-viewer fill-height">
+      <ResizeAware
+        className={this.getContainerClasses()}
+        onResize={({ width }) => this.props.onResize(width)}
+      >
         <VersionDetailComponent {...props} />
-      </div>
+      </ResizeAware>
     );
   }
 
@@ -208,19 +275,50 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Render the list containing versions selected for comparison.
+   * It is not the ListComponent's place to know the context in which it is being rendered
+   * so it is the directive of this contextual component to tell it what stylistic adaptations
+   * it should present based on the context (the type of list it contains).
+   *
+   * @returns {HistoryViewerVersionList|null}
+   */
+  renderComparisonSelectionList() {
+    const { compare: { versionFrom }, ListComponent } = this.props;
+    if (!versionFrom) {
+      return null;
+    }
+    return (
+      <ListComponent
+        versions={[versionFrom]}
+        extraClass="history-viewer__table history-viewer__table--comparison-selected"
+      />
+    );
+  }
+
+  /**
    * Renders a list of versions
    *
    * @returns {HistoryViewerVersionList}
    */
   renderVersionList() {
-    const { isPreviewable, ListComponent, onSelect } = this.props;
+    const {
+      isPreviewable,
+      ListComponent,
+      CompareWarningComponent,
+      compare,
+      compare: { versionFrom: hasVersionFrom },
+    } = this.props;
+
 
     return (
-      <div className="history-viewer fill-height">
+      <div className={this.getContainerClasses()}>
+        <CompareWarningComponent />
+
         <div className={isPreviewable ? 'panel panel--padded panel--scrollable' : ''}>
+          {this.renderComparisonSelectionList()}
           <ListComponent
-            onSelect={onSelect}
             versions={this.getVersions()}
+            showHeader={!compare || (compare && !hasVersionFrom)}
           />
 
           <div className="history-viewer__pagination">
@@ -231,11 +329,24 @@ class HistoryViewer extends Component {
     );
   }
 
+  renderCompareMode() {
+    const { compare } = this.props;
+
+    if (compare && compare.versionFrom && compare.versionTo) {
+        return this.renderVersionDetail();
+    }
+    return this.renderVersionList();
+  }
+
   render() {
-    const { loading, currentVersion } = this.props;
+    const { loading, compare, currentVersion } = this.props;
 
     if (loading) {
       return <Loading />;
+    }
+
+    if (compare) {
+      return this.renderCompareMode();
     }
 
     if (currentVersion) {
@@ -252,9 +363,12 @@ HistoryViewer.propTypes = {
   ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
-  currentVersion: PropTypes.number,
+  currentVersion: PropTypes.oneOfType([PropTypes.bool, versionType]),
+  compare: compareType,
+  isInGridField: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  CompareWarningComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.shape({
     Versions: PropTypes.shape({
       pageInfo: PropTypes.shape({
@@ -267,14 +381,19 @@ HistoryViewer.propTypes = {
   }),
   page: PropTypes.number,
   schemaUrl: PropTypes.string,
+  // @todo replace this with import { VIEW_MODE_STATES } from 'state/viewMode/ViewModeStates'
+  // when webpack-config has this export available via silverstripe/admin
+  previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
   actions: PropTypes.object,
   onSelect: PropTypes.func,
   onSetPage: PropTypes.func,
+  onResize: PropTypes.func,
 };
 
 HistoryViewer.defaultProps = {
   contextKey: '',
-  currentVersion: 0,
+  currentVersion: false,
+  isInGridField: false,
   isPreviewable: false,
   schemaUrl: '',
   versions: {
@@ -289,11 +408,19 @@ HistoryViewer.defaultProps = {
 
 
 function mapStateToProps(state) {
-  const { currentPage, currentVersion } = state.versionedAdmin.historyViewer;
+  const {
+    currentPage,
+    currentVersion,
+    compare,
+  } = state.versionedAdmin.historyViewer;
+
+  const { activeState } = state.viewMode;
 
   return {
     page: currentPage,
     currentVersion,
+    compare,
+    previewState: activeState,
   };
 }
 
@@ -301,10 +428,14 @@ function mapDispatchToProps(dispatch) {
   return {
     onSelect(id) {
       dispatch(showVersion(id));
+      dispatch(clearMessages());
     },
     onSetPage(page) {
       dispatch(setCurrentPage(page));
     },
+    onResize(panelWidth) {
+      dispatch(viewModeActions.enableOrDisableSplitMode(panelWidth));
+    }
   };
 }
 
@@ -314,10 +445,11 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   historyViewerConfig,
   inject(
-    ['HistoryViewerVersionList', 'HistoryViewerVersionDetail'],
-    (HistoryViewerVersionList, HistoryViewerVersionDetail) => ({
-      ListComponent: HistoryViewerVersionList,
-      VersionDetailComponent: HistoryViewerVersionDetail,
+    ['HistoryViewerVersionList', 'HistoryViewerVersionDetail', 'HistoryViewerCompareWarning'],
+    (ListComponent, VersionDetailComponent, CompareWarningComponent) => ({
+      ListComponent,
+      VersionDetailComponent,
+      CompareWarningComponent,
     }),
     ({ contextKey }) => `VersionedAdmin.HistoryViewer.${contextKey}`
   )
