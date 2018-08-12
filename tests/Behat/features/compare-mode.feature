@@ -29,9 +29,6 @@ Feature: Compare mode
 
     When I press the "Compare" button
     Then I should see text matching "Compare mode"
-
-    When I click on version 1
-    Then I should see text matching "Compare mode"
     And I should see text matching "Select two versions"
 
   Scenario: Changes between versions are highlighted

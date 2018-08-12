@@ -52,7 +52,7 @@ class FeatureContext extends SilverStripeContext
      */
     public function iClickOnVersion($versionNo)
     {
-        $versions = $this->getVersions(' .history-viewer__version-anchor .history-viewer__version-no');
+        $versions = $this->getVersions(' .history-viewer__version-no');
         $desiredVersion = null;
         foreach ($versions as $version) {
             /** @var NodeElement $version */
@@ -155,7 +155,7 @@ class FeatureContext extends SilverStripeContext
     public function iShouldSeeInTheAuthorColumn($text, $versionNumber)
     {
         $version = $this->getSpecificVersion($versionNumber);
-        $authorColumn = $version->find('css', '.history-viewer__version-anchor .history-viewer__author');
+        $authorColumn = $version->find('css', '.history-viewer__author');
 
         $exists = strpos($authorColumn->getText(), $text) !== false;
         assertTrue($exists, 'Author column contains ' . $text);
@@ -169,7 +169,7 @@ class FeatureContext extends SilverStripeContext
     public function iShouldSeeInTheRecordColumn($text, $versionNumber)
     {
         $version = $this->getSpecificVersion($versionNumber);
-        $recordColumn = $version->find('css', '.history-viewer__version-anchor .history-viewer__version-state');
+        $recordColumn = $version->find('css', '.history-viewer__version-state');
 
         $exists = strpos($recordColumn->getText(), $text) !== false;
         assertTrue($exists, 'Record column contains ' . $text);
@@ -181,7 +181,7 @@ class FeatureContext extends SilverStripeContext
     public function iShouldSeeInTheVersionColumn($text, $versionNumber)
     {
         $version = $this->getSpecificVersion($versionNumber);
-        $versionColumn = $version->find('css', '.history-viewer__version-anchor .history-viewer__version-no');
+        $versionColumn = $version->find('css', '.history-viewer__version-no');
 
         $exists = strpos($versionColumn->getText(), $text) !== false;
         assertTrue($exists, 'Version column contains ' . $text);
