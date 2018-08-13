@@ -6,6 +6,7 @@ import { Component as HistoryViewerToolbar } from '../HistoryViewerToolbar';
 
 describe('HistoryViewerToolbar', () => {
   const FormActionComponent = () => <div />;
+  const ViewModeComponent = () => <div />;
   let component = null;
   let mockRevertMutation;
   let revertHandler;
@@ -22,6 +23,7 @@ describe('HistoryViewerToolbar', () => {
           onAfterRevert={revertHandler}
           actions={{ revertToVersion: mockRevertMutation }}
           FormActionComponent={FormActionComponent}
+          ViewModeComponent={ViewModeComponent}
           recordId={123}
           versionId={234}
         />

@@ -49,8 +49,10 @@
   },
   "devDependencies": {
     "@silverstripe/eslint-config": "^0.0.2",
-    "@silverstripe/webpack-config": "^0.8.0",
+    "@silverstripe/webpack-config": "^0.10.0",
     "babel-jest": "^19.0.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-15.4": "^1.0.5",
     "expose-loader": "^0.7.4",
     "jest-cli": "^19.0.2",
     "sass-loader": "^6.0.7"
@@ -72,8 +74,10 @@
     "react-apollo": "^0.7.1",
     "react-dom": "15.3.1",
     "react-redux": "^4.4.5",
+    "react-resize-aware": "^2.7.1",
     "react-router": "^2.5.2",
     "react-router-redux": "^4.0.5",
+    "reactstrap": "^5.0.0-beta",
     "redux": "^3.3.1",
     "uuid": "^3.2.1"
   },
