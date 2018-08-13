@@ -6,16 +6,49 @@ import { compose } from 'redux';
 import { inject } from 'lib/Injector';
 import { messageType } from 'types/messageType';
 import { versionType } from 'types/versionType';
+import { compareType } from 'types/compareType';
 
 class HistoryViewerVersionList extends PureComponent {
   /**
-   * Return a string of HTML class names for the table element
+   * Return a string of HTML class names for the list element
    *
    * @returns {string}
    */
   getClassNames() {
-    const { extraClass } = this.props;
-    return classnames({ table: true }, extraClass);
+    const { extraClass, showHeader } = this.props;
+    const classes = {
+      table: true,
+      'history-viewer__table--headerless': !showHeader,
+    };
+    return classnames(classes, extraClass);
+  }
+
+  /**
+   * Compares provided version object to see if it is one of the selected ones in the store.
+   * It can be that it is either currentVersion, the versionFrom or the versionTo comparison.
+   *
+   * We receive either a version object, or `false` as props for current/from/to
+   * If and only if we are NOT in compare mode:
+   * - compare is `false`
+   * - versionFrom and versionTo are `undefined`
+   * - currentVersion is relevant (otherwise it can be ignored, even if it is a valid version)
+   *
+   * @see {state/historyviewer/HistoryViewerReducer} for how compare is set
+   *
+   * Otherwise we simply check to see if the provided version object's version number
+   * is equal to one of the version numbers on the store objects.
+   *
+   * @param {Object} version
+   * @returns {boolean}
+   */
+  isVersionActive(version) {
+      const { currentVersion, compare, compare: { versionFrom, versionTo } } = this.props;
+
+      const isCurrent = currentVersion && currentVersion.Version === version.Version;
+      const isCompareFrom = versionFrom && versionFrom.Version === version.Version;
+      const isCompareTo = versionTo && versionTo.Version === version.Version;
+
+      return (!compare && isCurrent) || isCompareFrom || isCompareTo;
   }
 
   /**
@@ -46,55 +79,63 @@ class HistoryViewerVersionList extends PureComponent {
     );
   }
 
+  /**
+   * Renders a HeadingComponent at the top of the list, unless it has been disabled.
+   * @returns {HistoryViewerHeading|null}
+   */
+  renderHeader() {
+    const { showHeader, HeadingComponent } = this.props;
+    return showHeader ? <HeadingComponent /> : null;
+  }
+
   render() {
-    const { HeadingComponent, isActive, VersionComponent, versions } = this.props;
+    const { VersionComponent, versions, compare } = this.props;
 
     return (
-      <div>
+      <div className="history-viewer__list">
         {this.renderMessages()}
-
-        <table className={this.getClassNames()}>
-          <thead>
-            <HeadingComponent />
-          </thead>
-          <tbody>
-            {
-              versions.map((version) => (
-                <VersionComponent
-                  key={version.Version}
-                  isActive={isActive}
-                  version={version}
-                />
-              ))
-            }
-          </tbody>
-        </table>
+        <ul className={this.getClassNames()} role="table">
+          {this.renderHeader()}
+          {
+            versions.map((version) => (
+              <VersionComponent
+                key={version.Version}
+                isActive={this.isVersionActive(version)}
+                version={version}
+                compare={compare}
+              />
+            ))
+          }
+        </ul>
       </div>
     );
   }
 }
 
 HistoryViewerVersionList.propTypes = {
-  extraClass: PropTypes.string,
+  extraClass: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
+  showHeader: PropTypes.bool,
   FormAlertComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   HeadingComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  isActive: PropTypes.bool,
   messages: PropTypes.arrayOf(messageType),
   VersionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.arrayOf(versionType),
+  compare: compareType,
 };
 
 HistoryViewerVersionList.defaultProps = {
-  extraClass: 'table-hover',
-  isActive: false,
+  extraClass: 'history-viewer__table',
   messages: [],
+  showHeader: true,
   versions: [],
 };
 
 function mapStateToProps(state) {
-  const { messages } = state.versionedAdmin.historyViewer;
+  const { messages, compare, currentVersion } = state.versionedAdmin.historyViewer;
   return {
     messages,
+    compare,
+    currentVersion,
   };
 }
 

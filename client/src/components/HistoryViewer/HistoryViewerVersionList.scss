@@ -1,0 +1,113 @@
+// Replicate Bootstrap table stylings relatively closely but using a unordered list
+.history-viewer__table {
+  padding: 0;
+
+  li {
+    display: flex;
+    list-style-type: none;
+  }
+}
+
+// In compare mode, we don't want any space between the two version lists, only a small black line.
+.history-viewer__table--comparison-selected {
+  margin-bottom: 0;
+  border-bottom: 5px solid $gray-800;
+
+}
+
+.history-viewer__row--comparison-selected:last-child {
+  border-bottom: none;
+}
+
+.history-viewer__heading,
+.history-viewer__row {
+  border-bottom: 1px solid $table-border-color;
+}
+
+// Add colours to the table rows
+.history-viewer {
+  &__row {
+    background-color: $table-accent-bg;
+
+    &:hover,
+    &:active {
+      background-color: $table-hover-bg;
+    }
+  }
+
+  &__version-link {
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1; // use up 3 columns worth of space by default
+
+    &:hover,
+    &:active {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  &__table {
+    &--current {
+      .history-viewer__version-link:hover {
+        cursor: default;
+      }
+    }
+  }
+}
+
+// Give all columns equal width to start with, and table padding
+.history-viewer__version-no,
+.history-viewer__version-state,
+.history-viewer__author,
+.history-viewer__actions {
+  padding: $table-cell-padding;
+}
+
+// Ensures version numbers (up to three digits) don't affect record column alignment
+.history-viewer__version-no {
+  width: 3.7%;
+}
+
+.history-viewer__version-state,
+.history-viewer__author {
+  flex-grow: 1;
+  width: 50%;
+}
+
+// Remove padding in the heading's last column so it doesn't push padding in the others
+.history-viewer__actions {
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; // right alignment
+  min-width: 12rem; // big enough to fit both Compare and "X" close buttons
+}
+
+.table .history-viewer__row--current {
+  &, &:hover {
+    background-color: $link-color;
+    color: $white;
+  }
+
+  .text-muted {
+    // Note: !important is necessary due to its use in the base Bootstrap library
+    color: $white !important;
+  }
+}
+
+// In detail views, pulls the content (and content tabs) closer to the selected version table
+.history-viewer__table--current {
+  margin-bottom: $panel-padding-y / 2;
+}
+
+.history-viewer {
+  // Ensure that form field styles don't give extra styles to the pagination controls
+  &__pagination {
+    select {
+      width: auto;
+    }
+  }
+}

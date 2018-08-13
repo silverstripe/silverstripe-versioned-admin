@@ -22,6 +22,9 @@ jQuery.entwine('ss', ($) => {
           recordId={this.data('record-id')}
           recordClass={this.data('record-class')}
           contextKey={this.data('context-key')}
+          // If the HistoryViewerField is instantiated via a GridFieldDetailForm, it will not
+          // have this class attached (see CMSPageHistoryViewerController).
+          isInGridField={!this.hasClass('history-viewer--standalone')}
           isPreviewable={!!parseInt(this.data('preview-enabled'), 10)}
           limit={30}
           offset={0}

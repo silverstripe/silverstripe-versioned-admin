@@ -1,32 +1,44 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* global jest, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
-import HistoryViewerHeading from '../HistoryViewerHeading';
+import { Component as HistoryViewerHeading } from '../HistoryViewerHeading';
+import Enzyme, { shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-15.4/build/index';
 
-class HeadingWrapper extends React.PureComponent {
-  render() {
-    return (
-      <table>
-        <thead>
-          <HistoryViewerHeading {...this.props} />
-        </thead>
-      </table>
-    );
-  }
-}
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('HistoryViewerHeading', () => {
-  it('has four columns when hasActions is true', () => {
-    const component = ReactTestUtils.renderIntoDocument(
-      <HeadingWrapper hasActions />
-    );
+  // Mock select functions to replace the ones provided by mapDispatchToProps
+  const mockOnCompareModeSelect = jest.fn();
+  const mockOnCompareModeUnselect = jest.fn();
 
-    const result = ReactTestUtils.scryRenderedDOMComponentsWithTag(
-      component,
-      'th'
-    );
+  describe('onChange()', () => {
+    it('triggers mapDispatchToProps functions to notify and update the Redux store', () => {
+      const wrapper = shallow(
+        <HistoryViewerHeading
+          compareModeSelected
+          onCompareModeSelect={mockOnCompareModeSelect}
+          onCompareModeUnselect={mockOnCompareModeUnselect}
+        />
+      );
 
-    expect(result.length).toBe(4);
+      wrapper.find('.history-viewer-heading__compare-mode-checkbox').at(0).simulate('change');
+      expect(mockOnCompareModeUnselect).toHaveBeenCalled();
+    });
+
+    it('simulate change event in disabled compare mode', () => {
+      const wrapper = shallow(
+        <HistoryViewerHeading
+          compareModeSelected={false}
+          onCompareModeSelect={mockOnCompareModeSelect}
+          onCompareModeUnselect={mockOnCompareModeUnselect}
+        />
+      );
+
+      wrapper.find('.history-viewer-heading__compare-mode-checkbox').at(0).simulate('change');
+      expect(mockOnCompareModeSelect).toHaveBeenCalled();
+    });
   });
 });
+
