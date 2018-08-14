@@ -1,13 +1,13 @@
 [main]
 host = https://www.transifex.com
 
-[silverstripe-campaign-admin.master]
+[silverstripe-versioned-admin.master]
 file_filter = lang/<lang>.yml
 source_file = lang/en.yml
 source_lang = en
 type = YML
 
-[silverstripe-campaign-admin.master-js]
+[silverstripe-versioned-admin.master-js]
 file_filter = client/lang/src/<lang>.json
 source_file = client/lang/src/en.json
 source_lang = en
