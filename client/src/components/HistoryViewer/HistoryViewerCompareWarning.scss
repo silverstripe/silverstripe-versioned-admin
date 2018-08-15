@@ -14,12 +14,12 @@
     background-color: inherit;
     color: inherit;
     border-width: 0 0 0 $border-width;
-    border-color: $color-notice;
+    border-color: lighten($color-notice, 10%);
     margin-right: 0;
     border-radius: 0 0 $border-radius 0;
 
     &:hover {
-      background-color: $color-notice;
+      background-color: lighten($color-notice, 10%);
     }
   }
 }
