@@ -81,6 +81,7 @@ export default function historyViewerReducer(state = initialState, { type, paylo
 
       return {
         ...state,
+        currentVersion: versionFrom,
         compare: { versionFrom, versionTo },
       };
     }
@@ -99,6 +100,7 @@ export default function historyViewerReducer(state = initialState, { type, paylo
 
       return {
         ...state,
+        currentVersion: versionFrom,
         compare: { versionFrom, versionTo },
       };
     }
