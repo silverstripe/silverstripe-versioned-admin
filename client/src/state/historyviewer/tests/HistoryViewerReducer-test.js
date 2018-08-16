@@ -169,6 +169,26 @@ describe('HistoryViewerReducer', () => {
       expect(result.compare.versionFrom.Version).toBe(80);
       expect(result.compare.versionTo).toBe(false);
     });
+
+    it('sets the currentVersion to the compareFrom version', () => {
+      state = {
+        ...state,
+        compare: {
+          versionFrom: {
+            Version: 50,
+          },
+        },
+      };
+
+      const result = historyViewerReducer(state, {
+        type: 'HISTORY_VIEWER.SET_COMPARE_FROM',
+        payload: {
+          version: { Version: 60 },
+        },
+      });
+
+      expect(result.currentVersion.Version).toBe(60);
+    });
   });
 
   describe('SET_COMPARE_TO', () => {
@@ -176,11 +196,7 @@ describe('HistoryViewerReducer', () => {
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_TO',
         payload: {
-          version:
-            {
-              Version:
-                85
-            }
+          version: { Version: 85 }
         },
       });
 
@@ -212,5 +228,25 @@ describe('HistoryViewerReducer', () => {
       expect(result.compare.versionFrom.Version).toBe(25);
       expect(result.compare.versionTo.Version).toBe(50);
     });
+  });
+
+  it('sets the currentVersion to the compareFrom version', () => {
+    state = {
+      ...state,
+      compare: {
+        versionFrom: {
+          Version: 50,
+        },
+      },
+    };
+
+    const result = historyViewerReducer(state, {
+      type: 'HISTORY_VIEWER.SET_COMPARE_FROM',
+      payload: {
+        version: { Version: 60 },
+      },
+    });
+
+    expect(result.currentVersion.Version).toBe(60);
   });
 });
