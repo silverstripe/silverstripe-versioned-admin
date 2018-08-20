@@ -32,5 +32,18 @@
         display: block;
       }
     }
+
+    // Because focus-within is not supported by IE and Edge - see https://caniuse.com/#search=%3Afocus-within -,
+    // and the above styl block is not being applied. Therefore the below defines it again using hover.
+    &:hover,
+    &:focus {
+      .history-viewer__selected-message {
+        display: none;
+      }
+
+      .history-viewer__close-button {
+        display: block;
+      }
+    }
   }
 }
