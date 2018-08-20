@@ -284,13 +284,20 @@ class HistoryViewer extends Component {
    */
   renderComparisonSelectionList() {
     const { compare: { versionFrom }, ListComponent } = this.props;
+
     if (!versionFrom) {
       return null;
     }
+
+    const selectionListClasses = classNames(
+      'history-viewer__table',
+      'history-viewer__table--comparison-selected',
+    );
+
     return (
       <ListComponent
         versions={[versionFrom]}
-        extraClass="history-viewer__table history-viewer__table--comparison-selected"
+        extraClass={selectionListClasses}
       />
     );
   }
