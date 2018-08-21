@@ -1,0 +1,9 @@
+SilverStripe\CMS\Model\SiteTree:
+  page_one:
+    Title: 1
+    URLSegment: page-one
+    Content: <p>Hello world!</p>
+  page_two:
+    Title: 2
+    URLSegment: page-two
+    Content: <p>Hello world!</p>
