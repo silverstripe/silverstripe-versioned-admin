@@ -140,7 +140,13 @@ class HistoryViewerVersionDetail extends PureComponent {
    * @returns {Object}
    */
   renderDetails() {
-    const { ListComponent, schemaUrl, CompareWarningComponent, previewState } = this.props;
+    const {
+      compareModeAvailable,
+      ListComponent,
+      schemaUrl,
+      CompareWarningComponent,
+      previewState,
+    } = this.props;
 
     // Hide when the preview mode is explicitly enabled
     if (this.isPreviewable() && previewState === 'preview') {
@@ -170,6 +176,7 @@ class HistoryViewerVersionDetail extends PureComponent {
           <ListComponent
             extraClass={classnames(extraListClasses)}
             versions={this.getListVersions()}
+            compareModeAvailable={compareModeAvailable}
           />
 
           <div className={classnames(formClasses)}>

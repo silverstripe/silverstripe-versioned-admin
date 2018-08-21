@@ -109,10 +109,10 @@ class HistoryViewerVersion extends Component {
    * @returns {FormAction|null}
    */
   renderCompareButton() {
-    const { compare, FormActionComponent } = this.props;
+    const { compareModeAvailable, compare, FormActionComponent } = this.props;
     const translatedText = i18n._t('HistoryViewerVersion.COMPARE', 'Compare');
 
-    if (compare) {
+    if (!compareModeAvailable || compare) {
       return null;
     }
 
@@ -242,6 +242,7 @@ HistoryViewerVersion.propTypes = {
   onSelect: PropTypes.func,
   onCompareMode: PropTypes.func,
   compare: compareType,
+  compareModeAvailable: PropTypes.bool,
   StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
@@ -250,6 +251,7 @@ HistoryViewerVersion.defaultProps = {
   isActive: false,
   version: defaultVersion,
   compare: false,
+  compareModeAvailable: true,
 };
 
 export { HistoryViewerVersion as Component };

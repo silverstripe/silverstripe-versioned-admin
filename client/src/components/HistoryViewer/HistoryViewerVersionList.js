@@ -84,12 +84,21 @@ class HistoryViewerVersionList extends PureComponent {
    * @returns {HistoryViewerHeading|null}
    */
   renderHeader() {
-    const { showHeader, HeadingComponent } = this.props;
-    return showHeader ? <HeadingComponent /> : null;
+    const { showHeader, HeadingComponent, compareModeAvailable } = this.props;
+
+    if (!showHeader) {
+      return null;
+    }
+
+    const headingProps = {
+      compareModeAvailable,
+    };
+
+    return <HeadingComponent {...headingProps} />;
   }
 
   render() {
-    const { VersionComponent, versions, compare } = this.props;
+    const { VersionComponent, versions, compareModeAvailable, compare } = this.props;
 
     return (
       <div className="history-viewer__list">
@@ -103,6 +112,7 @@ class HistoryViewerVersionList extends PureComponent {
                 isActive={this.isVersionActive(version)}
                 version={version}
                 compare={compare}
+                compareModeAvailable={compareModeAvailable}
               />
             ))
           }
@@ -121,9 +131,11 @@ HistoryViewerVersionList.propTypes = {
   VersionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.arrayOf(versionType),
   compare: compareType,
+  compareModeAvailable: PropTypes.bool,
 };
 
 HistoryViewerVersionList.defaultProps = {
+  compareModeAvailable: true,
   extraClass: 'history-viewer__table',
   messages: [],
   showHeader: true,
