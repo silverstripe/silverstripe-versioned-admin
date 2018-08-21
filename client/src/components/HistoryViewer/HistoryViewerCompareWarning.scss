@@ -1,9 +1,10 @@
 .history-viewer__compare-notice {
-  align-self: center;
   border-top: none;
   border-radius: 0 0 $border-radius $border-radius;
   padding: 0;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 
   .notice-message {
     padding: .4rem 1rem .4rem 1.5rem;
