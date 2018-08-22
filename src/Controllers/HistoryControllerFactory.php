@@ -29,10 +29,11 @@ class HistoryControllerFactory implements Factory
 
         if ($id) {
             // Ensure we read from the draft stage at this position
-            $originalStage = Versioned::get_stage();
-            Versioned::set_stage(Versioned::DRAFT);
-            $page = SiteTree::get()->byID($id);
-            Versioned::set_stage($originalStage);
+            $page = Versioned::get_one_by_stage(
+                SiteTree::class,
+                Versioned::DRAFT,
+                sprintf('"SiteTree"."ID" = \'%d\'', $id)
+            );
 
             if ($page && $this->isEnabled($page)) {
                 return Injector::inst()->create(CMSPageHistoryViewerController::class);
