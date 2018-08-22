@@ -251,34 +251,79 @@ describe('HistoryViewer', () => {
 
       expect(wrapper.instance().isListView()).toBe(true);
     });
+
+    it('returns false when in compare mode', () => {
+      const wrapper = shallow(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
+          recordId={1}
+          onSelect={mockOnSelect}
+          onSetPage={mockOnSetPage}
+          limit={1}
+          page={2}
+          versions={versions}
+          currentVersion={{
+            ID: 1
+          }}
+          compare={{
+            versionFrom: {
+              ID: 1,
+            },
+            versionTo: {
+              ID: 2,
+            },
+          }}
+        />
+      );
+
+      expect(wrapper.instance().isListView()).toBe(false);
+    });
   });
 
-  it('returns false when in compare mode', () => {
-    const wrapper = shallow(
-      <HistoryViewer
-        ListComponent={ListComponent}
-        VersionDetailComponent={VersionDetailComponent}
-        CompareWarningComponent={CompareWarningComponent}
-        recordId={1}
-        onSelect={mockOnSelect}
-        onSetPage={mockOnSetPage}
-        limit={1}
-        page={2}
-        versions={versions}
-        currentVersion={{
-          ID: 1
-        }}
-        compare={{
-          versionFrom: {
-            ID: 1,
-          },
-          versionTo: {
-            ID: 2,
-          },
-        }}
-      />
-    );
+  describe('compareModeAvailable()', () => {
+    it('returns true when more than one version is present', () => {
+      const wrapper = shallow(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
+          recordId={1}
+          onSelect={mockOnSelect}
+          onSetPage={mockOnSetPage}
+          limit={1}
+          page={2}
+          versions={versions}
+        />
+      );
 
-    expect(wrapper.instance().isListView()).toBe(false);
+      expect(wrapper.instance().compareModeAvailable()).toBe(true);
+    });
+
+    it('returns false with only one version', () => {
+      const wrapper = shallow(
+        <HistoryViewer
+          ListComponent={ListComponent}
+          VersionDetailComponent={VersionDetailComponent}
+          CompareWarningComponent={CompareWarningComponent}
+          recordId={1}
+          onSelect={mockOnSelect}
+          onSetPage={mockOnSetPage}
+          limit={1}
+          page={2}
+          versions={{
+            Versions: {
+              pageInfo: { totalCount: 1 },
+              edges: [
+                { node: { Version: 14 } },
+              ],
+            }
+          }}
+        />
+      );
+
+      expect(wrapper.instance().compareModeAvailable()).toBe(false);
+    });
   });
 });

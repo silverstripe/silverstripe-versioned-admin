@@ -1,0 +1,49 @@
+.history-viewer__row--current {
+  .history-viewer__version-link {
+    cursor: default;
+  }
+}
+
+// By default hide 'Already selected' message
+.history-viewer__selected-message {
+  display: none;
+}
+
+.history-viewer__table--headerless {
+  .history-viewer__row--current.history-viewer__row--comparison-selected {
+    // When version is selected in compare mode, hide close button and show 'Already selected' message instead
+    .history-viewer__close-button {
+      display: none;
+    }
+
+    .history-viewer__selected-message {
+      display: block;
+    }
+
+    // When version is selected in compare mode - on hover only - show close button and hide the message
+    // focus-within makes this feature keyboard accessible
+    &:hover,
+    &:focus-within {
+      .history-viewer__selected-message {
+        display: none;
+      }
+
+      .history-viewer__close-button {
+        display: block;
+      }
+    }
+
+    // Because focus-within is not supported by IE and Edge - see https://caniuse.com/#search=%3Afocus-within -,
+    // and the above styl block is not being applied. Therefore the below defines it again using hover.
+    &:hover,
+    &:focus {
+      .history-viewer__selected-message {
+        display: none;
+      }
+
+      .history-viewer__close-button {
+        display: block;
+      }
+    }
+  }
+}

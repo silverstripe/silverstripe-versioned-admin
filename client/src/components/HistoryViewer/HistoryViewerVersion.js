@@ -109,10 +109,10 @@ class HistoryViewerVersion extends Component {
    * @returns {FormAction|null}
    */
   renderCompareButton() {
-    const { compare, FormActionComponent } = this.props;
+    const { compareModeAvailable, compare, FormActionComponent } = this.props;
     const translatedText = i18n._t('HistoryViewerVersion.COMPARE', 'Compare');
 
-    if (compare) {
+    if (!compareModeAvailable || compare) {
       return null;
     }
 
@@ -131,6 +131,8 @@ class HistoryViewerVersion extends Component {
   /**
    * Renders a "clear" button to close the version, for example when used in a "detail view"
    * context. This is shown when this version is "active", displayed with a blue background.
+   * It is hidden for the selected version when compare mode is active, until the row is hovered or
+   * focused.
    *
    * @returns {FormAction|null}
    */
@@ -157,6 +159,27 @@ class HistoryViewerVersion extends Component {
   }
 
   /**
+   * Renders an "Already selected" span to close the selected version when compare mode is enabled.
+   * Hidden in all other cases in favour of the "clear button". When the rendered version is
+   * hovered or focused, it gets hidden and the clear button is rendered instead.
+   *
+   * @returns {DOMElement|null}
+   */
+  renderSelectedMessage() {
+    const { isActive } = this.props;
+
+    if (!isActive) {
+      return null;
+    }
+
+    return (
+      <span className="history-viewer__selected-message">
+        {i18n._t('HistoryViewerVersion.SELECTED', 'Already selected')}
+      </span>
+    );
+  }
+
+  /**
    * Renders the "actions" menu for the detail view. This menu may contain a compare mode toggle
    * and/or a "clear" button to clear the current selected version
    *
@@ -174,6 +197,7 @@ class HistoryViewerVersion extends Component {
     return (
       <span className="history-viewer__actions" role="cell">
         {this.renderCompareButton()}
+        {this.renderSelectedMessage()}
         {this.renderClearButton()}
       </span>
     );
@@ -218,6 +242,7 @@ HistoryViewerVersion.propTypes = {
   onSelect: PropTypes.func,
   onCompareMode: PropTypes.func,
   compare: compareType,
+  compareModeAvailable: PropTypes.bool,
   StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
@@ -226,6 +251,7 @@ HistoryViewerVersion.defaultProps = {
   isActive: false,
   version: defaultVersion,
   compare: false,
+  compareModeAvailable: true,
 };
 
 export { HistoryViewerVersion as Component };

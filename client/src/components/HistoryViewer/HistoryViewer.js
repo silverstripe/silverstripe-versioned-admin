@@ -175,6 +175,15 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Compare mode is not available when only one version exists
+   *
+   * @returns {boolean}
+   */
+  compareModeAvailable() {
+    return this.getVersions().length > 1;
+  }
+
+  /**
    * Renders the detail form for a selected version
    *
    * @returns {HistoryViewerVersionDetail}
@@ -207,7 +216,7 @@ class HistoryViewer extends Component {
     const schemaSearch = compare ? /:id|:class|:from|:to/g : /:id|:class|:version/g;
     const schemaReplacements = compare ? schemaCompareReplacements : schemaVersionReplacements;
 
-    const version = compare ? compare.versionFrom : currentVersion;
+    const version = compare ? versionFrom : currentVersion;
     const latestVersion = this.getLatestVersion();
 
     const props = {
@@ -218,6 +227,7 @@ class HistoryViewer extends Component {
       schemaUrl: schemaUrl.replace(schemaSearch, (match) => schemaReplacements[match]),
       version,
       compare,
+      compareModeAvailable: this.compareModeAvailable(),
       previewState,
     };
 
@@ -284,13 +294,20 @@ class HistoryViewer extends Component {
    */
   renderComparisonSelectionList() {
     const { compare: { versionFrom }, ListComponent } = this.props;
+
     if (!versionFrom) {
       return null;
     }
+
+    const selectionListClasses = classNames(
+      'history-viewer__table',
+      'history-viewer__table--comparison-selected',
+    );
+
     return (
       <ListComponent
         versions={[versionFrom]}
-        extraClass="history-viewer__table history-viewer__table--comparison-selected"
+        extraClass={selectionListClasses}
       />
     );
   }
@@ -319,6 +336,7 @@ class HistoryViewer extends Component {
           <ListComponent
             versions={this.getVersions()}
             showHeader={!compare || (compare && !hasVersionFrom)}
+            compareModeAvailable={this.compareModeAvailable()}
           />
 
           <div className="history-viewer__pagination">
@@ -345,7 +363,7 @@ class HistoryViewer extends Component {
       return <Loading />;
     }
 
-    if (compare) {
+    if (this.compareModeAvailable() && compare) {
       return this.renderCompareMode();
     }
 
@@ -391,6 +409,7 @@ HistoryViewer.propTypes = {
 };
 
 HistoryViewer.defaultProps = {
+  compare: {},
   contextKey: '',
   currentVersion: false,
   isInGridField: false,

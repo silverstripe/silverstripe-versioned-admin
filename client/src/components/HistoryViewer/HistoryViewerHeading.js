@@ -32,10 +32,45 @@ class HistoryViewerHeading extends Component {
     }
   }
 
-  render() {
-    const { compareModeSelected } = this.props;
+  /**
+   * If compare mode is available, renders a dropdown containing the "compare two versions" option
+   *
+   * @returns {Dropdown|null}
+   */
+  renderDropdown() {
+    const { compareModeAvailable, compareModeSelected } = this.props;
     const { dropdownOpen } = this.state;
 
+    if (!compareModeAvailable) {
+      return null;
+    }
+
+    return (
+      <Dropdown
+        isOpen={dropdownOpen}
+        toggle={this.toggle}
+        className="history-viewer__actions-dropdown"
+      >
+        <DropdownToggle className="font-icon-sliders" />
+        <DropdownMenu right>
+          <div className="form-check">
+            <input
+              id="history-viewer-compare-two"
+              type="checkbox"
+              className="no-change-track history-viewer-heading__compare-mode-checkbox"
+              checked={compareModeSelected}
+              onChange={this.handleCompareModeChange}
+            />
+            <label className="form-check-label" htmlFor="history-viewer-compare-two">
+              {i18n._t('HistoryViewerHeading.COMPARE_VERSIONS', 'Compare two versions')}
+            </label>
+          </div>
+        </DropdownMenu>
+      </Dropdown>
+    );
+  }
+
+  render() {
     return (
       <li className="history-viewer__heading" role="row">
         <span className="history-viewer__version-no" role="columnheader">#</span>
@@ -46,27 +81,7 @@ class HistoryViewerHeading extends Component {
           {i18n._t('HistoryViewer.Author', 'Author')}
         </span>
         <span className="history-viewer__actions" role="columnheader">
-          <Dropdown
-            isOpen={dropdownOpen}
-            toggle={this.toggle}
-            className="history-viewer__actions-dropdown"
-          >
-            <DropdownToggle className="font-icon-sliders" />
-            <DropdownMenu right>
-              <div className="form-check">
-                <input
-                  id="history-viewer-compare-two"
-                  type="checkbox"
-                  className="no-change-track history-viewer-heading__compare-mode-checkbox"
-                  checked={compareModeSelected}
-                  onChange={this.handleCompareModeChange}
-                />
-                <label className="form-check-label" htmlFor="history-viewer-compare-two">
-                  {i18n._t('HistoryViewerHeading.COMPARE_VERSIONS', 'Compare two versions')}
-                </label>
-              </div>
-            </DropdownMenu>
-          </Dropdown>
+          {this.renderDropdown()}
         </span>
       </li>
     );
@@ -74,9 +89,14 @@ class HistoryViewerHeading extends Component {
 }
 
 HistoryViewerHeading.propTypes = {
+  compareModeAvailable: PropTypes.bool,
   compareModeSelected: PropTypes.bool,
   onCompareModeSelect: PropTypes.func,
   onCompareModeUnselect: PropTypes.func,
+};
+
+HistoryViewerHeading.defaultProps = {
+  compareModeAvailable: true,
 };
 
 function mapStateToProps(state) {
