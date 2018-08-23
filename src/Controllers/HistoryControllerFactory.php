@@ -27,7 +27,7 @@ class HistoryControllerFactory implements Factory
         $request = Injector::inst()->get(HTTPRequest::class);
         $id = $request->param('ID');
 
-        if ($id) {
+        if ($id && is_numeric($id)) {
             // Ensure we read from the draft stage at this position
             $page = Versioned::get_one_by_stage(
                 SiteTree::class,
