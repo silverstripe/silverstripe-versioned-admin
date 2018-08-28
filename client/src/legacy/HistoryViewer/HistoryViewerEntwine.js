@@ -16,20 +16,17 @@ jQuery.entwine('ss', ($) => {
         : {};
 
       const HistoryViewerComponent = loadComponent('HistoryViewer', context);
+      const schemaData = this.data('schema');
+
+      const props = {
+        ...schemaData.data,
+        // If the HistoryViewerField is instantiated via a GridFieldDetailForm, it will not
+        // have this class attached (see CMSPageHistoryViewerController).
+        isInGridField: schemaData.data.isInGridField || !this.hasClass('history-viewer--standalone'),
+      };
 
       ReactDOM.render(
-        <HistoryViewerComponent
-          recordId={this.data('record-id')}
-          recordClass={this.data('record-class')}
-          contextKey={this.data('context-key')}
-          // If the HistoryViewerField is instantiated via a GridFieldDetailForm, it will not
-          // have this class attached (see CMSPageHistoryViewerController).
-          isInGridField={!this.hasClass('history-viewer--standalone')}
-          isPreviewable={!!parseInt(this.data('preview-enabled'), 10)}
-          limit={30}
-          offset={0}
-          page={0}
-        />,
+        <HistoryViewerComponent {...props} />,
         this[0]
       );
     },
