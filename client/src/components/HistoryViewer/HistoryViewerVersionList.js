@@ -16,11 +16,11 @@ class HistoryViewerVersionList extends PureComponent {
    */
   getClassNames() {
     const { extraClass, showHeader } = this.props;
-    const classes = {
+
+    return classnames(extraClass, {
       table: true,
       'history-viewer__table--headerless': !showHeader,
-    };
-    return classnames(classes, extraClass);
+    });
   }
 
   /**
