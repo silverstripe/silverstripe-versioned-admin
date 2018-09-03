@@ -14,6 +14,7 @@ use SilverStripe\Forms\GridField\GridField_ActionMenu;
 use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
@@ -127,6 +128,7 @@ class ArchiveAdmin extends ModelAdmin
     {
         $config = GridFieldConfig_Base::create();
         $config->removeComponentsByType(VersionedGridFieldState::class);
+        $config->removeComponentsByType(GridFieldFilterHeader::class);
         $config->addComponent(new GridFieldDetailForm);
         $config->addComponent(new GridFieldViewButton);
         $config->addComponent(new GridFieldRestoreAction);
