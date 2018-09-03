@@ -34,10 +34,10 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
         $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $listColumns->setDisplayFields([
             'Name' => File::singleton()->fieldLabel('Name'),
-            'appCategory' => _t(ArchiveAdmin::class . '.COLUMN_TYPE', 'Type'),
-            'LastEdited.Ago' => _t(ArchiveAdmin::class . '.COLUMN_DATEARCHIVED', 'Date Archived'),
-            'Parent.Name' => _t(ArchiveAdmin::class . '.COLUMN_ORIGIN', 'Origin'),
-            'AuthorID' => _t(ArchiveAdmin::class . '.COLUMN_ARCHIVEDBY', 'Archived By'),
+            'appCategory' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
+            'LastEdited.Ago' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED', 'Date Archived'),
+            'Parent.Name' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
+            'AuthorID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY', 'Archived By'),
         ]);
         $listColumns->setFieldFormatting([
             'appCategory' => function ($val, $item) {

@@ -32,10 +32,10 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
         $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $listColumns->setDisplayFields([
             'Title' => BaseElement::singleton()->fieldLabel('Title'),
-            'Type' => _t(ArchiveAdmin::class . '.COLUMN_TYPE', 'Type'),
-            'LastEdited.Ago' => _t(ArchiveAdmin::class . '.COLUMN_DATEARCHIVED', 'Date Archived'),
-            'Breadcrumbs' => _t(ArchiveAdmin::class . '.COLUMN_ORIGIN', 'Origin'),
-            'AuthorID' => _t(ArchiveAdmin::class . '.COLUMN_ARCHIVEDBY', 'Archived By')
+            'Type' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
+            'LastEdited.Ago' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED', 'Date Archived'),
+            'Breadcrumbs' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
+            'AuthorID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY', 'Archived By')
         ]);
         $listColumns->setFieldFormatting([
             'Breadcrumbs' => function ($val, $item) {
