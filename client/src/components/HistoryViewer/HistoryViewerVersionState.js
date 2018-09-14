@@ -4,6 +4,7 @@ import i18n from 'i18n';
 import moment from 'moment';
 import { versionType, defaultVersion } from 'types/versionType';
 import { inject } from 'lib/Injector';
+import PropTypes from 'prop-types';
 
 class HistoryViewerVersionState extends Component {
   /**
@@ -75,11 +76,11 @@ class HistoryViewerVersionState extends Component {
 
 HistoryViewerVersionState.propTypes = {
   version: versionType,
-  extraClass: React.PropTypes.string,
-  isActive: React.PropTypes.bool,
-  BadgeComponent: React.PropTypes.oneOfType([
-    React.PropTypes.node,
-    React.PropTypes.func,
+  extraClass: PropTypes.string,
+  isActive: PropTypes.bool,
+  BadgeComponent: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.func,
   ]).isRequired
 };
 

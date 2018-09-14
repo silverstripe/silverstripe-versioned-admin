@@ -1,6 +1,6 @@
 /* global window */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Griddle from 'griddle-react';
@@ -18,6 +18,7 @@ import { compareType } from 'types/compareType';
 import classNames from 'classnames';
 import ResizeAware from 'react-resize-aware';
 import * as viewModeActions from 'state/viewMode/ViewModeActions';
+import PropTypes from 'prop-types';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component

@@ -1,9 +1,10 @@
 import i18n from 'i18n';
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { setCompareMode } from 'state/historyviewer/HistoryViewerActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class HistoryViewerHeading extends Component {
   constructor(props) {
