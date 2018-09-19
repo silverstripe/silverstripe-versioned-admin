@@ -6,8 +6,13 @@ before_install:
 
 env:
   global:
+<<<<<<< HEAD
     - COMPOSER_ROOT_VERSION=1.2.x-dev
     - TRAVIS_NODE_VERSION="6"
+=======
+    - COMPOSER_ROOT_VERSION=1.1.x-dev
+    - TRAVIS_NODE_VERSION="10"
+>>>>>>> Bump to React v16
     - DISPLAY=":99"
     - XVFBARGS=":99 -ac -screen 0 1024x768x16"
     - SS_BASE_URL="http://localhost:8080/"
