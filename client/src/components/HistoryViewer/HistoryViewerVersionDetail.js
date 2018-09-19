@@ -1,10 +1,11 @@
 /* global document */
 
-import React, { PropTypes, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import classnames from 'classnames';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import { inject } from 'lib/Injector';
 import { versionType } from 'types/versionType';
+import PropTypes from 'prop-types';
 
 class HistoryViewerVersionDetail extends PureComponent {
   componentWillMount() {
