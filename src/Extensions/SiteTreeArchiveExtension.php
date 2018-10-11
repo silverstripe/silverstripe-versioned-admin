@@ -32,10 +32,10 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
         $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $listColumns->setDisplayFields([
             'Title' => SiteTree::singleton()->fieldLabel('Title'),
-            'i18n_singular_name' => _t(ArchiveAdmin::class . '.COLUMN_TYPE', 'Type'),
-            'LastEdited.Ago' => _t(ArchiveAdmin::class . '.COLUMN_DATEARCHIVED', 'Date Archived'),
-            'ParentID' => _t(ArchiveAdmin::class . '.COLUMN_ORIGIN', 'Origin'),
-            'AuthorID' => _t(ArchiveAdmin::class . '.COLUMN_ARCHIVEDBY', 'Archived By')
+            'i18n_singular_name' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
+            'LastEdited.Ago' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED', 'Date Archived'),
+            'ParentID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
+            'AuthorID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY', 'Archived By')
         ]);
         $listColumns->setFieldFormatting([
             'ParentID' => function ($val, $item) {
