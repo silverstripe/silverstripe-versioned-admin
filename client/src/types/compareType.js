@@ -1,4 +1,4 @@
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 import { versionType } from './versionType';
 
 // Describes the data structure for compare version storage

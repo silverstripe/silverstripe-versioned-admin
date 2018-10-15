@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@silverstripe/eslint-config@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@silverstripe/eslint-config/-/eslint-config-0.0.2.tgz#358ed4e1f28d35326b5af7e4526e5f1cbf7b3b60"
+"@silverstripe/eslint-config@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@silverstripe/eslint-config/-/eslint-config-0.0.5.tgz#ab94d58e6f328d4efbcc1910572fdff5d85fc4ec"
   dependencies:
     eslint "^4.6.1"
     eslint-config-airbnb "^15.1.0"
@@ -14,9 +14,9 @@
     eslint-plugin-jsx-a11y "^5.1.1"
     eslint-plugin-react "^7.3.0"
 
-"@silverstripe/webpack-config@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@silverstripe/webpack-config/-/webpack-config-0.10.0.tgz#5cb3f9aeb4197f9325660c6ea5c9f15fb3ccf2a4"
+"@silverstripe/webpack-config@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@silverstripe/webpack-config/-/webpack-config-0.12.0.tgz#6e392af52adc81bc4856badc276cf4738b0af7e4"
   dependencies:
     autoprefixer "^6.4.0"
     babel-core "^6.24.1"
@@ -1824,9 +1824,9 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
-bootstrap@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.0.0.tgz#ceb03842c145fcc1b9b4e15da2a05656ba68469a"
+bootstrap@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.1.2.tgz#aee2a93472e61c471fc79fb475531dcbc87de326"
 
 bowser@^1.0.0, bowser@^1.7.3:
   version "1.9.3"

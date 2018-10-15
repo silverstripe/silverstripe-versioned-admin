@@ -1,4 +1,4 @@
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 
 // Describes the expected data structure for a member attached to a version
 const memberShape = PropTypes.shape({
