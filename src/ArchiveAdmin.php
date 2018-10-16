@@ -62,11 +62,12 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getEditForm($id = null, $fields = null)
     {
-        $fields = new FieldList();
+        $fields = FieldList::create();
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
+        $classInst = Injector::inst()->get($this->modelClass);
 
-        if (ClassInfo::hasMethod(Injector::inst()->get($this->modelClass), 'getArchiveField')) {
-            $listField = Injector::inst()->get($this->modelClass)->getArchiveField();
+        if (ClassInfo::hasMethod($classInst, 'getArchiveField')) {
+            $listField = $classInst->getArchiveField();
             $fields->push($listField);
         } else {
             $otherVersionedObjects = $this->getVersionedModels('other');
@@ -290,14 +291,15 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getManagedModelTabs()
     {
-        $forms = new ArrayList();
-
+        $forms = ArrayList::create();
         $mainModels = $this->getVersionedModels('main', true);
+
         foreach ($mainModels as $class => $title) {
-            if (ClassInfo::hasMethod(Injector::inst()->get($class), 'isArchiveFieldEnabled')
-                && Injector::inst()->get($class)->isArchiveFieldEnabled()
+            $classInst = Injector::inst()->get($class);
+            if (ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
+                && $classInst->isArchiveFieldEnabled()
             ) {
-                $forms->push(new ArrayData([
+                $forms->push(ArrayData::create([
                     'Title' => $title,
                     'ClassName' => $class,
                     'Link' => $this->Link($this->sanitiseClassName($class)),
@@ -312,7 +314,7 @@ class ArchiveAdmin extends ModelAdmin
                 $this->request->getVar('others') !== null ||
                 array_key_exists($this->modelClass, $otherModels)
             );
-            $forms->push(new ArrayData([
+            $forms->push(ArrayData::create([
                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Others'),
                 'ClassName' => 'Others',
                 'Link' => $this->Link('?others=1'),
