@@ -31,6 +31,13 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
     {
         $listField = ArchiveAdmin::createArchiveGridField('Files', File::class);
 
+        $list = $listField->getList();
+        // Paginator reports all records even if some can't be viewed, so we filter them out here
+        $list = $list->filterByCallback(function ($item) {
+            return $item->canView();
+        });
+        $listField->setList($list);
+
         $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $listColumns->setDisplayFields([
             'Name' => File::singleton()->fieldLabel('Name'),

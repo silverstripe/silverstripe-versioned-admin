@@ -5,7 +5,7 @@ namespace SilverStripe\VersionedAdmin;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -65,8 +65,8 @@ class ArchiveAdmin extends ModelAdmin
         $fields = new FieldList();
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
 
-        if (ClassInfo::hasMethod(Injectable::singleton($this->modelClass), 'getArchiveField')) {
-            $listField = Injectable::singleton($this->modelClass)->getArchiveField();
+        if (ClassInfo::hasMethod(Injector::inst()->get($this->modelClass), 'getArchiveField')) {
+            $listField = Injector::inst()->get($this->modelClass)->getArchiveField();
             $fields->push($listField);
         } else {
             $otherVersionedObjects = $this->getVersionedModels('other');
@@ -179,7 +179,7 @@ class ArchiveAdmin extends ModelAdmin
 
             // Get the classes that are decalred as handled by ArchiveViewProviders
             foreach ($archiveProviders as $provider) {
-                $archiveProviderClass = Injectable::singleton($provider)->getArchiveFieldClass();
+                $archiveProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
                 $archiveProviderClasses[] = $archiveProviderClass;
             }
 
@@ -294,12 +294,16 @@ class ArchiveAdmin extends ModelAdmin
 
         $mainModels = $this->getVersionedModels('main', true);
         foreach ($mainModels as $class => $title) {
-            $forms->push(new ArrayData(array(
-                'Title' => $title,
-                'ClassName' => $class,
-                'Link' => $this->Link($this->sanitiseClassName($class)),
-                'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
-            )));
+            if (ClassInfo::hasMethod(Injector::inst()->get($class), 'isArchiveFieldEnabled')
+                && Injector::inst()->get($class)->isArchiveFieldEnabled()
+            ) {
+                $forms->push(new ArrayData([
+                    'Title' => $title,
+                    'ClassName' => $class,
+                    'Link' => $this->Link($this->sanitiseClassName($class)),
+                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
+                ]));
+            }
         }
 
         $otherModels = $this->getVersionedModels('other', true);
