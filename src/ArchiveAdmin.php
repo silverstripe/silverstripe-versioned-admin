@@ -22,7 +22,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
-use SilverStripe\VersionedAdmin\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 

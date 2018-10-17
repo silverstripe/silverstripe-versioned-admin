@@ -7,7 +7,7 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
-use SilverStripe\VersionedAdmin\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
 /**
  * Adds a archive view for Elemental blocks
