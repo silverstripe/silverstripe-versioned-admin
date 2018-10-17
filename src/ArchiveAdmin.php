@@ -5,7 +5,7 @@ namespace SilverStripe\VersionedAdmin;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -62,11 +62,12 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getEditForm($id = null, $fields = null)
     {
-        $fields = new FieldList();
+        $fields = FieldList::create();
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
+        $classInst = Injector::inst()->get($this->modelClass);
 
-        if (ClassInfo::hasMethod(Injectable::singleton($this->modelClass), 'getArchiveField')) {
-            $listField = Injectable::singleton($this->modelClass)->getArchiveField();
+        if (ClassInfo::hasMethod($classInst, 'getArchiveField')) {
+            $listField = $classInst->getArchiveField();
             $fields->push($listField);
         } else {
             $otherVersionedObjects = $this->getVersionedModels('other');
@@ -179,7 +180,7 @@ class ArchiveAdmin extends ModelAdmin
 
             // Get the classes that are decalred as handled by ArchiveViewProviders
             foreach ($archiveProviders as $provider) {
-                $archiveProviderClass = Injectable::singleton($provider)->getArchiveFieldClass();
+                $archiveProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
                 $archiveProviderClasses[] = $archiveProviderClass;
             }
 
@@ -290,16 +291,21 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getManagedModelTabs()
     {
-        $forms = new ArrayList();
-
+        $forms = ArrayList::create();
         $mainModels = $this->getVersionedModels('main', true);
+
         foreach ($mainModels as $class => $title) {
-            $forms->push(new ArrayData(array(
-                'Title' => $title,
-                'ClassName' => $class,
-                'Link' => $this->Link($this->sanitiseClassName($class)),
-                'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
-            )));
+            $classInst = Injector::inst()->get($class);
+            if (ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
+                && $classInst->isArchiveFieldEnabled()
+            ) {
+                $forms->push(ArrayData::create([
+                    'Title' => $title,
+                    'ClassName' => $class,
+                    'Link' => $this->Link($this->sanitiseClassName($class)),
+                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
+                ]));
+            }
         }
 
         $otherModels = $this->getVersionedModels('other', true);
@@ -308,7 +314,7 @@ class ArchiveAdmin extends ModelAdmin
                 $this->request->getVar('others') !== null ||
                 array_key_exists($this->modelClass, $otherModels)
             );
-            $forms->push(new ArrayData([
+            $forms->push(ArrayData::create([
                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Others'),
                 'ClassName' => 'Others',
                 'Link' => $this->Link('?others=1'),
