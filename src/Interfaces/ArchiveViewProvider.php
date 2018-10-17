@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\VersionedAdmin;
+namespace SilverStripe\VersionedAdmin\Interfaces;
 
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridField;
