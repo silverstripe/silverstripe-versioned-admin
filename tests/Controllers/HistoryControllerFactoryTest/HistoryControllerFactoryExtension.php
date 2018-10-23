@@ -8,7 +8,17 @@ class HistoryControllerFactoryExtension extends Extension implements TestOnly
 {
     public function updateIsEnabled($record)
     {
-        // Only "enable" for the second fixture (from HistoryControllerFactoryTest.yml)
-        return $record->Title === '2';
+        // First fixture is explicitely disable (from HistoryControllerFactoryTest.yml)
+        if ($record->Title === '1') {
+            return false;
+        }
+
+        // second fixture is explicitely enable (from HistoryControllerFactoryTest.yml)
+        if ($record->Title === '2') {
+            return true;
+        }
+
+        // We ignore the third one and let HistoryControllerFactory's default stand
+
     }
 }

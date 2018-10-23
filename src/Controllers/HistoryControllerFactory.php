@@ -14,7 +14,7 @@ use SilverStripe\Versioned\Versioned;
  * The history controller factory decides which CMS history controller to use, out of the default from the
  * silverstripe/cms module or the history viewer controller from this module, depending on the current page type
  *
- * @deprecated 1.0.0:2.0.0
+ * @deprecated 1.1.0:2.0.0
  */
 class HistoryControllerFactory implements Factory
 {
@@ -36,6 +36,7 @@ class HistoryControllerFactory implements Factory
                 );
 
                 if ($page && !$this->isEnabled($page)) {
+                    // Injector is not used to prevent an infinite loop
                     return new CMSPageHistoryController();
                 }
             }
@@ -54,7 +55,7 @@ class HistoryControllerFactory implements Factory
      */
     public function isEnabled(SiteTree $record)
     {
-        $enabledResults = array_filter($this->extend('updateIsEnabled', $record));
-        return (empty($enabledResults) || min($enabledResults) === false);
+        $enabledResults = $this->extend('updateIsEnabled', $record);
+        return (empty($enabledResults) || min($enabledResults) !== false);
     }
 }
