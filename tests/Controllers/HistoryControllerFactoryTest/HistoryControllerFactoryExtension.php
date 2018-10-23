@@ -17,8 +17,5 @@ class HistoryControllerFactoryExtension extends Extension implements TestOnly
         if ($record->Title === '2') {
             return true;
         }
-
-        // We ignore the third one and let HistoryControllerFactory's default stand
-
     }
 }
