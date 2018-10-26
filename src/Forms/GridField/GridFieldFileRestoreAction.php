@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\VersionedAdmin;
+namespace SilverStripe\VersionedAdmin\Forms\GridField;
 
 use SilverStripe\Assets\File;
 use SilverStripe\Versioned\GridFieldRestoreAction;
