@@ -27,7 +27,7 @@ class GridFieldFileRestoreActionTest extends SapphireTest
             ->getMock();
         $file->method('exists')
             ->willReturn(true);
-        
+
         $this->assertInstanceOf(GridField_FormAction::class, $action->getRestoreAction($gridField, $file, 'Test'));
     }
 }
