@@ -2,6 +2,7 @@
 
 namespace SilverStripe\VersionedAdmin\Extensions;
 
+use SilverStripe\Assets\File;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -64,10 +65,14 @@ class ArchiveRestoreAction extends DataExtension
     protected function shouldDisplayAction($record)
     {
         $admin = $this->owner->popupController;
+        // If the record is a File, check if the file binary was archived
+        $hasFileSaved = $record instanceof File ? $record->exists() : true;
         return (
+            $hasFileSaved &&
             $admin instanceof ArchiveAdmin &&
             DataObject::has_extension($record, Versioned::class) &&
-            $record->canRestoreToDraft());
+            $record->canRestoreToDraft()
+        );
     }
 
     /**

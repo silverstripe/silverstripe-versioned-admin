@@ -18,6 +18,7 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\Versioned\Versioned;
@@ -82,13 +83,12 @@ class ArchiveAdmin extends ModelAdmin
                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
                 $listColumns->setDisplayFields([
                     'Title' => _t(__CLASS__ . '.COLUMN_TITLE', 'Title'),
-                    'LastEdited.Ago' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
-                    'AuthorID' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
+                    'allVersions.first.LastEdited' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
+                    'allVersions.first.Author.Name' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
                 ]);
                 $listColumns->setFieldFormatting([
-                    'AuthorID' => function ($val, $item) {
-                        $member = Member::get_by_id($val);
-                        return $member ? $member->Name : null;
+                    'allVersions.first.LastEdited' => function ($val, $item) {
+                        return DBDatetime::create_field('Datetime', $val)->Ago();
                     },
                 ]);
 
@@ -135,15 +135,33 @@ class ArchiveAdmin extends ModelAdmin
         $config->addComponent(new GridFieldRestoreAction);
         $config->addComponent(new GridField_ActionMenu);
 
-        $items = Versioned::get_including_deleted($class);
-        $items = $items->filterByCallback(function ($item) {
-            return $item->isArchived();
-        });
+        $list = singleton($class)->get();
+        $baseTable = singleton($list->dataClass())->baseTable();
+        $liveTable = $baseTable . '_Live';
+
+        $list = $list
+            ->setDataQueryParam('Versioned.mode', 'latest_versions');
+        // Join a temporary alias BaseTable_Draft, renaming this on execution to BaseTable
+        // See Versioned::augmentSQL() For reference on this alias
+        $draftTable = $baseTable . '_Draft';
+        $list = $list
+            ->leftJoin(
+                $draftTable,
+                "\"{$baseTable}\".\"ID\" = \"{$draftTable}\".\"ID\""
+            );
+
+        $list = $list->leftJoin(
+            $liveTable,
+            "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
+        );
+
+        $list = $list->where("\"{$draftTable}\".\"ID\" IS NULL");
+        $list = $list->sort('LastEdited DESC');
 
         $field = GridField::create(
             $title,
             false,
-            $items->sort('LastEdited DESC'),
+            $list,
             $config
         );
         $field->setModelClass($class);
