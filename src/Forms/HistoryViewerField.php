@@ -116,7 +116,7 @@ class HistoryViewerField extends FormField
     {
         $attributes = parent::getAttributes();
 
-        $attributes['data-schema'] = Convert::raw2json($this->getSchemaData());
+        $attributes['data-schema'] = json_encode($this->getSchemaData());
 
         return $attributes;
     }
