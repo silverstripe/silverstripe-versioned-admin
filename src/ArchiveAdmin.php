@@ -193,28 +193,19 @@ class ArchiveAdmin extends ModelAdmin
 
         $archiveProviders = ClassInfo::implementorsOf(ArchiveViewProvider::class);
 
-        // Get providers that have their view disabled
-        $disabledProviders = array_filter(
-            $archiveProviders,
-            function ($provider) {
-                return !Injector::inst()->get($provider)->isArchiveFieldEnabled();
-            }
-        );
-
-        $disabledProvidersClasses = [];
+        $disabledHandledClasses = [];
 
         // Get the classes that are declared as handled by the disabled providers
-        foreach ($disabledProviders as $provider) {
-            $disabledProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
-            $disabledProvidersClasses[] = $disabledProviderClass;
-        }
+        foreach ($archiveProviders as $provider) {
+            if (!Injector::inst()->get($provider)->isArchiveFieldEnabled()) {
+                $disabledProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
+                $disabledHandledClasses[] = $disabledProviderClass;
 
-        $disabledHandledClasses = [];
-        foreach ($disabledProvidersClasses as $disabledProviderClass) {
-            $disabledHandledClasses = array_merge(
-                $disabledHandledClasses,
-                array_keys(ClassInfo::subclassesFor($disabledProviderClass))
-            );
+                $disabledHandledClasses = array_merge(
+                    $disabledHandledClasses,
+                    array_keys(ClassInfo::subclassesFor($disabledProviderClass))
+                );
+            }
         }
 
         // Remove any subclasses that would also be handled by those disabled providers
