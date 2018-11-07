@@ -7,9 +7,11 @@ use SilverStripe\Assets\File;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\Security\Member;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
-use SilverStripe\VersionedAdmin\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Forms\GridField\GridFieldFileRestoreAction;
+use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
 /**
  * Adds a archive view for Files
@@ -31,21 +33,36 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
     {
         $listField = ArchiveAdmin::createArchiveGridField('Files', File::class);
 
+        $list = $listField->getList();
+        // Paginator reports all records even if some can't be viewed, so we filter them out here
+        $list = $list->filterByCallback(function ($item) {
+            return $item->canView();
+        });
+        $listField->setList($list);
+        $listConfig = $listField->getConfig();
+        $listConfig->removeComponentsByType(GridFieldRestoreAction::class);
+        $listConfig->addComponent(new GridFieldFileRestoreAction());
+
         $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $listColumns->setDisplayFields([
             'Name' => File::singleton()->fieldLabel('Name'),
             'appCategory' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
-            'LastEdited.Ago' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED', 'Date Archived'),
+            'allVersions.first.LastEdited' => _t(
+                'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED',
+                'Date Archived'
+            ),
             'Parent.Name' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
-            'AuthorID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY', 'Archived By'),
+            'allVersions.first.Author.Name' => _t(
+                'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
+                'Archived By'
+            )
         ]);
         $listColumns->setFieldFormatting([
             'appCategory' => function ($val, $item) {
                 return ucfirst($val ?: $item->i18n_singular_name());
             },
-            'AuthorID' => function ($val, $item) {
-                $member = Member::get_by_id($val);
-                return $member ? $member->Name : null;
+            'allVersions.first.LastEdited' => function ($val, $item) {
+                return DBDatetime::create_field('Datetime', $val)->Ago();
             },
         ]);
 

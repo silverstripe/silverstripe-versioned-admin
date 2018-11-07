@@ -5,7 +5,7 @@ namespace SilverStripe\VersionedAdmin\Tests\ArchiveAdminTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\VersionedAdmin\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
 class ViewProviderVersionedObject extends DataObject implements ArchiveViewProvider
 {
