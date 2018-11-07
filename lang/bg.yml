@@ -1,0 +1,12 @@
+bg:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    COLUMN_ARCHIVEDBY: 'Архивиран от'
+    COLUMN_DATEARCHIVED: 'Архивиран на'
+    COLUMN_ORIGIN: Източник
+    COLUMN_TITLE: Заглавие
+    COLUMN_TYPE: Тип
+    SELECT_EMPTY: Изберете...
+    SELECT_TYPE: 'Изберете тип съдържание'
+    TAB_OTHERS: Други
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: ''

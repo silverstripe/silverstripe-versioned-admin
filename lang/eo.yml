@@ -1,0 +1,12 @@
+eo:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    COLUMN_ARCHIVEDBY: Enarĥivigis
+    COLUMN_DATEARCHIVED: 'Dato de enarĥivigo'
+    COLUMN_ORIGIN: Origino
+    COLUMN_TITLE: Titolo
+    COLUMN_TYPE: Tipo
+    SELECT_EMPTY: Elekti
+    SELECT_TYPE: 'Elekti tipon de enhavo'
+    TAB_OTHERS: Aliaj
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: ''
