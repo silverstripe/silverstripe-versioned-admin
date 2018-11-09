@@ -1,0 +1,3 @@
+en:
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: 'You don''t have the necessary permissions to view {ObjectTitle}'
