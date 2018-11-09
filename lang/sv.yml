@@ -1,0 +1,12 @@
+sv:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    COLUMN_ARCHIVEDBY: 'Arkiverad av'
+    COLUMN_DATEARCHIVED: Arkiveringsdatum
+    COLUMN_ORIGIN: Ursprung
+    COLUMN_TITLE: Titel
+    COLUMN_TYPE: Typ
+    SELECT_EMPTY: Välj...
+    SELECT_TYPE: 'Välj en innehållstyp'
+    TAB_OTHERS: Andra
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: ''
