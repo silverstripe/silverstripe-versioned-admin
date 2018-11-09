@@ -1,0 +1,12 @@
+fr:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    COLUMN_ARCHIVEDBY: 'Archivé par'
+    COLUMN_DATEARCHIVED: 'Archivé le'
+    COLUMN_ORIGIN: Origine
+    COLUMN_TITLE: Titre
+    COLUMN_TYPE: Type
+    SELECT_EMPTY: Sélectionner…
+    SELECT_TYPE: 'Sélectionner un type de contenu'
+    TAB_OTHERS: Autres
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: ''

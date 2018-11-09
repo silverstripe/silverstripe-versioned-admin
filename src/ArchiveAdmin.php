@@ -5,7 +5,7 @@ namespace SilverStripe\VersionedAdmin;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -18,11 +18,12 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
-use SilverStripe\VersionedAdmin\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 
@@ -62,11 +63,12 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getEditForm($id = null, $fields = null)
     {
-        $fields = new FieldList();
+        $fields = FieldList::create();
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
+        $classInst = Injector::inst()->get($this->modelClass);
 
-        if (ClassInfo::hasMethod(Injectable::singleton($this->modelClass), 'getArchiveField')) {
-            $listField = Injectable::singleton($this->modelClass)->getArchiveField();
+        if (ClassInfo::hasMethod($classInst, 'getArchiveField')) {
+            $listField = $classInst->getArchiveField();
             $fields->push($listField);
         } else {
             $otherVersionedObjects = $this->getVersionedModels('other');
@@ -81,13 +83,12 @@ class ArchiveAdmin extends ModelAdmin
                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
                 $listColumns->setDisplayFields([
                     'Title' => _t(__CLASS__ . '.COLUMN_TITLE', 'Title'),
-                    'LastEdited.Ago' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
-                    'AuthorID' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
+                    'allVersions.first.LastEdited' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
+                    'allVersions.first.Author.Name' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
                 ]);
                 $listColumns->setFieldFormatting([
-                    'AuthorID' => function ($val, $item) {
-                        $member = Member::get_by_id($val);
-                        return $member ? $member->Name : null;
+                    'allVersions.first.LastEdited' => function ($val, $item) {
+                        return DBDatetime::create_field('Datetime', $val)->Ago();
                     },
                 ]);
 
@@ -134,15 +135,33 @@ class ArchiveAdmin extends ModelAdmin
         $config->addComponent(new GridFieldRestoreAction);
         $config->addComponent(new GridField_ActionMenu);
 
-        $items = Versioned::get_including_deleted($class);
-        $items = $items->filterByCallback(function ($item) {
-            return $item->isArchived();
-        });
+        $list = singleton($class)->get();
+        $baseTable = singleton($list->dataClass())->baseTable();
+        $liveTable = $baseTable . '_Live';
+
+        $list = $list
+            ->setDataQueryParam('Versioned.mode', 'latest_versions');
+        // Join a temporary alias BaseTable_Draft, renaming this on execution to BaseTable
+        // See Versioned::augmentSQL() For reference on this alias
+        $draftTable = $baseTable . '_Draft';
+        $list = $list
+            ->leftJoin(
+                $draftTable,
+                "\"{$baseTable}\".\"ID\" = \"{$draftTable}\".\"ID\""
+            );
+
+        $list = $list->leftJoin(
+            $liveTable,
+            "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
+        );
+
+        $list = $list->where("\"{$draftTable}\".\"ID\" IS NULL");
+        $list = $list->sort('LastEdited DESC');
 
         $field = GridField::create(
             $title,
             false,
-            $items->sort('LastEdited DESC'),
+            $list,
             $config
         );
         $field->setModelClass($class);
@@ -172,14 +191,33 @@ class ArchiveAdmin extends ModelAdmin
             }
         );
 
+        $archiveProviders = ClassInfo::implementorsOf(ArchiveViewProvider::class);
+
+        $disabledHandledClasses = [];
+
+        // Get the classes that are declared as handled by the disabled providers
+        foreach ($archiveProviders as $provider) {
+            if (!Injector::inst()->get($provider)->isArchiveFieldEnabled()) {
+                $disabledProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
+                $disabledHandledClasses[] = $disabledProviderClass;
+
+                $disabledHandledClasses = array_merge(
+                    $disabledHandledClasses,
+                    array_keys(ClassInfo::subclassesFor($disabledProviderClass))
+                );
+            }
+        }
+
+        // Remove any subclasses that would also be handled by those disabled providers
+        $versionedClasses = array_diff_key($versionedClasses, array_flip($disabledHandledClasses));
+
         // If there is a valid filter passed
         if ($filter && in_array($filter, ['main', 'other'])) {
-            $archiveProviders = ClassInfo::implementorsOf(ArchiveViewProvider::class);
             $archiveProviderClasses = [];
 
             // Get the classes that are decalred as handled by ArchiveViewProviders
             foreach ($archiveProviders as $provider) {
-                $archiveProviderClass = Injectable::singleton($provider)->getArchiveFieldClass();
+                $archiveProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
                 $archiveProviderClasses[] = $archiveProviderClass;
             }
 
@@ -290,16 +328,21 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getManagedModelTabs()
     {
-        $forms = new ArrayList();
-
+        $forms = ArrayList::create();
         $mainModels = $this->getVersionedModels('main', true);
+
         foreach ($mainModels as $class => $title) {
-            $forms->push(new ArrayData(array(
-                'Title' => $title,
-                'ClassName' => $class,
-                'Link' => $this->Link($this->sanitiseClassName($class)),
-                'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
-            )));
+            $classInst = Injector::inst()->get($class);
+            if (ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
+                && $classInst->isArchiveFieldEnabled()
+            ) {
+                $forms->push(ArrayData::create([
+                    'Title' => $title,
+                    'ClassName' => $class,
+                    'Link' => $this->Link($this->sanitiseClassName($class)),
+                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
+                ]));
+            }
         }
 
         $otherModels = $this->getVersionedModels('other', true);
@@ -308,7 +351,7 @@ class ArchiveAdmin extends ModelAdmin
                 $this->request->getVar('others') !== null ||
                 array_key_exists($this->modelClass, $otherModels)
             );
-            $forms->push(new ArrayData([
+            $forms->push(ArrayData::create([
                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Others'),
                 'ClassName' => 'Others',
                 'Link' => $this->Link('?others=1'),

@@ -27,24 +27,27 @@ class HistoryControllerFactoryTest extends SapphireTest
         $factory = new HistoryControllerFactory;
 
         $controller = $factory->create(null);
-        $this->assertInstanceOf(CMSPageHistoryController::class, $controller);
+        $this->assertInstanceOf(CMSPageHistoryViewerController::class, $controller);
 
-        $id = $this->idFromFixture(SiteTree::class, 'page_one');
-
-        $mockRequest = new HTTPRequest('GET', '');
-        $mockRequest->setRouteParams(['ID' => $id]);
-        Injector::inst()->registerService($mockRequest);
-
+        $this->mockRequest('page_one');
         $controller = $factory->create(null);
         $this->assertInstanceOf(CMSPageHistoryController::class, $controller);
 
-        $id = $this->idFromFixture(SiteTree::class, 'page_two');
-
-        $mockRequest = new HTTPRequest('GET', '');
-        $mockRequest->setRouteParams(['ID' => $id]);
-        Injector::inst()->registerService($mockRequest);
-
+        $this->mockRequest('page_two');
         $controller = $factory->create(null);
         $this->assertInstanceOf(CMSPageHistoryViewerController::class, $controller);
+
+        $this->mockRequest('page_three');
+        $controller = $factory->create(null);
+        $this->assertInstanceOf(CMSPageHistoryViewerController::class, $controller);
+    }
+
+    private function mockRequest($identifier)
+    {
+        $id = $this->idFromFixture(SiteTree::class, $identifier);
+
+        $mockRequest = new HTTPRequest('GET', '');
+        $mockRequest->setRouteParams(['ID' => $id]);
+        Injector::inst()->registerService($mockRequest);
     }
 }

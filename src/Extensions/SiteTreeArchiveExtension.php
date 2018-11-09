@@ -5,9 +5,10 @@ namespace SilverStripe\VersionedAdmin\Extensions;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
-use SilverStripe\VersionedAdmin\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
 /**
  * Adds a archive view for Pages
@@ -33,9 +34,15 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
         $listColumns->setDisplayFields([
             'Title' => SiteTree::singleton()->fieldLabel('Title'),
             'i18n_singular_name' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
-            'LastEdited.Ago' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED', 'Date Archived'),
+            'allVersions.first.LastEdited' => _t(
+                'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED',
+                'Date Archived'
+            ),
             'ParentID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
-            'AuthorID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY', 'Archived By')
+            'allVersions.first.Author.Name' => _t(
+                'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
+                'Archived By'
+            )
         ]);
         $listColumns->setFieldFormatting([
             'ParentID' => function ($val, $item) {
@@ -48,9 +55,8 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
                     return $breadcrumbString;
                 }
             },
-            'AuthorID' => function ($val, $item) {
-                $member = Member::get_by_id($val);
-                return $member ? $member->Name : null;
+            'allVersions.first.LastEdited' => function ($val, $item) {
+                return DBDatetime::create_field('Datetime', $val)->Ago();
             },
         ]);
 

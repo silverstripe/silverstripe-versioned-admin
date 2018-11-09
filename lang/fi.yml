@@ -1,0 +1,12 @@
+fi:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    COLUMN_ARCHIVEDBY: Arkistoija
+    COLUMN_DATEARCHIVED: Arkistointipäivä
+    COLUMN_ORIGIN: Alkuperäinen
+    COLUMN_TITLE: Otsikko
+    COLUMN_TYPE: Tyyppi
+    SELECT_EMPTY: Valitse...
+    SELECT_TYPE: 'Valitse sisällön tyyppi'
+    TAB_OTHERS: Muut
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: ''
