@@ -1,0 +1,13 @@
+{
+  "HistoryViewer.NEXT": "Next",
+  "HistoryViewer.PREVIOUS": "Previous",
+  "HistoryViewer.Record": "Record",
+  "HistoryViewer.Author": "Author",
+  "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Unavailable for the current version",
+  "HistoryViewerToolbar.REVERT_TO_VERSION": "Revert to this version",
+  "HistoryViewerToolbar.REVERTED_MESSAGE": "Successfully reverted to version %s",
+  "HistoryViewerVersionList.CLOSE": "Close",
+  "HistoryViewer.Published": "Published",
+  "HistoryViewer.Saved": "Saved",
+  "HistoryViewer.BadgeLive": "Live"
+}
