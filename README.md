@@ -19,7 +19,7 @@ $ composer require silverstripe/versioned-admin
 
 ## Documentation
 
-See [doc.silverstripe.org](https://docs.silverstripe.org)
+See ["Versioning" on docs.silverstripe.org](https://docs.silverstripe.org/en/4/developer_guides/model/versioning/)
 
 ## Versioning
 
