@@ -11,6 +11,10 @@ class HistoryViewerToolbar extends Component {
     super(props);
 
     this.handleRevert = this.handleRevert.bind(this);
+
+    this.state = {
+      isReverting: false,
+    };
   }
 
   /**
@@ -20,12 +24,19 @@ class HistoryViewerToolbar extends Component {
   handleRevert() {
     const { actions: { revertToVersion }, onAfterRevert, recordId, versionId } = this.props;
 
+    this.setState({ isReverting: true });
+
     const handler = typeof onAfterRevert === 'function' ? onAfterRevert : () => {};
-    return revertToVersion(recordId, versionId, 'DRAFT', 'DRAFT').then(handler(versionId));
+    return revertToVersion(recordId, versionId, 'DRAFT', 'DRAFT').then(() => handler(versionId));
   }
 
   render() {
     const { FormActionComponent, ViewModeComponent, isLatestVersion, isPreviewable } = this.props;
+    const { isReverting } = this.state;
+
+    const revertButtonTitle = isReverting
+      ? i18n._t('HistoryViewerToolbar.REVERT_IN_PROGRESS', 'Revert in progress...')
+      : i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version');
 
     return (
       <div className="toolbar toolbar--south">
@@ -35,12 +46,13 @@ class HistoryViewerToolbar extends Component {
             icon="back-in-time"
             name="revert"
             attributes={{
-              title: i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version'),
+              title: revertButtonTitle,
             }}
             data={{
               buttonStyle: 'warning'
             }}
-            disabled={isLatestVersion}
+            disabled={isLatestVersion || isReverting}
+            loading={isReverting}
             title={i18n._t('HistoryViewerToolbar.REVERT_TO_VERSION', 'Revert to this version')}
           />
           { isPreviewable && <ViewModeComponent id="history-viewer-edit-mode" area="edit" /> }
