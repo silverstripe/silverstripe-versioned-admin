@@ -320,7 +320,7 @@ class HistoryViewer extends Component {
    */
   renderVersionList() {
     const {
-      isPreviewable,
+      isInGridField,
       ListComponent,
       CompareWarningComponent,
       compare,
@@ -332,7 +332,7 @@ class HistoryViewer extends Component {
       <div className={this.getContainerClasses()}>
         <CompareWarningComponent />
 
-        <div className={isPreviewable ? 'panel panel--padded panel--scrollable' : ''}>
+        <div className={isInGridField ? '' : 'panel panel--padded panel--scrollable'}>
           {this.renderComparisonSelectionList()}
           <ListComponent
             versions={this.getVersions()}

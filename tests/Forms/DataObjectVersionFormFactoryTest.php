@@ -114,8 +114,10 @@ class DataObjectVersionFormFactoryTest extends SapphireTest
             $this->markTestSkipped('This test requires the cms module to be installed.');
         }
 
+        $record = new SiteTree();
+        $record->write();
         $context = [
-            'Record' => new SiteTree(),
+            'Record' => $record,
         ];
         $form = $this->factory->getForm($this->controller, 'some_form', $context);
         $field = $form->Fields()->dataFieldByName('MetaDescription');
