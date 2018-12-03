@@ -9,6 +9,7 @@
   "HistoryViewer.Author": "Author",
   "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Unavailable for the current version",
   "HistoryViewerToolbar.REVERT_TO_VERSION": "Revert to this version",
+  "HistoryViewerToolbar.REVERT_IN_PROGRESS": "Revert in progress...",
   "HistoryViewerToolbar.REVERTED_MESSAGE": "Successfully reverted to version %s",
   "HistoryViewerVersion.COMPARE": "Compare",
   "HistoryViewerVersion.CLOSE": "Close",
