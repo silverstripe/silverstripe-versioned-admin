@@ -62,8 +62,11 @@ class HistoryViewerField extends FormField
     public function getPreviewEnabled()
     {
         $record = $this->getSourceRecord();
+        $previewEnabled = $record && $record instanceof CMSPreviewable;
 
-        return $record && $record instanceof CMSPreviewable;
+        $this->extend('updatePreviewEnabled', $previewEnabled, $record);
+
+        return $previewEnabled;
     }
 
     public function getContextKey()
