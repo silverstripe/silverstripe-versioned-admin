@@ -24,7 +24,12 @@ class CMSPageHistoryViewerController extends CMSMain
 
     private static $url_rule = '/$Action/$ID/$VersionID/$OtherVersionID';
 
-    private static $url_priority = 41;
+    /**
+     * {@inheritDoc}
+     *
+     * This is one higher than CMSPageHistoryController to give it priority
+     */
+    private static $url_priority = 43;
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
