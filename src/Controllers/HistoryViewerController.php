@@ -170,7 +170,7 @@ class HistoryViewerController extends LeftAndMain
 
         if (!$record->canView()) {
             $this->jsonError(403, _t(
-                __CLASS__.'.ErrorItemViewPermissionDenied',
+                __CLASS__ . '.ErrorItemViewPermissionDenied',
                 "You don't have the necessary permissions to view {ObjectTitle}",
                 ['ObjectTitle' => $record->i18n_singular_name()]
             ));

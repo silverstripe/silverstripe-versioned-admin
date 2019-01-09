@@ -24,7 +24,7 @@ class HistoryControllerFactoryTest extends SapphireTest
 
     public function testCreateController()
     {
-        $factory = new HistoryControllerFactory;
+        $factory = new HistoryControllerFactory();
 
         $controller = $factory->create(null);
         $this->assertInstanceOf(CMSPageHistoryViewerController::class, $controller);
