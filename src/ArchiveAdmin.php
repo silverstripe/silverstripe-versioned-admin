@@ -105,7 +105,7 @@ class ArchiveAdmin extends ModelAdmin
         $form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
         $form->setAttribute('data-pjax-fragment', 'CurrentForm');
         $form->addExtraClass(
-            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow '.
+            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow ' .
             $this->BaseCSSClasses()
         );
         $form->setFormAction(Controller::join_links(
@@ -130,10 +130,10 @@ class ArchiveAdmin extends ModelAdmin
         $config = GridFieldConfig_Base::create();
         $config->removeComponentsByType(VersionedGridFieldState::class);
         $config->removeComponentsByType(GridFieldFilterHeader::class);
-        $config->addComponent(new GridFieldDetailForm);
-        $config->addComponent(new GridFieldViewButton);
-        $config->addComponent(new GridFieldRestoreAction);
-        $config->addComponent(new GridField_ActionMenu);
+        $config->addComponent(new GridFieldDetailForm());
+        $config->addComponent(new GridFieldViewButton());
+        $config->addComponent(new GridFieldRestoreAction());
+        $config->addComponent(new GridField_ActionMenu());
 
         $list = singleton($class)->get();
         $baseTable = singleton($list->dataClass())->baseTable();
