@@ -9,4 +9,4 @@ it:
     SELECT_TYPE: 'Selezionare tipo di contenuto'
     TAB_OTHERS: Altri
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''
+    ErrorItemViewPermissionDenied: 'Non hai i necessari permessi per vedere {ObjectTitle}'
