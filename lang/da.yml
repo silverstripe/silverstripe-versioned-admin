@@ -9,4 +9,4 @@ da:
     SELECT_TYPE: 'Vælg en indholdstype'
     TAB_OTHERS: Andre
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''
+    ErrorItemViewPermissionDenied: 'Du har ikke de nødvendige rettigheder for at se {ObjectTitle}'

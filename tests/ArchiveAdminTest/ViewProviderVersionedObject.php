@@ -7,7 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
-class ViewProviderVersionedObject extends DataObject implements ArchiveViewProvider
+class ViewProviderVersionedObject extends DataObject implements ArchiveViewProvider, TestOnly
 {
     private static $table_name = 'Test_ViewProviderVersionedObject';
 
