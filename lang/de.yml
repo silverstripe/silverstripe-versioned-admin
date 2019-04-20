@@ -1,0 +1,12 @@
+de:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    COLUMN_ARCHIVEDBY: 'Archiviert von'
+    COLUMN_DATEARCHIVED: 'Datum der Archivierung'
+    COLUMN_ORIGIN: Ursprung
+    COLUMN_TITLE: Titel
+    COLUMN_TYPE: Typ
+    SELECT_EMPTY: Auswählen...
+    SELECT_TYPE: 'Inhaltstyp auswählen'
+    TAB_OTHERS: Andere
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: 'Sie haben nicht die nötigen Berechtigungen, um {ObjectTitle} auszuwählen'
