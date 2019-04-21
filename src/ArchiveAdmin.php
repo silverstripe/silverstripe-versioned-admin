@@ -86,11 +86,11 @@ class ArchiveAdmin extends ModelAdmin
                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
                 $listColumns->setDisplayFields([
                     'Title' => _t(__CLASS__ . '.COLUMN_TITLE', 'Title'),
-                    'allVersions.first.LastEdited' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
-                    'allVersions.first.Author.Name' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
+                    'Versions.first.LastEdited' => _t(__CLASS__ . '.COLUMN_DATEARCHIVED', 'Date Archived'),
+                    'Versions.first.Author.Name' => _t(__CLASS__ . '.COLUMN_ARCHIVEDBY', 'Archived By'),
                 ]);
                 $listColumns->setFieldFormatting([
-                    'allVersions.first.LastEdited' => function ($val, $item) {
+                    'Versions.first.LastEdited' => function ($val, $item) {
                         return DBDatetime::create_field('Datetime', $val)->Ago();
                     },
                 ]);

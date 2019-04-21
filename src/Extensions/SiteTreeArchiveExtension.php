@@ -34,12 +34,12 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
         $listColumns->setDisplayFields([
             'Title' => SiteTree::singleton()->fieldLabel('Title'),
             'i18n_singular_name' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
-            'allVersions.first.LastEdited' => _t(
+            'Versions.first.LastEdited' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED',
                 'Date Archived'
             ),
             'ParentID' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
-            'allVersions.first.Author.Name' => _t(
+            'Versions.first.Author.Name' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
                 'Archived By'
             )
@@ -55,7 +55,7 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
                     return $breadcrumbString;
                 }
             },
-            'allVersions.first.LastEdited' => function ($val, $item) {
+            'Versions.first.LastEdited' => function ($val, $item) {
                 return DBDatetime::create_field('Datetime', $val)->Ago();
             },
         ]);

@@ -34,12 +34,12 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
         $listColumns->setDisplayFields([
             'Title' => BaseElement::singleton()->fieldLabel('Title'),
             'Type' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
-            'allVersions.first.LastEdited' => _t(
+            'Versions.first.LastEdited' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED',
                 'Date Archived'
             ),
             'Breadcrumbs' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
-            'allVersions.first.Author.Name' => _t(
+            'Versions.first.Author.Name' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
                 'Archived By'
             )
@@ -50,7 +50,7 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
 
                 return ($parent && $parent->hasMethod('Breadcrumbs')) ? $parent->Breadcrumbs() : null;
             },
-            'allVersions.first.LastEdited' => function ($val, $item) {
+            'Versions.first.LastEdited' => function ($val, $item) {
                 return DBDatetime::create_field('Datetime', $val)->Ago();
             },
         ]);
