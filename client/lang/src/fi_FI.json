@@ -1,0 +1,21 @@
+{
+  "HistoryViewer.NEXT": "Seuraava",
+  "HistoryViewer.PREVIOUS": "Edellinen",
+  "HistoryViewer.COMPARE_MODE": "Vertailutila",
+  "HistoryViewer.SELECT_PROMPT": "Valitse kaksi versiota",
+  "HistoryViewer.EXIT": "Poistu",
+  "HistoryViewerHeading.COMPARE_VERSIONS": "Vertaa kahta versiota",
+  "HistoryViewer.Record": "Tietue",
+  "HistoryViewer.Author": "Tekijä",
+  "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Ei saatavilla nykyiseen versioon",
+  "HistoryViewerToolbar.REVERT_TO_VERSION": "Palaa tähän versioon",
+  "HistoryViewerToolbar.REVERTED_MESSAGE": "Palattiin onnistuneesti versioon %s",
+  "HistoryViewerVersion.COMPARE": "Vertaile",
+  "HistoryViewerVersion.CLOSE": "Sulje",
+  "HistoryViewerVersion.SELECTED": "On jo valittu",
+  "HistoryViewerVersion.GO_TO_VERSION": "Siirry versioon {version}",
+  "HistoryViewerVersionList.CLOSE": "Sulje",
+  "HistoryViewer.Published": "Julkaistu",
+  "HistoryViewer.Saved": "Tallennettu",
+  "HistoryViewer.BadgeLive": "Julkinen"
+}
