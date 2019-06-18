@@ -10,7 +10,9 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormFactory;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Forms\DataObjectVersionFormFactory;
 use SilverStripe\VersionedAdmin\Forms\DiffTransformation;
@@ -101,6 +103,7 @@ class HistoryViewerController extends LeftAndMain
                     'RecordClass' => $request->getVar('RecordClass'),
                     'RecordID' => $request->getVar('RecordID'),
                     'RecordVersion' => $request->getVar('RecordVersion'),
+                    'RecordDate' => $request->getVar('RecordDate'),
                 ]);
                 break;
             case self::FORM_NAME_COMPARE:
@@ -131,24 +134,57 @@ class HistoryViewerController extends LeftAndMain
      */
     public function getVersionForm(array $context)
     {
-        $this->validateInput($context, ['RecordClass', 'RecordID', 'RecordVersion']);
+        $required = ['RecordClass', 'RecordID', 'RecordVersion'];
+
+        // Attempt to parse a date if given in case we're fetching a version form for a specific timestamp.
+        try {
+            $specifiesDate = !empty($context['RecordDate']) && DBDatetime::create()->setValue($context['RecordDate']);
+        } catch (InvalidArgumentException $e) {
+            $specifiesDate = false;
+        }
+
+        if ($specifiesDate) {
+            $required[2] = 'RecordDate';
+        }
+        $this->validateInput($context, $required);
 
         $recordClass = $context['RecordClass'];
         $recordId = $context['RecordID'];
-        $recordVersion = $context['RecordVersion'];
 
-        // Load record and perform a canView check
-        $record = $this->getRecordVersion($recordClass, $recordId, $recordVersion);
-        if (!$record) {
-            return null;
+        // Fetch by version or date depending on what is provided
+        if (!$specifiesDate) {
+            $recordVersion = $context['RecordVersion'];
+            // Load record and perform a canView check
+            $record = $this->getRecordVersion($recordClass, $recordId, $recordVersion);
+
+            $effectiveContext = array_merge($context, ['Record' => $record]);
+
+            return $this->scaffoldForm(self::FORM_NAME_VERSION, $effectiveContext, [
+                $recordClass,
+                $recordId,
+            ]);
+        } else {
+            $form = null;
+
+            Versioned::withVersionedMode(function () use ($context, $recordClass, $recordId, &$form) {
+                Versioned::reading_archived_date($context['RecordDate']);
+
+                $record = DataList::create(DataObject::getSchema()->baseDataClass($recordClass))
+                    ->byID($recordId);
+
+                if ($record) {
+                    $effectiveContext = array_merge($context, ['Record' => $record]);
+
+                    // Ensure the form is scaffolded with archive date enabled.
+                    $form = $this->scaffoldForm(self::FORM_NAME_VERSION, $effectiveContext, [
+                        $recordClass,
+                        $recordId,
+                    ]);
+                }
+            });
         }
 
-        $effectiveContext = array_merge($context, ['Record' => $record]);
-        return $this->scaffoldForm(self::FORM_NAME_VERSION, $effectiveContext, [
-            $recordClass,
-            $recordId,
-            $recordVersion
-        ]);
+        return $form;
     }
 
     /**
