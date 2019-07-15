@@ -42,6 +42,7 @@ class HistoryViewerControllerTest extends SapphireTest
             'RecordClass' => 'Page',
             'RecordID' => 123,
             'RecordVersion' => 234,
+            'RecordDate' => null
         ]);
 
         $controllerMock->expects($this->once())->method('getCompareForm')->with([
