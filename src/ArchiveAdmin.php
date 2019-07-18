@@ -50,8 +50,6 @@ class ArchiveAdmin extends ModelAdmin
 
         Requirements::javascript('silverstripe/versioned-admin:client/dist/js/bundle.js');
         Requirements::css('silverstripe/versioned-admin:client/dist/styles/bundle.css');
-        Requirements::javascript('silverstripe/cms: client/dist/js/bundle.js');
-        Requirements::css('silverstripe/cms: client/dist/styles/bundle.css');
     }
 
     /**
