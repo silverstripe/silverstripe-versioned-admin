@@ -2,11 +2,9 @@
 
 namespace SilverStripe\VersionedAdmin\Forms;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\Requirements;
 
 class HistoryViewerField extends FormField
 {
