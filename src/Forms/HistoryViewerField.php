@@ -31,9 +31,6 @@ class HistoryViewerField extends FormField
 
     public function __construct($name, $title = null, $value = null)
     {
-        Requirements::javascript('silverstripe/versioned-admin:client/dist/js/bundle.js');
-        Requirements::css('silverstripe/versioned-admin:client/dist/styles/bundle.css');
-
         parent::__construct($name, $title, $value);
     }
 
