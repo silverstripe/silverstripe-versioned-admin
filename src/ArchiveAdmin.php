@@ -19,13 +19,11 @@ use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Security\Member;
 use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\Requirements;
 
 /**
  * Archive admin is a section of the CMS that displays archived records
@@ -47,11 +45,6 @@ class ArchiveAdmin extends ModelAdmin
     protected function init()
     {
         parent::init();
-
-        Requirements::javascript('silverstripe/versioned-admin:client/dist/js/bundle.js');
-        Requirements::css('silverstripe/versioned-admin:client/dist/styles/bundle.css');
-        Requirements::javascript('silverstripe/cms: client/dist/js/bundle.js');
-        Requirements::css('silverstripe/cms: client/dist/styles/bundle.css');
     }
 
     /**
