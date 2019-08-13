@@ -82,10 +82,15 @@ class HistoryViewer extends Component {
     const { compare, isInGridField } = this.props;
 
     // GridFieldDetailForm provides its own padding, so apply a class to counteract this.
-    return classNames('history-viewer', 'fill-height', {
-      'history-viewer__compare-mode': compare,
-      'history-viewer--no-margins': isInGridField && !this.isListView(),
-    });
+    return classNames(
+      'history-viewer',
+      'fill-height',
+      'panel--scrollable',
+      {
+        'history-viewer__compare-mode': compare,
+        'history-viewer--no-margins': isInGridField && !this.isListView(),
+      }
+    );
   }
 
   /**
