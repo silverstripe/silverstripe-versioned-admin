@@ -173,6 +173,8 @@ class HistoryViewerVersionDetail extends PureComponent {
 
     return (
       <div className="flexbox-area-grow fill-height">
+        <CompareWarningComponent fixed />
+
         <div className={classnames(containerClasses)}>
           <ListComponent
             extraClass={classnames(extraListClasses)}
@@ -189,8 +191,6 @@ class HistoryViewerVersionDetail extends PureComponent {
         </div>
 
         {this.renderToolbar()}
-
-        <CompareWarningComponent fixed />
       </div>
     );
   }
