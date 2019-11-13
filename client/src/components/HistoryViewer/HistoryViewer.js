@@ -41,14 +41,16 @@ class HistoryViewer extends Component {
    * @param {object} prevProps
    */
   componentDidUpdate(prevProps) {
+    if (!this.props.actions || !this.props.actions.versions) {
+      return;
+    }
+
     const { page: prevPage } = prevProps;
     const { page: currentPage } = this.props;
+    const { actions: { versions } } = this.props;
 
-    if (this.props.actions.versions) {
-      const { actions: { versions } } = this.props;
-      if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
-        versions.goToPage(currentPage);
-      }
+    if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
+      versions.goToPage(currentPage);
     }
   }
 
