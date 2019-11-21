@@ -36,7 +36,7 @@ class HistoryViewerToolbar extends Component {
 
     const revertButtonTitle = isReverting
       ? i18n._t('HistoryViewerToolbar.REVERT_IN_PROGRESS', 'Revert in progress...')
-      : i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version');
+      : (isLatestVersion ? i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version') : '');
 
     return (
       <div className="toolbar toolbar--south">
