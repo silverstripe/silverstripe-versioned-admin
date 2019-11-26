@@ -41,8 +41,13 @@ class HistoryViewer extends Component {
    * @param {object} prevProps
    */
   componentDidUpdate(prevProps) {
+    if (!this.props.actions || !this.props.actions.versions) {
+      return;
+    }
+
     const { page: prevPage } = prevProps;
-    const { page: currentPage, actions: { versions } } = this.props;
+    const { page: currentPage } = this.props;
+    const { actions: { versions } } = this.props;
 
     if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
       versions.goToPage(currentPage);
@@ -82,10 +87,15 @@ class HistoryViewer extends Component {
     const { compare, isInGridField } = this.props;
 
     // GridFieldDetailForm provides its own padding, so apply a class to counteract this.
-    return classNames('history-viewer', 'fill-height', {
-      'history-viewer__compare-mode': compare,
-      'history-viewer--no-margins': isInGridField && !this.isListView(),
-    });
+    return classNames(
+      'history-viewer',
+      'fill-height',
+      'panel--scrollable',
+      {
+        'history-viewer__compare-mode': compare,
+        'history-viewer--no-margins': isInGridField && !this.isListView(),
+      }
+    );
   }
 
   /**
