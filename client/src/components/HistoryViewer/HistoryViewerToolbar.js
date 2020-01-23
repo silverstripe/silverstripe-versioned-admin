@@ -34,9 +34,12 @@ class HistoryViewerToolbar extends Component {
     const { FormActionComponent, ViewModeComponent, isLatestVersion, isPreviewable } = this.props;
     const { isReverting } = this.state;
 
-    const revertButtonTitle = isReverting
-      ? i18n._t('HistoryViewerToolbar.REVERT_IN_PROGRESS', 'Revert in progress...')
-      : i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version');
+    let revertButtonTitle = '';
+    if (isReverting) {
+      revertButtonTitle = i18n._t('HistoryViewerToolbar.REVERT_IN_PROGRESS', 'Revert in progress...');
+    } else if (isLatestVersion) {
+      revertButtonTitle = i18n._t('HistoryViewerToolbar.REVERT_UNAVAILABLE', 'Unavailable for the current version');
+    }
 
     return (
       <div className="toolbar toolbar--south">
