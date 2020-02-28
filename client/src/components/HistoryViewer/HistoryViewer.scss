@@ -1,3 +1,6 @@
+$diff-removed-color: #ffd2da;
+$diff-added-color: #b9f1c8;
+
 .history-viewer {
   > .panel--padded {
     padding-top: 0;
@@ -68,11 +71,13 @@
 
 .history-viewer__version-detail-diff {
   del {
-    color: $red;
+    background-color: $diff-removed-color;
+    border-radius: 1px;
   }
 
   ins {
-    background-color: lighten($green, 70%);
+    background-color: $diff-added-color;
+    border-radius: 1px;
     text-decoration: none;
   }
 }
