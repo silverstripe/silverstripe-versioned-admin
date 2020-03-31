@@ -1,4 +1,5 @@
 <?php
+
 namespace SilverStripe\VersionedAdmin\Tests\Controllers;
 
 use SilverStripe\VersionedAdmin\Tests\Controller\HistoryControllerFactory\HistoryControllerFactoryExtension;
@@ -31,7 +32,7 @@ class HistoryControllerFactoryTest extends SapphireTest
 
         $this->mockRequest('page_one');
         $controller = $factory->create(null);
-        $this->assertInstanceOf(CMSPageHistoryController::class, $controller);
+        $this->assertInstanceOf(CMSPageHistoryViewerController::class, $controller);
 
         $this->mockRequest('page_two');
         $controller = $factory->create(null);

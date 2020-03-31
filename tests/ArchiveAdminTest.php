@@ -20,7 +20,7 @@ class ArchiveAdminTest extends SapphireTest
         ViewProviderVersionedObject::class,
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }

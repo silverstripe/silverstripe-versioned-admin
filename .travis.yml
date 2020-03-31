@@ -1,17 +1,23 @@
 language: php
 
-dist: trusty
+dist: xenial
 
-before_install:
- - sudo apt-get update
- - sudo apt-get install chromium-chromedriver
+services:
+  - mysql
+  - postgresql
+  - xvfb
+
+addons:
+  apt:
+    packages:
+      - tidy
+      - chromium-chromedriver
+      - chromium-browser
 
 env:
   global:
     - COMPOSER_ROOT_VERSION=2.x-dev
     - TRAVIS_NODE_VERSION="10"
-    - DISPLAY=":99"
-    - XVFBARGS=":99 -ac -screen 0 1024x768x16"
     - SS_BASE_URL="http://localhost:8080/"
     - SS_ENVIRONMENT_TYPE="dev"
 
@@ -23,7 +29,7 @@ matrix:
       env: DB=MYSQL PHPUNIT_TEST=1
     - php: 7.3
       env: DB=MYSQL PDO=1 PHPUNIT_COVERAGE_TEST=1
-    - php: 7.3
+    - php: 7.4
       env: DB=MYSQL PHPUNIT_TEST=1
     - php: 7.3
       env: DB=PGSQL PHPUNIT_TEST=1 PHPCS_TEST=1 NPM_TEST=1
@@ -44,9 +50,14 @@ before_script:
 
   # Install composer
   - composer validate
-  - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql 3.x-dev; fi
-  - composer require --no-update silverstripe/recipe-testing:^2 silverstripe/recipe-cms 5.x-dev
-  - composer install --prefer-source
+  - if [[ $DB == PGSQL ]]; then composer require --no-update silverstripe/postgresql:3.x-dev; fi
+  - composer require --no-update silverstripe/recipe-testing:^2 silverstripe/recipe-cms:5.x-dev
+  - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
+
+# Remove preinstalled Chrome (google-chrome)
+# this would conflict with our chromium-browser installation
+# and its version is incompatible with chromium-chromedriver
+  - sudo apt-get remove -y --purge google-chrome-stable || true
 
   # Behat bootstrapping
   - if [[ $BEHAT_TEST ]]; then mkdir artifacts; fi

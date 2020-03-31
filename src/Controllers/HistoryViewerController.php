@@ -26,12 +26,12 @@ class HistoryViewerController extends LeftAndMain
     /**
      * @var string
      */
-    const FORM_NAME_VERSION = 'versionForm';
+    public const FORM_NAME_VERSION = 'versionForm';
 
     /**
      * @var string
      */
-    const FORM_NAME_COMPARE = 'compareForm';
+    public const FORM_NAME_COMPARE = 'compareForm';
 
     private static $url_segment = 'historyviewer';
 

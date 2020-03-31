@@ -25,7 +25,7 @@ class DataObjectVersionFormFactory implements FormFactory
      *
      * @var string
      */
-    const TYPE_HISTORY = 'history';
+    public const TYPE_HISTORY = 'history';
 
     /**
      * Define context types that will automatically be converted to readonly forms

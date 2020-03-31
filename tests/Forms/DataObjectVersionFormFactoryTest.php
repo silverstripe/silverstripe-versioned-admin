@@ -29,10 +29,9 @@ class DataObjectVersionFormFactoryTest extends SapphireTest
      */
     protected $controller;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-
         $this->factory = new DataObjectVersionFormFactory();
         $this->controller = new HistoryViewerController();
     }
@@ -56,12 +55,10 @@ class DataObjectVersionFormFactoryTest extends SapphireTest
         );
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Missing required context Record
-     */
     public function testGetFormThrowsExceptionOnMissingRequiredContext()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing required context Record');
         $this->factory->getForm();
     }
 

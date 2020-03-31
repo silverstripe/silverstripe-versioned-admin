@@ -326,7 +326,8 @@ class ArchiveAdmin extends ModelAdmin
 
         foreach ($mainModels as $class => $title) {
             $classInst = Injector::inst()->get($class);
-            if (ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
+            if (
+                ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
                 && $classInst->isArchiveFieldEnabled()
             ) {
                 $forms->push(ArrayData::create([

@@ -6,6 +6,8 @@ import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import { inject } from 'lib/Injector';
 import { versionType } from 'types/versionType';
 import PropTypes from 'prop-types';
+import url from 'url';
+import qs from 'qs';
 
 class HistoryViewerVersionDetail extends PureComponent {
   componentWillMount() {
@@ -89,25 +91,31 @@ class HistoryViewerVersionDetail extends PureComponent {
    * @returns {Preview|null}
    */
   renderPreview() {
-    const { version, PreviewComponent, previewState } = this.props;
+    const {
+      version: { AbsoluteLink, LastEdited, Version },
+      PreviewComponent,
+      previewState
+    } = this.props;
 
     // Don't render the preview if the view mode is "edit"
     if (!this.isPreviewable() || previewState === 'edit') {
       return null;
     }
 
+    // Build HREF for the preview
+    const parsedURL = url.parse(AbsoluteLink);
+    const parsedQs = qs.parse(parsedURL.query);
+    parsedQs.archiveDate = LastEdited;
+    const href = url.format({ ...parsedURL, search: qs.stringify(parsedQs) });
     return (
       <PreviewComponent
         className="history-viewer__preview flexbox-area-grow" // removes default: fill-height
         itemLinks={{
           preview: {
-            Stage: {
-              href: `${version.AbsoluteLink}&archiveDate=${version.LastEdited}`,
-              type: 'text/html',
-            },
+            Stage: { href, type: 'text/html' },
           },
         }}
-        itemId={version.Version}
+        itemId={Version}
       />
     );
   }

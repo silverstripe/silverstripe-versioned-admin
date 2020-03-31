@@ -37,7 +37,7 @@ class HistoryControllerFactory implements Factory
 
                 if ($page && !$this->isEnabled($page)) {
                     // Injector is not used to prevent an infinite loop
-                    return new CMSPageHistoryController();
+                    return new CMSPageHistoryViewerController();
                 }
             }
         }
