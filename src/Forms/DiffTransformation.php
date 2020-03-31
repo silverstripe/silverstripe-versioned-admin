@@ -29,7 +29,8 @@ class DiffTransformation extends FormTransformation
         $name = $field->getName();
 
         // Do not compare generated security data
-        if (($form = $field->getForm())
+        if (
+            ($form = $field->getForm())
             && ($securityToken = $form->getSecurityToken())
             && ($securityTokenName = $securityToken->getName())
             && $securityTokenName === $name
