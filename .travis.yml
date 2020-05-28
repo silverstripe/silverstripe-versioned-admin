@@ -16,7 +16,7 @@ addons:
 
 env:
   global:
-    - COMPOSER_ROOT_VERSION=1.x-dev
+    - COMPOSER_ROOT_VERSION=1.6.x-dev
     - TRAVIS_NODE_VERSION="10"
     - SS_BASE_URL="http://localhost:8080/"
     - SS_ENVIRONMENT_TYPE="dev"
@@ -51,7 +51,7 @@ before_script:
   # Install composer
   - composer validate
   - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql:2.x-dev; fi
-  - composer require --no-update silverstripe/recipe-testing:^1 silverstripe/recipe-cms:4.x-dev
+  - composer require --no-update silverstripe/recipe-testing:^1 silverstripe/recipe-cms:4.6.x-dev
   - composer install --prefer-source
 
 # Remove preinstalled Chrome (google-chrome)
