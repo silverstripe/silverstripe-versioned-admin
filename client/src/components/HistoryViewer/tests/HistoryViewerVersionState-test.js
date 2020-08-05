@@ -32,6 +32,45 @@ describe('HistoryViewerVersionState', () => {
       expect(component.getPublishedState()).toBe('Published');
     });
 
+    it('returns the Unpublished state correctly', () => {
+      const mockVersion = {
+        Published: true,
+        Deleted: true,
+      };
+
+      component = ReactTestUtils.renderIntoDocument(
+        <HistoryViewerVersionState version={mockVersion} />
+      );
+
+      expect(component.getPublishedState()).toBe('Unpublished');
+    });
+
+    it('returns the Archived state correctly', () => {
+      const mockVersion = {
+        Published: true,
+        Deleted: true,
+        Draft: true,
+      };
+
+      component = ReactTestUtils.renderIntoDocument(
+        <HistoryViewerVersionState version={mockVersion} />
+      );
+
+      expect(component.getPublishedState()).toBe('Archived');
+    });
+
+    it('returns the Created state correctly', () => {
+      const mockVersion = {
+        Version: 1,
+      };
+
+      component = ReactTestUtils.renderIntoDocument(
+        <HistoryViewerVersionState version={mockVersion} />
+      );
+
+      expect(component.getPublishedState()).toBe('Created');
+    });
+
     it('defaults to "Modified" if not defined', () => {
       component = ReactTestUtils.renderIntoDocument(
         <HistoryViewerVersionState version={{}} />
