@@ -12,6 +12,8 @@ const versionType = PropTypes.shape({
   AbsoluteLink: PropTypes.string,
   LastEdited: PropTypes.string,
   Published: PropTypes.boolean,
+  Draft: PropTypes.boolean,
+  Deleted: PropTypes.boolean,
   LiveVersion: PropTypes.boolean,
   LatestDraftVersion: PropTypes.boolean,
   Publisher: memberShape,
@@ -24,6 +26,8 @@ const defaultVersion = {
   AbsoluteLink: '',
   LastEdited: '',
   Published: false,
+  Draft: true,
+  Deleted: false,
   LiveVersion: false,
   LatestDraftVersion: false,
   Publisher: {

@@ -18,16 +18,27 @@ class HistoryViewerVersionState extends Component {
   }
 
   /**
-   * When the record is published, return "Published", else return "Saved"
+   * Return the type of action that was performed when the record was saved
    *
-   * @returns {string}
+   * @returns {string} Returns either Saved, Created, Archived, Unpublished or Published
    */
   getPublishedState() {
     const { version } = this.props;
 
+    if (version.Version === 1) {
+      return i18n._t('HistoryViewer.Created', 'Created');
+    }
+
     if (version.Published) {
+      if (version.Deleted) {
+        if (version.Draft) {
+          return i18n._t('HistoryViewer.Archived', 'Archived');
+        }
+        return i18n._t('HistoryViewer.Unpublished', 'Unpublished');
+      }
       return i18n._t('HistoryViewer.Published', 'Published');
     }
+
     return i18n._t('HistoryViewer.Saved', 'Saved');
   }
 
