@@ -45,6 +45,13 @@ class ArchiveAdmin extends ModelAdmin
     protected function init()
     {
         parent::init();
+
+        // Set the default model class to SiteTree, as long as silverstripe/cms is installed
+        // This is done otherwise File will be the default set in ModelAdmin::init() which is basically random
+        $class = 'SilverStripe\\CMS\\Model\\SiteTree';
+        if (!$this->getRequest()->param('ModelClass') && !$this->request->getVar('others') && class_exists($class)) {
+            $this->modelClass = $class;
+        }
     }
 
     /**
@@ -324,6 +331,13 @@ class ArchiveAdmin extends ModelAdmin
         $forms = ArrayList::create();
         $mainModels = $this->getVersionedModels('main', true);
 
+        // Display order should be Pages > Blocks > Files > Other
+        // Pages, Blocks, Files are treated specially and have extensions defined in _config/archive-admin.yml
+        $order = ['Pages', 'Blocks', 'Files'];
+        uasort($mainModels, function ($a, $b) use ($order) {
+            return array_search($a, $order) < array_search($b, $order) ? -1 : 1;
+        });
+
         foreach ($mainModels as $class => $title) {
             $classInst = Injector::inst()->get($class);
             if (ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
@@ -345,7 +359,7 @@ class ArchiveAdmin extends ModelAdmin
                 array_key_exists($this->modelClass, $otherModels)
             );
             $forms->push(ArrayData::create([
-                'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Others'),
+                'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Other'),
                 'ClassName' => 'Others',
                 'Link' => $this->Link('?others=1'),
                 'LinkOrCurrent' => ($isOtherActive ? 'current' : 'link')
