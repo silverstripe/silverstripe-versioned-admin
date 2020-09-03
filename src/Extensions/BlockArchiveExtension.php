@@ -48,7 +48,7 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
             'Breadcrumbs' => function ($val, $item) {
                 $parent = $item->Page;
 
-                return $parent ? $parent->Breadcrumbs() : null;
+                return ($parent && $parent->hasMethod('Breadcrumbs')) ? $parent->Breadcrumbs() : null;
             },
             'allVersions.first.LastEdited' => function ($val, $item) {
                 return DBDatetime::create_field('Datetime', $val)->Ago();
