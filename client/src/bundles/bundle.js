@@ -17,4 +17,6 @@ require('../legacy/ArchiveAdmin/ArchiveAdmin');
 // To do: determine better way of using webpack to pull in optional javascript
 require('../legacy/HistoryViewer/HistoryViewerEntwine');
 
+require('../legacy/VersionedEditForm/VersionedEditForm');
+
 require('boot');
