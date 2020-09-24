@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import jQuery from 'jquery';
 
 jQuery.entwine('ss', ($) => {
@@ -14,7 +15,10 @@ jQuery.entwine('ss', ($) => {
      *  (Event) e
      */
     onclick(e) {
-      const message = 'Are you sure you want to remove your record from the published site?\n\nThis record will still be available in the CMS as draft.';
+      const message = i18n._t(
+        'VersionedEditForm.PUBLISH_CONFIRM_MESSAGE',
+        'Are you sure you want to remove your record from the published site?\n\nThis record will still be available in the CMS as draft.'
+      );
 
       if (confirm(message)) {
         // Add a loading indicator and continue
@@ -40,7 +44,10 @@ jQuery.entwine('ss', ($) => {
      *  (Event) e
      */
     onclick(e) {
-      const message = 'Warning: This record will be unpublished before being sent to the archive.\n\nAre you sure you want to proceed?';
+      const message = i18n._t(
+        'VersionedEditForm.ARCHIVE_CONFIRM_MESSAGE',
+        'Warning: This record will be unpublished before being sent to the archive.\n\nAre you sure you want to proceed?'
+      );
 
       if (confirm(message)) {
         // Add a loading indicator and continue
