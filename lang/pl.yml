@@ -1,0 +1,5 @@
+pl:
+  SilverStripe\VersionedAdmin\ArchiveAdmin:
+    MENUTITLE: Archiwum
+  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
+    MENUTITLE: 'Edytuj stronę'
