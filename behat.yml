@@ -8,7 +8,7 @@ default:
   suites:
     versioned-admin:
       paths:
-        - %paths.modules.versioned-admin%/tests/Behat/features
+        - '%paths.modules.versioned-admin%/tests/Behat/features'
       contexts:
         - SilverStripe\VersionedAdmin\Tests\Behat\Context\FeatureContext
         - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
@@ -18,10 +18,10 @@ default:
         - SilverStripe\BehatExtension\Context\LoginContext
         -
           SilverStripe\VersionedAdmin\Tests\Behat\Context\FixtureContext:
-            - %paths.modules.versioned-admin%/tests/behat/files/
+            - '%paths.modules.versioned-admin%/tests/behat/files/'
         -
           SilverStripe\Framework\Tests\Behaviour\ConfigContext:
-            - %paths.modules.versioned-admin%/tests/Behat/config
+            - '%paths.modules.versioned-admin%/tests/Behat/config'
   extensions:
     SilverStripe\BehatExtension\MinkExtension:
       default_session: facebook_web_driver
@@ -32,5 +32,5 @@ default:
       browser_name: chrome
     SilverStripe\BehatExtension\Extension:
       bootstrap_file: vendor/silverstripe/cms/tests/behat/serve-bootstrap.php
-      screenshot_path: %paths.base%/artifacts/screenshots
+      screenshot_path: '%paths.base%/artifacts/screenshots'
       retry_seconds: 4 # default is 2
