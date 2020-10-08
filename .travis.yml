@@ -24,19 +24,22 @@ env:
 matrix:
   include:
     - php: 7.1
-      env: DB=PGSQL PHPUNIT_TEST=1 PHPCS_TEST=1
+      env: DB=MYSQL PHPUNIT_TEST=1 COMPOSER_ARG=--prefer-lowest
+    - php: 7.1
+      env: DB=PGSQL PHPUNIT_TEST=1
     - php: 7.2
       env: DB=MYSQL PHPUNIT_TEST=1
     - php: 7.3
       env: DB=MYSQL PDO=1 PHPUNIT_COVERAGE_TEST=1
-    - php: 7.4
-      env: DB=MYSQL PHPUNIT_TEST=1
-    - php: 7.1
-      env: DB=MYSQL PHPUNIT_TEST=1
-    - php: 7.2
-      env: DB=MYSQL NPM_TEST=1
     - php: 7.3
       env: DB=MYSQL BEHAT_TEST=1
+    - php: 7.4
+      env: DB=MYSQL PHPUNIT_TEST=1 PHPCS_TEST=1
+    - php: 7.4
+      env: DB=MYSQL NPM_TEST=1
+    - php: nightly
+      env: DB=MYSQL PHPUNIT_TEST=1 COMPOSER_ARG=--ignore-platform-reqs
+
 
 before_script:
   # Extra $PATH
@@ -44,7 +47,7 @@ before_script:
 
   # Init PHP
   - phpenv rehash
-  - phpenv config-rm xdebug.ini
+  - phpenv config-rm xdebug.ini || true
   - export PATH=~/.composer/vendor/bin:$PATH
   - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
@@ -52,7 +55,7 @@ before_script:
   - composer validate
   - if [[ $DB == PGSQL ]]; then composer require --prefer-dist --no-update silverstripe/postgresql:2.x-dev; fi
   - composer require --no-update silverstripe/recipe-testing:^1 silverstripe/recipe-cms:4.x-dev
-  - composer install --prefer-source
+  - composer update --prefer-source $COMPOSER_ARG
 
 # Remove preinstalled Chrome (google-chrome)
 # this would conflict with our chromium-browser installation
