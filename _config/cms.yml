@@ -11,6 +11,10 @@ SilverStripe\CMS\Controllers\CMSMain:
   extensions:
     - SilverStripe\VersionedAdmin\Extensions\CMSMainExtension
 
+SilverStripe\Admin\Forms\UsedOnTable:
+  extensions:
+    - SilverStripe\VersionedAdmin\Extensions\UsedOnTableExtension
+
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - 'silverstripe/versioned-admin:client/dist/js/bundle.js'
