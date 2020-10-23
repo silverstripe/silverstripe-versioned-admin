@@ -1,7 +1,7 @@
 <?php
 namespace SilverStripe\VersionedAdmin\Tests\Controllers;
 
-use SilverStripe\VersionedAdmin\Tests\Controller\HistoryControllerFactory\HistoryControllerFactoryExtension;
+use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryControllerFactory\HistoryControllerFactoryExtension;
 use SilverStripe\CMS\Controllers\CMSPageHistoryController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\HTTPRequest;
