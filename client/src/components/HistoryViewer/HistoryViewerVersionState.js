@@ -25,13 +25,13 @@ class HistoryViewerVersionState extends Component {
   getPublishedState() {
     const { version } = this.props;
 
-    if (version.Version === 1) {
+    if (version.version === 1) {
       return i18n._t('HistoryViewer.Created', 'Created');
     }
 
-    if (version.Published) {
-      if (version.Deleted) {
-        if (version.Draft) {
+    if (version.published) {
+      if (version.deleted) {
+        if (version.draft) {
           return i18n._t('HistoryViewer.Archived', 'Archived');
         }
         return i18n._t('HistoryViewer.Unpublished', 'Unpublished');
@@ -50,7 +50,7 @@ class HistoryViewerVersionState extends Component {
    */
   getDate() {
     moment.locale(i18n.detectLocale());
-    return moment(this.props.version.LastEdited).format('L LT');
+    return moment(this.props.version.lastEdited).format('L LT');
   }
 
   /**
@@ -61,7 +61,7 @@ class HistoryViewerVersionState extends Component {
   getBadges() {
     const { version, isActive, BadgeComponent } = this.props;
 
-    if (version.LiveVersion) {
+    if (version.liveVersion) {
       return (
         <BadgeComponent
           status="success"

@@ -23,38 +23,34 @@ describe('HistoryViewer', () => {
   });
 
   const versions = {
-    Versions: {
+    versions: {
       pageInfo: {
         totalCount: 2
       },
-      edges: [
+      nodes: [
         {
-          node: {
-            Version: 14,
-            Author: {
-              FirstName: 'Michelle',
-              Surname: 'Masters'
-            },
-            Publisher: null,
-            Published: false,
-            LatestDraftVersion: false,
-            LiveVersion: false,
-            LastEdited: '2018-03-08 11:57:58'
-          }
+          version: 14,
+          author: {
+            firstName: 'Michelle',
+            surname: 'Masters'
+          },
+          publisher: null,
+          published: false,
+          latestDraftVersion: false,
+          liveVersion: false,
+          lastEdited: '2018-03-08 11:57:58'
         },
         {
-          node: {
-            Version: 13,
-            Author: {
-              FirstName: 'Scott',
-              Surname: 'Stockman'
-            },
-            Publisher: null,
-            Published: false,
-            LatestDraftVersion: true,
-            LiveVersion: false,
-            LastEdited: '2018-03-08 11:57:56'
-          }
+          version: 13,
+          author: {
+            firstName: 'Scott',
+            surname: 'Stockman'
+          },
+          publisher: null,
+          published: false,
+          latestDraftVersion: true,
+          liveVersion: false,
+          lastEdited: '2018-03-08 11:57:56'
         },
       ],
     },
@@ -74,7 +70,7 @@ describe('HistoryViewer', () => {
         />
       );
 
-      expect(wrapper.instance().getVersions().map((version) => version.Version)).toEqual([14, 13]);
+      expect(wrapper.instance().getVersions().map((version) => version.version)).toEqual([14, 13]);
     });
   });
 
@@ -93,7 +89,7 @@ describe('HistoryViewer', () => {
         />
       );
 
-      expect(wrapper.instance().getLatestVersion().Version).toEqual(13);
+      expect(wrapper.instance().getLatestVersion().version).toEqual(13);
     });
 
     it('gives priority to the currentVersion', () => {
@@ -108,13 +104,13 @@ describe('HistoryViewer', () => {
           page={1}
           compare={false}
           currentVersion={{
-            Version: 123,
-            LatestDraftVersion: true
+            version: 123,
+            latestDraftVersion: true
           }}
         />
       );
 
-      expect(wrapper.instance().getLatestVersion().Version).toEqual(123);
+      expect(wrapper.instance().getLatestVersion().version).toEqual(123);
     });
   });
 
@@ -239,11 +235,11 @@ describe('HistoryViewer', () => {
           page={2}
           versions={versions}
           currentVersion={{
-            ID: 1,
+            id: 1,
           }}
           compare={{
             versionFrom: {
-              ID: 1,
+              id: 1,
             },
           }}
         />
@@ -313,10 +309,10 @@ describe('HistoryViewer', () => {
           limit={1}
           page={2}
           versions={{
-            Versions: {
+            versions: {
               pageInfo: { totalCount: 1 },
-              edges: [
-                { node: { Version: 14 } },
+              nodes: [
+                { version: 14 },
               ],
             }
           }}

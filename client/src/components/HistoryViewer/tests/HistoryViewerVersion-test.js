@@ -23,16 +23,16 @@ describe('HistoryViewerVersion', () => {
     mockOnSelect = jest.fn();
 
     version = {
-      Author: {
-        FirstName: 'John',
-        Surname: 'Smith',
+      author: {
+        firstName: 'John',
+        surname: 'Smith',
       },
-      Published: false,
-      Publisher: {
-        FirstName: 'Sarah',
-        Surname: 'Smith',
+      published: false,
+      publisher: {
+        firstName: 'Sarah',
+        surname: 'Smith',
       },
-      Version: 3,
+      version: 3,
     };
   });
 
@@ -70,7 +70,7 @@ describe('HistoryViewerVersion', () => {
         <HistoryViewerVersion
           version={{
             ...version,
-            Published: true
+            published: true
           }}
           StateComponent={StateComponent}
           FormActionComponent={FormActionComponent}

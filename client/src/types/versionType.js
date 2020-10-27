@@ -2,41 +2,41 @@ import PropTypes from 'prop-types';
 
 // Describes the expected data structure for a member attached to a version
 const memberShape = PropTypes.shape({
-  FirstName: PropTypes.string,
-  Surname: PropTypes.string,
+  firstName: PropTypes.string,
+  surname: PropTypes.string,
 });
 
 // Describes the data structure for a Version, returned via GraphQL scaffolding
 const versionType = PropTypes.shape({
-  Version: PropTypes.number,
-  AbsoluteLink: PropTypes.string,
-  LastEdited: PropTypes.string,
-  Published: PropTypes.boolean,
-  Draft: PropTypes.boolean,
-  Deleted: PropTypes.boolean,
-  LiveVersion: PropTypes.boolean,
-  LatestDraftVersion: PropTypes.boolean,
-  Publisher: memberShape,
-  Author: memberShape,
+  version: PropTypes.number,
+  absoluteLink: PropTypes.string,
+  lastEdited: PropTypes.string,
+  published: PropTypes.boolean,
+  draft: PropTypes.boolean,
+  deleted: PropTypes.boolean,
+  liveVersion: PropTypes.boolean,
+  latestDraftVersion: PropTypes.boolean,
+  publisher: memberShape,
+  author: memberShape,
 });
 
 // A default (empty) data set for a version
 const defaultVersion = {
-  Version: 0,
-  AbsoluteLink: '',
-  LastEdited: '',
-  Published: false,
-  Draft: true,
-  Deleted: false,
-  LiveVersion: false,
-  LatestDraftVersion: false,
-  Publisher: {
-    FirstName: '',
-    Surname: '',
+  version: 0,
+  absoluteLink: '',
+  lastEdited: '',
+  published: false,
+  draft: true,
+  deleted: false,
+  liveVersion: false,
+  latestDraftVersion: false,
+  publisher: {
+    firstName: '',
+    surname: '',
   },
-  Author: {
-    FirstName: '',
-    Surname: '',
+  author: {
+    firstName: '',
+    surname: '',
   },
 };
 

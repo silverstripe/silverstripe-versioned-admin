@@ -215,7 +215,7 @@ class HistoryViewer extends Component {
     const schemaVersionReplacements = {
       ':id': recordId,
       ':class': recordClass,
-      ':version': currentVersion.Version,
+      ':version': currentVersion.version,
     };
     const schemaCompareReplacements = {
       ':id': recordId,

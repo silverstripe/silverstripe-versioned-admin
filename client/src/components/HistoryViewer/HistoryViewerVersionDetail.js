@@ -92,7 +92,7 @@ class HistoryViewerVersionDetail extends PureComponent {
    */
   renderPreview() {
     const {
-      version: { AbsoluteLink, LastEdited, Version },
+      version: { absoluteLink, lastEdited, version },
       PreviewComponent,
       previewState
     } = this.props;
@@ -103,9 +103,9 @@ class HistoryViewerVersionDetail extends PureComponent {
     }
 
     // Build HREF for the preview
-    const parsedURL = url.parse(AbsoluteLink);
+    const parsedURL = url.parse(absoluteLink);
     const parsedQs = qs.parse(parsedURL.query);
-    parsedQs.archiveDate = LastEdited;
+    parsedQs.archiveDate = lastEdited;
     const href = url.format({ ...parsedURL, search: qs.stringify(parsedQs) });
     return (
       <PreviewComponent
@@ -115,7 +115,7 @@ class HistoryViewerVersionDetail extends PureComponent {
             Stage: { href, type: 'text/html' },
           },
         }}
-        itemId={Version}
+        itemId={version}
       />
     );
   }
@@ -137,7 +137,7 @@ class HistoryViewerVersionDetail extends PureComponent {
         identifier="HistoryViewer.VersionDetail.Toolbar"
         isLatestVersion={isLatestVersion}
         recordId={recordId}
-        versionId={version.Version}
+        versionId={version.version}
         isPreviewable={this.isPreviewable()}
       />
     );
@@ -178,7 +178,6 @@ class HistoryViewerVersionDetail extends PureComponent {
       'history-viewer__version-detail': true,
       'history-viewer__version-detail--compare': this.isCompareMode(),
     };
-
     return (
       <div className="flexbox-area-grow fill-height">
         <CompareWarningComponent fixed />
