@@ -24,8 +24,6 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "HistoryViewerVersionList.CLOSE": "Close",
     "HistoryViewer.Published": "Published",
     "HistoryViewer.Saved": "Saved",
-    "HistoryViewer.BadgeLive": "Live",
-    "VersionedEditForm.PUBLISH_CONFIRM_MESSAGE": "Are you sure you want to remove your record from the published site?\n\nThis record will still be available in the CMS as draft.",
-    "VersionedEditForm.ARCHIVE_CONFIRM_MESSAGE": "Warning: This record will be unpublished before being sent to the archive.\n\nAre you sure you want to proceed?"
+    "HistoryViewer.BadgeLive": "Live"
 });
 }

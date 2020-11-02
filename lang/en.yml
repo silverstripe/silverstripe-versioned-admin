@@ -7,6 +7,6 @@ en:
     COLUMN_TYPE: Type
     SELECT_EMPTY: Select…
     SELECT_TYPE: 'Select a content type'
-    TAB_OTHERS: Other
+    TAB_OTHERS: Others
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'You don''t have the necessary permissions to view {ObjectTitle}'
