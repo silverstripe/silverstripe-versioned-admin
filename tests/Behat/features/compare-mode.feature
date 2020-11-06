@@ -12,6 +12,7 @@ Feature: Compare mode
     And I go to "/admin/pages"
     And I click on "Home" in the tree
     Then I click on "History" in the header tabs
+    And I wait for 13 seconds
 
   Scenario: The dropdown toggle can enable compare mode
     Given I open the history viewer actions menu
