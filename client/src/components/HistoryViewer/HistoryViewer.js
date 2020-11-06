@@ -220,8 +220,8 @@ class HistoryViewer extends Component {
     const schemaCompareReplacements = {
       ':id': recordId,
       ':class': recordClass,
-      ':from': versionFrom.Version || 0,
-      ':to': versionTo.Version || 0,
+      ':from': versionFrom.version || 0,
+      ':to': versionTo.version || 0,
     };
     const schemaSearch = compare ? /:id|:class|:from|:to/g : /:id|:class|:version/g;
     const schemaReplacements = compare ? schemaCompareReplacements : schemaVersionReplacements;
