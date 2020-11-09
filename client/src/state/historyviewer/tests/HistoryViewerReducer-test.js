@@ -33,12 +33,12 @@ describe('HistoryViewerReducer', () => {
         payload: {
           version:
             {
-              Version: 23
+              version: 23
             }
         },
       });
 
-      expect(result.currentVersion.Version).toBe(23);
+      expect(result.currentVersion.version).toBe(23);
     });
   });
 
@@ -140,12 +140,12 @@ describe('HistoryViewerReducer', () => {
         payload: {
           version:
             {
-              Version: 47
+              version: 47
             }
         },
       });
 
-      expect(result.compare.versionFrom.Version).toBe(47);
+      expect(result.compare.versionFrom.version).toBe(47);
     });
 
     it('uses versionTo for versionFrom when version is zero', () => {
@@ -153,10 +153,10 @@ describe('HistoryViewerReducer', () => {
         ...state,
         compare: {
           versionFrom: {
-            Version: 50
+            version: 50
           },
           versionTo: {
-            Version: 80
+            version: 80
           }
         },
       };
@@ -166,7 +166,7 @@ describe('HistoryViewerReducer', () => {
         payload: {}
       });
 
-      expect(result.compare.versionFrom.Version).toBe(80);
+      expect(result.compare.versionFrom.version).toBe(80);
       expect(result.compare.versionTo).toBe(false);
     });
 
@@ -175,7 +175,7 @@ describe('HistoryViewerReducer', () => {
         ...state,
         compare: {
           versionFrom: {
-            Version: 50,
+            version: 50,
           },
         },
       };
@@ -183,11 +183,11 @@ describe('HistoryViewerReducer', () => {
       const result = historyViewerReducer(state, {
         type: 'HISTORY_VIEWER.SET_COMPARE_FROM',
         payload: {
-          version: { Version: 60 },
+          version: { version: 60 },
         },
       });
 
-      expect(result.currentVersion.Version).toBe(60);
+      expect(result.currentVersion.version).toBe(60);
     });
   });
 
@@ -208,10 +208,10 @@ describe('HistoryViewerReducer', () => {
         ...state,
         compare: {
           versionFrom: {
-            Version: 50
+            version: 50
           },
           versionTo: {
-            Version: 100
+            version: 100
           }
         },
       };
@@ -220,13 +220,13 @@ describe('HistoryViewerReducer', () => {
         type: 'HISTORY_VIEWER.SET_COMPARE_TO',
         payload: {
           version: {
-            Version: 25
+            version: 25
           }
         },
       });
 
-      expect(result.compare.versionFrom.Version).toBe(25);
-      expect(result.compare.versionTo.Version).toBe(50);
+      expect(result.compare.versionFrom.version).toBe(25);
+      expect(result.compare.versionTo.version).toBe(50);
     });
   });
 
