@@ -9,7 +9,9 @@ Feature: View a version
 
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
+    And I wait 3 seconds
     And I click on "Home" in the tree
+    And I wait 3 seconds
     And I click on "History" in the header tabs
     Then I should see a list of versions
 

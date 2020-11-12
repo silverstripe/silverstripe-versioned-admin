@@ -10,8 +10,11 @@ Feature: Compare mode
 
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
+    And I wait 3 seconds
     And I click on "Home" in the tree
+    And I wait 3 seconds
     Then I click on "History" in the header tabs
+    And I wait for 3 seconds
 
   Scenario: The dropdown toggle can enable compare mode
     Given I open the history viewer actions menu

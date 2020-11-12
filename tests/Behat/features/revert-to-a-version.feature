@@ -10,7 +10,9 @@ Feature: Revert to a version
 
     Given I am logged in with "ADMIN" permissions
     And I go to "/admin/pages"
+    And I wait 3 seconds
     And I click on "Home" in the tree
+    And I wait 3 seconds
     And I fill in the "Content" HTML field with "<p>Second version</p>"
     And I press the "Save" button
     And I go to "/admin/pages/history/show/1"
