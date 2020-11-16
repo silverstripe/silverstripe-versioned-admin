@@ -5,8 +5,12 @@ da:
     COLUMN_ORIGIN: Oprindelse
     COLUMN_TITLE: Titel
     COLUMN_TYPE: Type
+    MENUTITLE: ''
     SELECT_EMPTY: Vælg...
     SELECT_TYPE: 'Vælg en indholdstype'
-    TAB_OTHERS: Andre
+    TAB_OTHERS: ''
+  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
+    MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Du har ikke de nødvendige rettigheder for at se {ObjectTitle}'
+    MENUTITLE: ''
