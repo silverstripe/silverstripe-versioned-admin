@@ -1,5 +1,5 @@
 <?php
-namespace SilverStripe\VersionedAdmin\Tests\Controller\HistoryControllerFactory;
+namespace SilverStripe\VersionedAdmin\Tests\Controllers\HistoryControllerFactory;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Dev\TestOnly;
