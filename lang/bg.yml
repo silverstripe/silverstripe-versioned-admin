@@ -8,5 +8,3 @@ bg:
     SELECT_EMPTY: Изберете...
     SELECT_TYPE: 'Изберете тип съдържание'
     TAB_OTHERS: Други
-  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''

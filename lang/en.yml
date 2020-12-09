@@ -12,5 +12,5 @@ en:
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
     MENUTITLE: 'Edit Page'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: 'You don''t have the necessary permissions to view {ObjectTitle}'
+    ErrorItemViewPermissionDenied: "You don't have the necessary permissions to view {ObjectTitle}"
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController

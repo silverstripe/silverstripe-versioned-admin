@@ -8,5 +8,3 @@ fi:
     SELECT_EMPTY: Valitse...
     SELECT_TYPE: 'Valitse sisällön tyyppi'
     TAB_OTHERS: Muut
-  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''
