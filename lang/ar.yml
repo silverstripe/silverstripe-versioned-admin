@@ -5,12 +5,8 @@ ar:
     COLUMN_ORIGIN: الأصل
     COLUMN_TITLE: العنوان
     COLUMN_TYPE: النوع
-    MENUTITLE: ''
     SELECT_EMPTY: اختر...
     SELECT_TYPE: 'اختر نوع المحتوى'
-    TAB_OTHERS: ''
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
+    TAB_OTHERS: أخرى
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'ليس لديك الصلاحيات اللازمة لعرض {ObjectTitle}'
-    MENUTITLE: ''

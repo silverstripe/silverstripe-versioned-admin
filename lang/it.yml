@@ -5,12 +5,8 @@ it:
     COLUMN_ORIGIN: Origine
     COLUMN_TITLE: Titolo
     COLUMN_TYPE: Tipo
-    MENUTITLE: ''
     SELECT_EMPTY: Selezionare...
     SELECT_TYPE: 'Selezionare tipo di contenuto'
-    TAB_OTHERS: ''
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
+    TAB_OTHERS: Altri
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Non hai i necessari permessi per vedere {ObjectTitle}'
-    MENUTITLE: ''
