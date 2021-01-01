@@ -202,6 +202,7 @@ class HistoryViewer extends Component {
     const {
       currentVersion,
       isPreviewable,
+      isRevertable,
       recordId,
       recordClass,
       schemaUrl,
@@ -233,6 +234,7 @@ class HistoryViewer extends Component {
       // comparison shows two versions as one, so by nature cannot be a single 'latest' version.
       isLatestVersion: !compare && latestVersion && latestVersion.version === version.version,
       isPreviewable,
+      isRevertable,
       recordId,
       schemaUrl: schemaUrl.replace(schemaSearch, (match) => schemaReplacements[match]),
       version,
@@ -395,6 +397,7 @@ HistoryViewer.propTypes = {
   compare: compareType,
   isInGridField: PropTypes.bool,
   isPreviewable: PropTypes.bool,
+  isRevertable: PropTypes.bool,
   VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   CompareWarningComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   versions: PropTypes.shape({

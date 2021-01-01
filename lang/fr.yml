@@ -8,5 +8,3 @@ fr:
     SELECT_EMPTY: Sélectionner…
     SELECT_TYPE: 'Sélectionner un type de contenu'
     TAB_OTHERS: Autres
-  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''
