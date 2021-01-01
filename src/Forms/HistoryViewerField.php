@@ -5,6 +5,7 @@ namespace SilverStripe\VersionedAdmin\Forms;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Security;
 
 class HistoryViewerField extends FormField
 {
@@ -64,6 +65,13 @@ class HistoryViewerField extends FormField
         return $previewEnabled;
     }
 
+    private function getIsRevertable()
+    {
+        $record = $this->getSourceRecord();
+        $member = Security::getCurrentUser();
+        return $record->canEdit($member);
+    }
+
     public function getContextKey()
     {
         if ($this->contextKey) {
@@ -96,6 +104,7 @@ class HistoryViewerField extends FormField
             'recordClass' => $sourceRecord ? $sourceRecord->ClassName : null,
             'contextKey' => $this->getContextKey(),
             'isPreviewable' => $this->getPreviewEnabled(),
+            'isRevertable' => $this->getIsRevertable(),
             'limit' => $this->config()->get('default_page_size'),
             'offset' => 0,
             'page' => 0,

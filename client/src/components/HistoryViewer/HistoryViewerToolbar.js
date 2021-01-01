@@ -31,7 +31,13 @@ class HistoryViewerToolbar extends Component {
   }
 
   render() {
-    const { FormActionComponent, ViewModeComponent, isLatestVersion, isPreviewable } = this.props;
+    const {
+      FormActionComponent,
+      ViewModeComponent,
+      isLatestVersion,
+      isPreviewable,
+      isRevertable
+    } = this.props;
     const { isReverting } = this.state;
 
     let revertButtonTitle = '';
@@ -44,7 +50,7 @@ class HistoryViewerToolbar extends Component {
     return (
       <div className="toolbar toolbar--south">
         <div className="btn-toolbar">
-          <FormActionComponent
+          { isRevertable && <FormActionComponent
             onClick={this.handleRevert}
             icon="back-in-time"
             name="revert"
@@ -57,7 +63,7 @@ class HistoryViewerToolbar extends Component {
             disabled={isLatestVersion || isReverting}
             loading={isReverting}
             title={i18n._t('HistoryViewerToolbar.REVERT_TO_VERSION', 'Revert to this version')}
-          />
+          /> }
           { isPreviewable && <ViewModeComponent id="history-viewer-edit-mode" area="edit" /> }
         </div>
       </div>
@@ -73,6 +79,7 @@ HistoryViewerToolbar.propTypes = {
   ViewModeComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   isLatestVersion: PropTypes.bool,
   isPreviewable: PropTypes.bool,
+  isRevertable: PropTypes.bool,
   onAfterRevert: PropTypes.func,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
@@ -81,6 +88,7 @@ HistoryViewerToolbar.propTypes = {
 HistoryViewerToolbar.defaultProps = {
   isLatestVersion: false,
   isPreviewable: false,
+  isRevertable: false,
 };
 
 
