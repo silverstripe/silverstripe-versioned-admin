@@ -44,6 +44,12 @@ class DiffField extends HTMLReadonlyField
     {
         $oldValue = $this->getOutdatedField()->Value();
         $newValue = $this->getComparisonField()->Value();
+
+        // Objects can't be diffed
+        if (is_object($oldValue) || is_object($newValue)) {
+            return sprintf('(%s)', _t(__CLASS__ . '.NO_DIFF_AVAILABLE', 'No diff available'));
+        }
+
         return Diff::compareHTML($oldValue, $newValue);
     }
 
