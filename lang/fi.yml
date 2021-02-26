@@ -5,8 +5,12 @@ fi:
     COLUMN_ORIGIN: Alkuperäinen
     COLUMN_TITLE: Otsikko
     COLUMN_TYPE: Tyyppi
+    MENUTITLE: Arkistot
     SELECT_EMPTY: Valitse...
     SELECT_TYPE: 'Valitse sisällön tyyppi'
     TAB_OTHERS: Muut
+  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
+    MENUTITLE: 'Muokkaa sivua'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: ''
+    MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
