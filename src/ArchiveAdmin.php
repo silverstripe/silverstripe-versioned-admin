@@ -36,7 +36,7 @@ class ArchiveAdmin extends ModelAdmin
 {
     private static $url_segment = 'archive';
 
-    private static $menu_title = 'Archives';
+    private static $menu_title = 'Archive';
 
     private static $menu_icon_class = 'font-icon-box';
 
@@ -289,7 +289,7 @@ class ArchiveAdmin extends ModelAdmin
     }
 
     /**
-     * Use 'Archives' as the top title rather than the model title
+     * Use 'Archive' as the top title rather than the model title
      *
      * @param bool $unlinked
      * @return ArrayList

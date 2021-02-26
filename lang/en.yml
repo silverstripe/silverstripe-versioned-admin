@@ -5,7 +5,7 @@ en:
     COLUMN_ORIGIN: Origin
     COLUMN_TITLE: Title
     COLUMN_TYPE: Type
-    MENUTITLE: Archives
+    MENUTITLE: Archive
     SELECT_EMPTY: Select…
     SELECT_TYPE: 'Select a content type'
     TAB_OTHERS: Other
