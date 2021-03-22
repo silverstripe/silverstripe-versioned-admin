@@ -1,0 +1,8 @@
+---
+Name: versionedadminrequirements
+---
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - 'silverstripe/versioned-admin:client/dist/js/bundle.js'
+  extra_requirements_css:
+    - 'silverstripe/versioned-admin:client/dist/styles/bundle.css'
