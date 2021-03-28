@@ -21,7 +21,7 @@ class DiffTransformation extends FormTransformation
             return $newField;
         }
 
-        if (!$field->hasData()) {
+        if (! $field->hasData()) {
             // No data; no value.
             return clone $field;
         }
@@ -40,9 +40,9 @@ class DiffTransformation extends FormTransformation
         try {
             // First check if a field implements performDiffTransformation()
             $diffField = parent::transform($field);
-        } catch (BadMethodCallException $e) {
+        } catch (BadMethodCallException $badMethodCallException) {
             $diffField = $field->castedCopy(DiffField::class);
-            $diffField->addExtraClass("history-viewer__version-detail-diff");
+            $diffField->addExtraClass('history-viewer__version-detail-diff');
             $diffField->setComparisonField($field);
         }
         return $diffField;

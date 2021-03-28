@@ -1,0 +1,51 @@
+
+
+---------------------------------
+  Running PHP STAN
+---------------------------------
+  directory of script: /home/ssu/.config/composer/vendor/bin
+  directory to analyse: /ss4/silverstripe-versioned-admin/src/
+  also check (e.g. _config.php file): /ss4/silverstripe-versioned-admin/app/_config.php
+  level: 2 (1/6)
+  php stan config file: /home/ssu/.config/composer/vendor/bin/../sunnysideup/easy-coding-standards/phpstan.neon
+---------------------------------
+
+
+ ------ -------------------------------------------------------- 
+  Line   /ss4/silverstripe-versioned-admin/src/ArchiveAdmin.php  
+ ------ -------------------------------------------------------- 
+  243    Cannot call static method singleton() on (int|string).  
+  307    Variable $archivedModels might not be defined.          
+ ------ -------------------------------------------------------- 
+
+ ------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  Line   /ss4/silverstripe-versioned-admin/src/Extensions/ArchiveRestoreAction.php                                                                                                 
+ ------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  46     Access to protected property SilverStripe\Forms\Form::$actions.                                                                                                           
+  65     Return typehint of method SilverStripe\VersionedAdmin\Extensions\ArchiveRestoreAction::doRestore() has invalid type SilverStripe\VersionedAdmin\Extensions\HTTPResponse.  
+  84     PHPDoc tag @param has invalid value ($record): Unexpected token "$record", expected type at offset 87                                                                     
+ ------ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------------------- 
+  Line   /ss4/silverstripe-versioned-admin/src/Extensions/BlockArchiveExtension.php  
+ ------ ---------------------------------------------------------------------------- 
+  19     Class DNADesign\Elemental\Models\BaseElement not found.                     
+         💡 Learn more at https://phpstan.org/user-guide/discovering-symbols          
+  25     Class DNADesign\Elemental\Models\BaseElement not found.                     
+         💡 Learn more at https://phpstan.org/user-guide/discovering-symbols          
+ ------ ---------------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  Line   /ss4/silverstripe-versioned-admin/src/Forms/HistoryViewerField.php                                                                                                           
+ ------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  31     Parameter $title of method SilverStripe\VersionedAdmin\Forms\HistoryViewerField::__construct() has invalid typehint type SilverStripe\Forms\SilverStripe\View\ViewableData.  
+ ------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+ -- ---------------------------------------------------------------------------------- 
+     Error                                                                             
+ -- ---------------------------------------------------------------------------------- 
+     Ignored error pattern #with incorrect case:# was not matched in reported errors.  
+ -- ---------------------------------------------------------------------------------- 
+
+ [ERROR] Found 9 errors                                                                                                 
+

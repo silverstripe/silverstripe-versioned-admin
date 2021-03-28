@@ -34,25 +34,13 @@ use SilverStripe\View\ArrayData;
  */
 class ArchiveAdmin extends ModelAdmin
 {
+    public $showSearchForm = false;
+
     private static $url_segment = 'archive';
 
     private static $menu_title = 'Archive';
 
     private static $menu_icon_class = 'font-icon-box';
-
-    public $showSearchForm = false;
-
-    protected function init()
-    {
-        parent::init();
-
-        // Set the default model class to SiteTree, as long as silverstripe/cms is installed
-        // This is done otherwise File will be the default set in ModelAdmin::init() which is basically random
-        $class = 'SilverStripe\\CMS\\Model\\SiteTree';
-        if (!$this->getRequest()->param('ModelClass') && !$this->request->getVar('others') && class_exists($class)) {
-            $this->modelClass = $class;
-        }
-    }
 
     /**
      * Produces an edit form with relevant prioritised tabs for Pages, Blocks and Files
@@ -77,7 +65,7 @@ class ArchiveAdmin extends ModelAdmin
 
             // If a valid other model name is passed via a request param
             // then show a gridfield with archived records
-            if (array_search($modelClass, $otherVersionedObjects)) {
+            if (array_search($modelClass, $otherVersionedObjects, true)) {
                 $listField = $this->createArchiveGridField('Others', $modelClass);
 
                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
@@ -105,7 +93,7 @@ class ArchiveAdmin extends ModelAdmin
         $form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
         $form->setAttribute('data-pjax-fragment', 'CurrentForm');
         $form->addExtraClass(
-            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow '.
+            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow ' .
             $this->BaseCSSClasses()
         );
         $form->setFormAction(Controller::join_links(
@@ -130,13 +118,13 @@ class ArchiveAdmin extends ModelAdmin
         $config = GridFieldConfig_Base::create();
         $config->removeComponentsByType(VersionedGridFieldState::class);
         $config->removeComponentsByType(GridFieldFilterHeader::class);
-        $config->addComponent(new GridFieldDetailForm);
-        $config->addComponent(new GridFieldViewButton);
-        $config->addComponent(new GridFieldRestoreAction);
-        $config->addComponent(new GridField_ActionMenu);
+        $config->addComponent(new GridFieldDetailForm());
+        $config->addComponent(new GridFieldViewButton());
+        $config->addComponent(new GridFieldRestoreAction());
+        $config->addComponent(new GridField_ActionMenu());
 
-        $list = singleton($class)->get();
-        $baseTable = singleton($list->dataClass())->baseTable();
+        $list = \Singleton($class)->get();
+        $baseTable = \Singleton($list->dataClass())->baseTable();
         $liveTable = $baseTable . '_Live';
 
         $list = $list
@@ -184,10 +172,10 @@ class ArchiveAdmin extends ModelAdmin
         $versionedClasses = array_filter(
             ClassInfo::subclassesFor(DataObject::class),
             function ($class) {
-                return (
+                return
                     DataObject::has_extension($class, Versioned::class) &&
                     DataObject::singleton($class)->hasStages()
-                );
+                ;
             }
         );
 
@@ -197,7 +185,7 @@ class ArchiveAdmin extends ModelAdmin
 
         // Get the classes that are declared as handled by the disabled providers
         foreach ($archiveProviders as $provider) {
-            if (!Injector::inst()->get($provider)->isArchiveFieldEnabled()) {
+            if (! Injector::inst()->get($provider)->isArchiveFieldEnabled()) {
                 $disabledProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
                 $disabledHandledClasses[] = $disabledProviderClass;
 
@@ -212,7 +200,7 @@ class ArchiveAdmin extends ModelAdmin
         $versionedClasses = array_diff_key($versionedClasses, array_flip($disabledHandledClasses));
 
         // If there is a valid filter passed
-        if ($filter && in_array($filter, ['main', 'other'])) {
+        if ($filter && in_array($filter, ['main', 'other'], true)) {
             $archiveProviderClasses = [];
 
             // Get the classes that are decalred as handled by ArchiveViewProviders
@@ -221,31 +209,29 @@ class ArchiveAdmin extends ModelAdmin
                 $archiveProviderClasses[] = $archiveProviderClass;
             }
 
-            switch ($filter) {
-                case 'other':
-                    $handledClasses = [];
-                    // Get any subclasses that would also be handled by those providers
-                    foreach ($archiveProviderClasses as $archiveProviderClass) {
-                        $handledClasses = array_merge(
-                            $handledClasses,
-                            array_keys(ClassInfo::subclassesFor($archiveProviderClass))
-                        );
+            if ($filter == 'other') {
+                $handledClasses = [];
+                // Get any subclasses that would also be handled by those providers
+                foreach ($archiveProviderClasses as $archiveProviderClass) {
+                    $handledClasses = array_merge(
+                        $handledClasses,
+                        array_keys(ClassInfo::subclassesFor($archiveProviderClass))
+                    );
+                }
+                $versionedClasses = array_filter(
+                    $versionedClasses,
+                    function ($class) use ($handledClasses) {
+                        return ! in_array(strtolower($class), $handledClasses, true);
                     }
-                    $versionedClasses = array_filter(
-                        $versionedClasses,
-                        function ($class) use ($handledClasses) {
-                            return !in_array(strtolower($class), $handledClasses);
-                        }
-                    );
-                    break;
-                default: // 'main'
-                    $versionedClasses = array_filter(
-                        $versionedClasses,
-                        function ($class) use ($archiveProviderClasses) {
-                            return in_array($class, $archiveProviderClasses);
-                        }
-                    );
-                    break;
+                );
+            } else {
+                // 'main'
+                $versionedClasses = array_filter(
+                    $versionedClasses,
+                    function ($class) use ($archiveProviderClasses) {
+                        return in_array($class, $archiveProviderClasses, true);
+                    }
+                );
             }
         }
 
@@ -314,7 +300,7 @@ class ArchiveAdmin extends ModelAdmin
 
         // Normalize models to have their model class in array key and all names as the value are uppercased
         foreach ($models as $k => $v) {
-            $archivedModels[$v] = array('title' => ucfirst(singleton($v)->i18n_plural_name()));
+            $archivedModels[$v] = ['title' => ucfirst(\Singleton($v)->i18n_plural_name())];
             unset($archivedModels[$k]);
         }
 
@@ -326,7 +312,7 @@ class ArchiveAdmin extends ModelAdmin
      *
      * @return ArrayList An ArrayList of all managed models to build the tabs for this ModelAdmin
      */
-    public function getManagedModelTabs()
+    protected function getManagedModelTabs()
     {
         $forms = ArrayList::create();
         $mainModels = $this->getVersionedModels('main', true);
@@ -335,7 +321,7 @@ class ArchiveAdmin extends ModelAdmin
         // Pages, Blocks, Files are treated specially and have extensions defined in _config/archive-admin.yml
         $order = ['Pages', 'Blocks', 'Files'];
         uasort($mainModels, function ($a, $b) use ($order) {
-            return array_search($a, $order) < array_search($b, $order) ? -1 : 1;
+            return array_search($a, $order, true) < array_search($b, $order, true) ? -1 : 1;
         });
 
         foreach ($mainModels as $class => $title) {
@@ -347,13 +333,13 @@ class ArchiveAdmin extends ModelAdmin
                     'Title' => $title,
                     'ClassName' => $class,
                     'Link' => $this->Link($this->sanitiseClassName($class)),
-                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
+                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link',
                 ]));
             }
         }
 
         $otherModels = $this->getVersionedModels('other', true);
-        if ($otherModels) {
+        if ($otherModels !== []) {
             $isOtherActive = (
                 $this->request->getVar('others') !== null ||
                 array_key_exists($this->modelClass, $otherModels)
@@ -362,12 +348,24 @@ class ArchiveAdmin extends ModelAdmin
                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Other'),
                 'ClassName' => 'Others',
                 'Link' => $this->Link('?others=1'),
-                'LinkOrCurrent' => ($isOtherActive ? 'current' : 'link')
+                'LinkOrCurrent' => ($isOtherActive ? 'current' : 'link'),
             ]));
         }
 
         $forms->first()->LinkOrCurrent = 'link';
 
         return $forms;
+    }
+
+    protected function init()
+    {
+        parent::init();
+
+        // Set the default model class to SiteTree, as long as silverstripe/cms is installed
+        // This is done otherwise File will be the default set in ModelAdmin::init() which is basically random
+        $class = 'SilverStripe\\CMS\\Model\\SiteTree';
+        if (! $this->getRequest()->param('ModelClass') && ! $this->request->getVar('others') && class_exists($class)) {
+            $this->modelClass = $class;
+        }
     }
 }

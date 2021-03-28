@@ -10,9 +10,6 @@ use SilverStripe\Versioned\GridFieldRestoreAction;
  */
 class GridFieldFileRestoreAction extends GridFieldRestoreAction
 {
-    /**
-     * @inheritdoc
-     */
     public function getRestoreAction($gridField, $record, $columnName)
     {
         // Only show the action if the file exists

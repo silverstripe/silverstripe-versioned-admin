@@ -7,9 +7,8 @@ use SilverStripe\Versioned\ChangeSetItem;
 
 class UsedOnTableExtension extends Extension
 {
-
     /**
-     * @var array $excludedClasses
+     * @var array
      */
     public function updateUsageExcludedClasses(array &$excludedClasses)
     {

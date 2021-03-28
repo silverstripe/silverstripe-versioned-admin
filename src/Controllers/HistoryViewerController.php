@@ -26,12 +26,19 @@ class HistoryViewerController extends LeftAndMain
     /**
      * @var string
      */
-    const FORM_NAME_VERSION = 'versionForm';
+    public const FORM_NAME_VERSION = 'versionForm';
 
     /**
      * @var string
      */
-    const FORM_NAME_COMPARE = 'compareForm';
+    public const FORM_NAME_COMPARE = 'compareForm';
+
+    /**
+     * An array of supported form names that can be requested through the schema
+     *
+     * @var string[]
+     */
+    protected $formNames = [self::FORM_NAME_VERSION, self::FORM_NAME_COMPARE];
 
     private static $url_segment = 'historyviewer';
 
@@ -46,13 +53,6 @@ class HistoryViewerController extends LeftAndMain
         self::FORM_NAME_COMPARE,
         'schema',
     ];
-
-    /**
-     * An array of supported form names that can be requested through the schema
-     *
-     * @var string[]
-     */
-    protected $formNames = [self::FORM_NAME_VERSION, self::FORM_NAME_COMPARE];
 
     public function getClientConfig()
     {
@@ -78,7 +78,7 @@ class HistoryViewerController extends LeftAndMain
     public function schema($request)
     {
         $formName = $request->param('FormName');
-        if (!in_array($formName, $this->formNames)) {
+        if (! in_array($formName, $this->formNames, true)) {
             return parent::schema($request);
         }
 
@@ -86,11 +86,102 @@ class HistoryViewerController extends LeftAndMain
     }
 
     /**
+     * Returns a {@link Form} showing the version details for a given version of a record
+     *
+     * @return Form
+     */
+    public function getVersionForm(array $context)
+    {
+        try {
+            $specifiesDate = ! empty($context['RecordDate']) && DBDatetime::create()->setValue($context['RecordDate']);
+        } catch (InvalidArgumentException $invalidArgumentException) {
+            $specifiesDate = false;
+        }
+
+        return $specifiesDate ? $this->getVersionFormByDate($context) : $this->getVersionFormByVersion($context);
+    }
+
+    /**
+     * Returns a {@link Form} containing the comparison {@link DiffTransformation} view for a record
+     * between two specified versions.
+     *
+     * @return Form
+     */
+    public function getCompareForm(array $context)
+    {
+        $this->validateInput($context, ['RecordClass', 'RecordID', 'RecordVersionFrom', 'RecordVersionTo']);
+
+        $recordClass = $context['RecordClass'];
+        $recordId = $context['RecordID'];
+        $recordVersionFrom = $context['RecordVersionFrom'];
+        $recordVersionTo = $context['RecordVersionTo'];
+
+        // Load record and perform a canView check
+        $recordFrom = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
+        $recordTo = $this->getRecordVersion($recordClass, $recordId, $recordVersionTo);
+        if (! $recordFrom || ! $recordTo) {
+            return null;
+        }
+
+        $effectiveContext = array_merge($context, ['Record' => $recordTo]);
+
+        $form = $this->scaffoldForm(self::FORM_NAME_COMPARE, $effectiveContext, [
+            $recordClass,
+            $recordId,
+            $recordVersionFrom,
+            $recordVersionTo,
+        ]);
+
+        // Enable the "compare mode" diff view
+        $comparisonTransformation = DiffTransformation::create();
+        $form->transform($comparisonTransformation);
+        $form->loadDataFrom($recordFrom);
+
+        return $form;
+    }
+
+    public function versionForm(HTTPRequest $request = null)
+    {
+        if ($request === null) {
+            $this->jsonError(400);
+            return null;
+        }
+
+        try {
+            return $this->getVersionForm([
+                'RecordClass' => $request->getVar('RecordClass'),
+                'RecordID' => $request->getVar('RecordID'),
+                'RecordVersion' => $request->getVar('RecordVersion'),
+            ]);
+        } catch (InvalidArgumentException $ex) {
+            $this->jsonError(400);
+        }
+    }
+
+    public function compareForm(HTTPRequest $request = null)
+    {
+        if ($request === null) {
+            $this->jsonError(400);
+            return null;
+        }
+
+        try {
+            return $this->getCompareForm([
+                'RecordClass' => $request->getVar('RecordClass'),
+                'RecordID' => $request->getVar('RecordID'),
+                'RecordVersionFrom' => $request->getVar('RecordVersionFrom'),
+                'RecordVersionTo' => $request->getVar('RecordVersionTo'),
+            ]);
+        } catch (InvalidArgumentException $ex) {
+            $this->jsonError(400);
+        }
+    }
+
+    /**
      * Checks the requested schema name and returns a scaffolded {@link Form}. An exception is thrown
      * if an unexpected value is provided.
      *
      * @param string $formName
-     * @param HTTPRequest $request
      * @return HTTPResponse
      * @throws InvalidArgumentException
      */
@@ -121,31 +212,13 @@ class HistoryViewerController extends LeftAndMain
         // Respond with this schema
         $response = $this->getResponse();
         $response->addHeader('Content-Type', 'application/json');
+
         $schemaID = $this->getRequest()->getURL();
 
         return $this->getSchemaResponse($schemaID, $form);
     }
 
     /**
-     * Returns a {@link Form} showing the version details for a given version of a record
-     *
-     * @param array $context
-     * @return Form
-     */
-    public function getVersionForm(array $context)
-    {
-        // Attempt to parse a date if given in case we're fetching a version form for a specific timestamp.
-        try {
-            $specifiesDate = !empty($context['RecordDate']) && DBDatetime::create()->setValue($context['RecordDate']);
-        } catch (InvalidArgumentException $e) {
-            $specifiesDate = false;
-        }
-
-        return $specifiesDate ? $this->getVersionFormByDate($context) : $this->getVersionFormByVersion($context);
-    }
-
-    /**
-     * @param array $context
      * @return Form|null
      */
     protected function getVersionFormByDate(array $context)
@@ -164,7 +237,7 @@ class HistoryViewerController extends LeftAndMain
             $record = DataList::create(DataObject::getSchema()->baseDataClass($recordClass))
                 ->byID($recordId);
 
-            if ($record) {
+            if ($record !== null) {
                 $effectiveContext = array_merge($context, ['Record' => $record]);
 
                 // Ensure the form is scaffolded with archive date enabled.
@@ -179,7 +252,6 @@ class HistoryViewerController extends LeftAndMain
     }
 
     /**
-     * @param array $context
      * @return Form
      */
     protected function getVersionFormByVersion(array $context)
@@ -214,14 +286,14 @@ class HistoryViewerController extends LeftAndMain
     {
         $record = Versioned::get_version($recordClass, $recordId, $recordVersion);
 
-        if (!$record) {
+        if (! $record) {
             $this->jsonError(404);
             return null;
         }
 
-        if (!$record->canView()) {
+        if (! $record->canView()) {
             $this->jsonError(403, _t(
-                __CLASS__.'.ErrorItemViewPermissionDenied',
+                __CLASS__ . '.ErrorItemViewPermissionDenied',
                 "You don't have the necessary permissions to view {ObjectTitle}",
                 ['ObjectTitle' => $record->i18n_singular_name()]
             ));
@@ -232,86 +304,8 @@ class HistoryViewerController extends LeftAndMain
     }
 
     /**
-     * Returns a {@link Form} containing the comparison {@link DiffTransformation} view for a record
-     * between two specified versions.
-     *
-     * @param array $context
-     * @return Form
-     */
-    public function getCompareForm(array $context)
-    {
-        $this->validateInput($context, ['RecordClass', 'RecordID', 'RecordVersionFrom', 'RecordVersionTo']);
-
-        $recordClass = $context['RecordClass'];
-        $recordId = $context['RecordID'];
-        $recordVersionFrom = $context['RecordVersionFrom'];
-        $recordVersionTo = $context['RecordVersionTo'];
-
-        // Load record and perform a canView check
-        $recordFrom = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
-        $recordTo = $this->getRecordVersion($recordClass, $recordId, $recordVersionTo);
-        if (!$recordFrom || !$recordTo) {
-            return null;
-        }
-
-        $effectiveContext = array_merge($context, ['Record' => $recordTo]);
-
-        $form = $this->scaffoldForm(self::FORM_NAME_COMPARE, $effectiveContext, [
-            $recordClass,
-            $recordId,
-            $recordVersionFrom,
-            $recordVersionTo,
-        ]);
-
-        // Enable the "compare mode" diff view
-        $comparisonTransformation = DiffTransformation::create();
-        $form->transform($comparisonTransformation);
-        $form->loadDataFrom($recordFrom);
-
-        return $form;
-    }
-
-    public function versionForm(HTTPRequest $request = null)
-    {
-        if (!$request) {
-            $this->jsonError(400);
-            return null;
-        }
-
-        try {
-            return $this->getVersionForm([
-                'RecordClass' => $request->getVar('RecordClass'),
-                'RecordID' => $request->getVar('RecordID'),
-                'RecordVersion' => $request->getVar('RecordVersion'),
-            ]);
-        } catch (InvalidArgumentException $ex) {
-            $this->jsonError(400);
-        }
-    }
-
-    public function compareForm(HTTPRequest $request = null)
-    {
-        if (!$request) {
-            $this->jsonError(400);
-            return null;
-        }
-
-        try {
-            return $this->getCompareForm([
-                'RecordClass' => $request->getVar('RecordClass'),
-                'RecordID' => $request->getVar('RecordID'),
-                'RecordVersionFrom' => $request->getVar('RecordVersionFrom'),
-                'RecordVersionTo' => $request->getVar('RecordVersionTo'),
-            ]);
-        } catch (InvalidArgumentException $ex) {
-            $this->jsonError(400);
-        }
-    }
-
-    /**
      * Perform some centralised validation checks on the input request and data within it
      *
-     * @param array $context
      * @param string[] $requiredFields
      * @return bool
      * @throws InvalidArgumentException

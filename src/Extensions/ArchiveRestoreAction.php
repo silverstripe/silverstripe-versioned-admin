@@ -21,7 +21,6 @@ class ArchiveRestoreAction extends DataExtension
     /**
      * Updates the edit form with a restore button if it is being viewed
      *
-     * @param Form $form
      * @return mixed
      */
     public function updateItemEditForm(Form $form)
@@ -57,25 +56,6 @@ class ArchiveRestoreAction extends DataExtension
     }
 
     /**
-     * Returns whether the restore action should be displayed
-     *
-     * @param $record
-     * @return bool
-     */
-    protected function shouldDisplayAction($record)
-    {
-        $admin = $this->owner->popupController;
-        // If the record is a File, check if the file binary was archived
-        $hasFileSaved = $record instanceof File ? $record->exists() : true;
-        return (
-            $hasFileSaved &&
-            $admin instanceof ArchiveAdmin &&
-            DataObject::has_extension($record, Versioned::class) &&
-            $record->canRestoreToDraft()
-        );
-    }
-
-    /**
      * Restore the record to its original place or top level if that's not possible
      *
      * @param array $data
@@ -93,5 +73,24 @@ class ArchiveRestoreAction extends DataExtension
         $controller->getEditForm()->sessionMessage($message['text'], $message['type'], ValidationResult::CAST_HTML);
 
         return $controller->redirect($controller->Link(), 'index');
+    }
+
+    /**
+     * Returns whether the restore action should be displayed
+     *
+     * @param $record
+     * @return bool
+     */
+    protected function shouldDisplayAction($record)
+    {
+        $admin = $this->owner->popupController;
+        // If the record is a File, check if the file binary was archived
+        $hasFileSaved = $record instanceof File ? $record->exists() : true;
+        return
+            $hasFileSaved &&
+            $admin instanceof ArchiveAdmin &&
+            DataObject::has_extension($record, Versioned::class) &&
+            $record->canRestoreToDraft()
+        ;
     }
 }

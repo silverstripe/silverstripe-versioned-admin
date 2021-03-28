@@ -25,7 +25,7 @@ class DataObjectVersionFormFactory implements FormFactory
      *
      * @var string
      */
-    const TYPE_HISTORY = 'history';
+    public const TYPE_HISTORY = 'history';
 
     /**
      * Define context types that will automatically be converted to readonly forms
@@ -41,8 +41,8 @@ class DataObjectVersionFormFactory implements FormFactory
     {
         // Validate context
         foreach ($this->getRequiredContext() as $required) {
-            if (!isset($context[$required])) {
-                throw new InvalidArgumentException("Missing required context $required");
+            if (! isset($context[$required])) {
+                throw new InvalidArgumentException("Missing required context {$required}");
             }
         }
 
@@ -71,7 +71,6 @@ class DataObjectVersionFormFactory implements FormFactory
     /**
      * Get form type from 'type' context
      *
-     * @param array $context
      * @return string
      */
     public function getFormType(array $context)
@@ -82,12 +81,16 @@ class DataObjectVersionFormFactory implements FormFactory
     /**
      * Get whether the current form type should be treated as readonly
      *
-     * @param array $context
      * @return bool
      */
     public function isReadonlyFormType(array $context)
     {
-        return in_array($this->getFormType($context), $this->config()->get('readonly_types'));
+        return in_array($this->getFormType($context), $this->config()->get('readonly_types'), true);
+    }
+
+    public function getRequiredContext()
+    {
+        return ['Record'];
     }
 
     protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
@@ -106,8 +109,6 @@ class DataObjectVersionFormFactory implements FormFactory
 
     /**
      * Do not return {@link HistoryViewerField} instances in the form - remove them if they are found
-     *
-     * @param FieldList $fields
      */
     protected function removeHistoryViewerFields(FieldList $fields)
     {
@@ -120,7 +121,7 @@ class DataObjectVersionFormFactory implements FormFactory
 
         // Cleanup empty tabs after removing HistoryViewerFields
         $fields->recursiveWalk(function (FormField $field) {
-            if ($field instanceof Tab && !$field->Fields()->count()) {
+            if ($field instanceof Tab && ! $field->Fields()->count()) {
                 $field->getContainerFieldList()->remove($field);
             }
         });
@@ -128,15 +129,13 @@ class DataObjectVersionFormFactory implements FormFactory
 
     /**
      * Remove right titles from selected form fields by default
-     *
-     * @param FieldList $fields
      */
     protected function removeSelectedRightTitles(FieldList $fields)
     {
         $noRightTitle = ['MetaDescription', 'ExtraMeta'];
 
         foreach ($noRightTitle as $fieldName) {
-            if ($field = $fields->dataFieldByName($fieldName)) {
+            if (($field = $fields->dataFieldByName($fieldName)) !== null) {
                 $field->setRightTitle('');
             }
         }
@@ -147,10 +146,5 @@ class DataObjectVersionFormFactory implements FormFactory
         $actions = FieldList::create();
         $this->invokeWithExtensions('updateFormActions', $actions, $controller, $formName, $context);
         return $actions;
-    }
-
-    public function getRequiredContext()
-    {
-        return ['Record'];
     }
 }

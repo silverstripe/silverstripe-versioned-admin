@@ -9,7 +9,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
 
-if (!class_exists(CMSMain::class)) {
+if (! class_exists(CMSMain::class)) {
     return;
 }
 

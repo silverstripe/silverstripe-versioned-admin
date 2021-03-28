@@ -6,7 +6,6 @@ use DNADesign\Elemental\Models\BaseElement;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
@@ -15,17 +14,12 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
  */
 class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
-    /**
-     * @inheritDoc
-    */
     public function getArchiveFieldClass()
     {
         return BaseElement::class;
     }
 
-    /**
-     * @inheritDoc
-    */
+
     public function getArchiveField()
     {
         $listField = ArchiveAdmin::createArchiveGridField('Blocks', BaseElement::class);
@@ -42,7 +36,7 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
             'allVersions.first.Author.Name' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
                 'Archived By'
-            )
+            ),
         ]);
         $listColumns->setFieldFormatting([
             'Breadcrumbs' => function ($val, $item) {
@@ -58,9 +52,7 @@ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
         return $listField;
     }
 
-    /**
-     * @inheritDoc
-    */
+
     public function isArchiveFieldEnabled()
     {
         return true;

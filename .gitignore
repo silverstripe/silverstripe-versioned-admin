@@ -6,3 +6,5 @@ coverage/
 /**/*.css.map
 artifacts/
 coverage/
+/vendor/
+/resources/

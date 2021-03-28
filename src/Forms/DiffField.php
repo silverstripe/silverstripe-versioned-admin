@@ -22,7 +22,6 @@ class DiffField extends HTMLReadonlyField
     protected $comparisonField;
 
     /**
-     * @param FormField $field
      * @return $this
      */
     public function setComparisonField(FormField $field)

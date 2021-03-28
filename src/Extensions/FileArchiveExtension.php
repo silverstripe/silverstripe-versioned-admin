@@ -18,17 +18,12 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
  */
 class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
-    /**
-     * @inheritDoc
-    */
     public function getArchiveFieldClass()
     {
         return File::class;
     }
 
-    /**
-     * @inheritDoc
-    */
+
     public function getArchiveField()
     {
         $listField = ArchiveAdmin::createArchiveGridField('Files', File::class);
@@ -55,7 +50,7 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
             'allVersions.first.Author.Name' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
                 'Archived By'
-            )
+            ),
         ]);
         $listColumns->setFieldFormatting([
             'appCategory' => function ($val, $item) {
@@ -74,7 +69,7 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
      * so this checks if this option is enabled
      *
      * @return boolean
-    */
+     */
     public function isArchiveFieldEnabled()
     {
         return Config::inst()->get(AssetControlExtension::class, 'keep_archived_assets');

@@ -10,14 +10,6 @@ use SilverStripe\Security\Security;
 class HistoryViewerField extends FormField
 {
     /**
-     * The default pagination page size
-     *
-     * @config
-     * @var int
-     */
-    private static $default_page_size = 30;
-
-    /**
      * Unique context key used to differentiate the different use cases for HistoryViewer
      *
      * @var string
@@ -28,16 +20,17 @@ class HistoryViewerField extends FormField
 
     protected $inputType = '';
 
+    /**
+     * The default pagination page size
+     *
+     * @config
+     * @var int
+     */
+    private static $default_page_size = 30;
+
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
-    }
-
-    protected function setupDefaultClasses()
-    {
-        parent::setupDefaultClasses();
-
-        $this->addExtraClass('fill-height');
     }
 
     /**
@@ -65,16 +58,9 @@ class HistoryViewerField extends FormField
         return $previewEnabled;
     }
 
-    private function getIsRevertable()
-    {
-        $record = $this->getSourceRecord();
-        $member = Security::getCurrentUser();
-        return $record->canEdit($member);
-    }
-
     public function getContextKey()
     {
-        if ($this->contextKey) {
+        if ($this->contextKey !== '') {
             return $this->contextKey;
         }
 
@@ -100,8 +86,8 @@ class HistoryViewerField extends FormField
         $sourceRecord = $this->getSourceRecord();
 
         $data['data'] = array_merge($data['data'], [
-            'recordId' => $sourceRecord ? $sourceRecord->ID : null,
-            'recordClass' => $sourceRecord ? $sourceRecord->ClassName : null,
+            'recordId' => $sourceRecord !== null ? $sourceRecord->ID : null,
+            'recordClass' => $sourceRecord !== null ? $sourceRecord->ClassName : null,
             'contextKey' => $this->getContextKey(),
             'isPreviewable' => $this->getPreviewEnabled(),
             'isRevertable' => $this->getIsRevertable(),
@@ -131,5 +117,19 @@ class HistoryViewerField extends FormField
     public function Type()
     {
         return 'history-viewer__container';
+    }
+
+    protected function setupDefaultClasses()
+    {
+        parent::setupDefaultClasses();
+
+        $this->addExtraClass('fill-height');
+    }
+
+    private function getIsRevertable()
+    {
+        $record = $this->getSourceRecord();
+        $member = Security::getCurrentUser();
+        return $record->canEdit($member);
     }
 }

@@ -6,7 +6,6 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
@@ -15,17 +14,12 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
  */
 class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
-    /**
-     * @inheritDoc
-    */
     public function getArchiveFieldClass()
     {
         return SiteTree::class;
     }
 
-    /**
-     * @inheritDoc
-    */
+
     public function getArchiveField()
     {
         $listField = ArchiveAdmin::createArchiveGridField('Pages', SiteTree::class);
@@ -42,7 +36,7 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
             'allVersions.first.Author.Name' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
                 'Archived By'
-            )
+            ),
         ]);
         $listColumns->setFieldFormatting([
             'ParentID' => function ($val, $item) {
@@ -51,7 +45,7 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
                     $breadcrumbString = '../';
                     foreach ($breadcrumbs as $item) {
                         $breadcrumbString = $breadcrumbString . $item->URLSegment . '/';
-                    };
+                    }
                     return $breadcrumbString;
                 }
             },
@@ -63,9 +57,7 @@ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvi
         return $listField;
     }
 
-    /**
-     * @inheritDoc
-    */
+
     public function isArchiveFieldEnabled()
     {
         return true;

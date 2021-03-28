@@ -1,0 +1,1166 @@
+
+
+---------------------------------
+  Running Easy Conding Standards
+---------------------------------
+  directory of script: /home/ssu/.config/composer/vendor/bin
+  directory to analyse: /ss4/silverstripe-versioned-admin/src/
+  also check (e.g. _config.php file): /ss4/silverstripe-versioned-admin/app/_config.php
+  ecs config file: /home/ssu/.config/composer/vendor/bin/../sunnysideup/easy-coding-standards/ecs.php
+---------------------------------
+
+
+
+
+
+1) src/ArchiveAdmin.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -34,6 +34,8 @@
+  */
+ class ArchiveAdmin extends ModelAdmin
+ {
++    public $showSearchForm = false;
++
+     private static $url_segment = 'archive';
+
+     private static $menu_title = 'Archive';
+@@ -40,20 +42,6 @@
+
+     private static $menu_icon_class = 'font-icon-box';
+
+-    public $showSearchForm = false;
+-
+-    protected function init()
+-    {
+-        parent::init();
+-
+-        // Set the default model class to SiteTree, as long as silverstripe/cms is installed
+-        // This is done otherwise File will be the default set in ModelAdmin::init() which is basically random
+-        $class = 'SilverStripe\\CMS\\Model\\SiteTree';
+-        if (!$this->getRequest()->param('ModelClass') && !$this->request->getVar('others') && class_exists($class)) {
+-            $this->modelClass = $class;
+-        }
+-    }
+-
+     /**
+      * Produces an edit form with relevant prioritised tabs for Pages, Blocks and Files
+      *
+@@ -77,7 +65,7 @@
+
+             // If a valid other model name is passed via a request param
+             // then show a gridfield with archived records
+-            if (array_search($modelClass, $otherVersionedObjects)) {
++            if (array_search($modelClass, $otherVersionedObjects, true)) {
+                 $listField = $this->createArchiveGridField('Others', $modelClass);
+
+                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+@@ -105,7 +93,7 @@
+         $form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+         $form->setAttribute('data-pjax-fragment', 'CurrentForm');
+         $form->addExtraClass(
+-            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow '.
++            'ArchiveAdmin discardchanges cms-edit-form cms-panel-padded center flexbox-area-grow ' .
+             $this->BaseCSSClasses()
+         );
+         $form->setFormAction(Controller::join_links(
+@@ -130,10 +118,10 @@
+         $config = GridFieldConfig_Base::create();
+         $config->removeComponentsByType(VersionedGridFieldState::class);
+         $config->removeComponentsByType(GridFieldFilterHeader::class);
+-        $config->addComponent(new GridFieldDetailForm);
+-        $config->addComponent(new GridFieldViewButton);
+-        $config->addComponent(new GridFieldRestoreAction);
+-        $config->addComponent(new GridField_ActionMenu);
++        $config->addComponent(new GridFieldDetailForm());
++        $config->addComponent(new GridFieldViewButton());
++        $config->addComponent(new GridFieldRestoreAction());
++        $config->addComponent(new GridField_ActionMenu());
+
+         $list = singleton($class)->get();
+         $baseTable = singleton($list->dataClass())->baseTable();
+@@ -184,10 +172,10 @@
+         $versionedClasses = array_filter(
+             ClassInfo::subclassesFor(DataObject::class),
+             function ($class) {
+-                return (
++                return
+                     DataObject::has_extension($class, Versioned::class) &&
+                     DataObject::singleton($class)->hasStages()
+-                );
++                ;
+             }
+         );
+
+@@ -197,7 +185,7 @@
+
+         // Get the classes that are declared as handled by the disabled providers
+         foreach ($archiveProviders as $provider) {
+-            if (!Injector::inst()->get($provider)->isArchiveFieldEnabled()) {
++            if (! Injector::inst()->get($provider)->isArchiveFieldEnabled()) {
+                 $disabledProviderClass = Injector::inst()->get($provider)->getArchiveFieldClass();
+                 $disabledHandledClasses[] = $disabledProviderClass;
+
+@@ -212,7 +200,7 @@
+         $versionedClasses = array_diff_key($versionedClasses, array_flip($disabledHandledClasses));
+
+         // If there is a valid filter passed
+-        if ($filter && in_array($filter, ['main', 'other'])) {
++        if ($filter && in_array($filter, ['main', 'other'], true)) {
+             $archiveProviderClasses = [];
+
+             // Get the classes that are decalred as handled by ArchiveViewProviders
+@@ -234,7 +222,7 @@
+                     $versionedClasses = array_filter(
+                         $versionedClasses,
+                         function ($class) use ($handledClasses) {
+-                            return !in_array(strtolower($class), $handledClasses);
++                            return ! in_array(strtolower($class), $handledClasses, true);
+                         }
+                     );
+                     break;
+@@ -242,7 +230,7 @@
+                     $versionedClasses = array_filter(
+                         $versionedClasses,
+                         function ($class) use ($archiveProviderClasses) {
+-                            return in_array($class, $archiveProviderClasses);
++                            return in_array($class, $archiveProviderClasses, true);
+                         }
+                     );
+                     break;
+@@ -314,7 +302,7 @@
+
+         // Normalize models to have their model class in array key and all names as the value are uppercased
+         foreach ($models as $k => $v) {
+-            $archivedModels[$v] = array('title' => ucfirst(singleton($v)->i18n_plural_name()));
++            $archivedModels[$v] = ['title' => ucfirst(singleton($v)->i18n_plural_name())];
+             unset($archivedModels[$k]);
+         }
+
+@@ -335,7 +323,7 @@
+         // Pages, Blocks, Files are treated specially and have extensions defined in _config/archive-admin.yml
+         $order = ['Pages', 'Blocks', 'Files'];
+         uasort($mainModels, function ($a, $b) use ($order) {
+-            return array_search($a, $order) < array_search($b, $order) ? -1 : 1;
++            return array_search($a, $order, true) < array_search($b, $order, true) ? -1 : 1;
+         });
+
+         foreach ($mainModels as $class => $title) {
+@@ -347,7 +335,7 @@
+                     'Title' => $title,
+                     'ClassName' => $class,
+                     'Link' => $this->Link($this->sanitiseClassName($class)),
+-                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
++                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link',
+                 ]));
+             }
+         }
+@@ -362,7 +350,7 @@
+                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Other'),
+                 'ClassName' => 'Others',
+                 'Link' => $this->Link('?others=1'),
+-                'LinkOrCurrent' => ($isOtherActive ? 'current' : 'link')
++                'LinkOrCurrent' => ($isOtherActive ? 'current' : 'link'),
+             ]));
+         }
+
+@@ -369,5 +357,17 @@
+         $forms->first()->LinkOrCurrent = 'link';
+
+         return $forms;
++    }
++
++    protected function init()
++    {
++        parent::init();
++
++        // Set the default model class to SiteTree, as long as silverstripe/cms is installed
++        // This is done otherwise File will be the default set in ModelAdmin::init() which is basically random
++        $class = 'SilverStripe\\CMS\\Model\\SiteTree';
++        if (! $this->getRequest()->param('ModelClass') && ! $this->request->getVar('others') && class_exists($class)) {
++            $this->modelClass = $class;
++        }
+     }
+ }
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer
+ * PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer
+ * PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer
+ * PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer
+ * PhpCsFixer\Fixer\ControlStructure\NoUnneededControlParenthesesFixer
+ * PhpCsFixer\Fixer\Operator\ConcatSpaceFixer
+ * PhpCsFixer\Fixer\Operator\NewWithBracesFixer
+ * PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer
+ * PhpCsFixer\Fixer\Strict\StrictParamFixer
+ * PhpCsFixer\Fixer\Whitespace\NoTrailingWhitespaceFixer
+
+
+
+2) src/Controllers/CMSPageHistoryViewerController.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -9,7 +9,7 @@
+ use SilverStripe\ORM\DataObject;
+ use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
+
+-if (!class_exists(CMSMain::class)) {
++if (! class_exists(CMSMain::class)) {
+     return;
+ }
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer
+
+
+
+3) src/Controllers/HistoryControllerFactory.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -20,7 +20,7 @@
+ {
+     use Extensible;
+
+-    public function create($service, array $params = array())
++    public function create($service, array $params = [])
+     {
+         // If no request is available yet, return the default controller
+         if (Injector::inst()->has(HTTPRequest::class)) {
+@@ -35,7 +35,7 @@
+                     sprintf('"SiteTree"."ID" = \'%d\'', $id)
+                 );
+
+-                if ($page && !$this->isEnabled($page)) {
++                if ($page && ! $this->isEnabled($page)) {
+                     // Injector is not used to prevent an infinite loop
+                     return new CMSPageHistoryController();
+                 }
+@@ -50,12 +50,11 @@
+      * Only deactivate for pages that have a history viewer capability removed. Extensions can provide their
+      * own two cents about this criteria.
+      *
+-     * @param SiteTree $record
+      * @return bool
+      */
+     public function isEnabled(SiteTree $record)
+     {
+         $enabledResults = $this->extend('updateIsEnabled', $record);
+-        return (empty($enabledResults) || min($enabledResults) !== false);
++        return empty($enabledResults) || min($enabledResults) !== false;
+     }
+ }
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer
+ * PhpCsFixer\Fixer\ControlStructure\NoUnneededControlParenthesesFixer
+ * PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+
+
+
+4) src/Controllers/HistoryViewerController.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -26,13 +26,20 @@
+     /**
+      * @var string
+      */
+-    const FORM_NAME_VERSION = 'versionForm';
++    public const FORM_NAME_VERSION = 'versionForm';
+
+     /**
+      * @var string
+      */
+-    const FORM_NAME_COMPARE = 'compareForm';
++    public const FORM_NAME_COMPARE = 'compareForm';
+
++    /**
++     * An array of supported form names that can be requested through the schema
++     *
++     * @var string[]
++     */
++    protected $formNames = [self::FORM_NAME_VERSION, self::FORM_NAME_COMPARE];
++
+     private static $url_segment = 'historyviewer';
+
+     private static $url_rule = '/$Action';
+@@ -47,13 +54,6 @@
+         'schema',
+     ];
+
+-    /**
+-     * An array of supported form names that can be requested through the schema
+-     *
+-     * @var string[]
+-     */
+-    protected $formNames = [self::FORM_NAME_VERSION, self::FORM_NAME_COMPARE];
+-
+     public function getClientConfig()
+     {
+         $clientConfig = parent::getClientConfig();
+@@ -78,7 +78,7 @@
+     public function schema($request)
+     {
+         $formName = $request->param('FormName');
+-        if (!in_array($formName, $this->formNames)) {
++        if (! in_array($formName, $this->formNames, true)) {
+             return parent::schema($request);
+         }
+
+@@ -86,11 +86,103 @@
+     }
+
+     /**
++     * Returns a {@link Form} showing the version details for a given version of a record
++     *
++     * @return Form
++     */
++    public function getVersionForm(array $context)
++    {
++        // Attempt to parse a date if given in case we're fetching a version form for a specific timestamp.
++        try {
++            $specifiesDate = ! empty($context['RecordDate']) && DBDatetime::create()->setValue($context['RecordDate']);
++        } catch (InvalidArgumentException $e) {
++            $specifiesDate = false;
++        }
++
++        return $specifiesDate ? $this->getVersionFormByDate($context) : $this->getVersionFormByVersion($context);
++    }
++
++    /**
++     * Returns a {@link Form} containing the comparison {@link DiffTransformation} view for a record
++     * between two specified versions.
++     *
++     * @return Form
++     */
++    public function getCompareForm(array $context)
++    {
++        $this->validateInput($context, ['RecordClass', 'RecordID', 'RecordVersionFrom', 'RecordVersionTo']);
++
++        $recordClass = $context['RecordClass'];
++        $recordId = $context['RecordID'];
++        $recordVersionFrom = $context['RecordVersionFrom'];
++        $recordVersionTo = $context['RecordVersionTo'];
++
++        // Load record and perform a canView check
++        $recordFrom = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
++        $recordTo = $this->getRecordVersion($recordClass, $recordId, $recordVersionTo);
++        if (! $recordFrom || ! $recordTo) {
++            return null;
++        }
++
++        $effectiveContext = array_merge($context, ['Record' => $recordTo]);
++
++        $form = $this->scaffoldForm(self::FORM_NAME_COMPARE, $effectiveContext, [
++            $recordClass,
++            $recordId,
++            $recordVersionFrom,
++            $recordVersionTo,
++        ]);
++
++        // Enable the "compare mode" diff view
++        $comparisonTransformation = DiffTransformation::create();
++        $form->transform($comparisonTransformation);
++        $form->loadDataFrom($recordFrom);
++
++        return $form;
++    }
++
++    public function versionForm(HTTPRequest $request = null)
++    {
++        if (! $request) {
++            $this->jsonError(400);
++            return null;
++        }
++
++        try {
++            return $this->getVersionForm([
++                'RecordClass' => $request->getVar('RecordClass'),
++                'RecordID' => $request->getVar('RecordID'),
++                'RecordVersion' => $request->getVar('RecordVersion'),
++            ]);
++        } catch (InvalidArgumentException $ex) {
++            $this->jsonError(400);
++        }
++    }
++
++    public function compareForm(HTTPRequest $request = null)
++    {
++        if (! $request) {
++            $this->jsonError(400);
++            return null;
++        }
++
++        try {
++            return $this->getCompareForm([
++                'RecordClass' => $request->getVar('RecordClass'),
++                'RecordID' => $request->getVar('RecordID'),
++                'RecordVersionFrom' => $request->getVar('RecordVersionFrom'),
++                'RecordVersionTo' => $request->getVar('RecordVersionTo'),
++            ]);
++        } catch (InvalidArgumentException $ex) {
++            $this->jsonError(400);
++        }
++    }
++
++    /**
+      * Checks the requested schema name and returns a scaffolded {@link Form}. An exception is thrown
+      * if an unexpected value is provided.
+      *
+      * @param string $formName
+-     * @param HTTPRequest $request
+      * @return HTTPResponse
+      * @throws InvalidArgumentException
+      */
+@@ -127,25 +219,6 @@
+     }
+
+     /**
+-     * Returns a {@link Form} showing the version details for a given version of a record
+-     *
+-     * @param array $context
+-     * @return Form
+-     */
+-    public function getVersionForm(array $context)
+-    {
+-        // Attempt to parse a date if given in case we're fetching a version form for a specific timestamp.
+-        try {
+-            $specifiesDate = !empty($context['RecordDate']) && DBDatetime::create()->setValue($context['RecordDate']);
+-        } catch (InvalidArgumentException $e) {
+-            $specifiesDate = false;
+-        }
+-
+-        return $specifiesDate ? $this->getVersionFormByDate($context) : $this->getVersionFormByVersion($context);
+-    }
+-
+-    /**
+-     * @param array $context
+      * @return Form|null
+      */
+     protected function getVersionFormByDate(array $context)
+@@ -179,7 +252,6 @@
+     }
+
+     /**
+-     * @param array $context
+      * @return Form
+      */
+     protected function getVersionFormByVersion(array $context)
+@@ -214,14 +286,14 @@
+     {
+         $record = Versioned::get_version($recordClass, $recordId, $recordVersion);
+
+-        if (!$record) {
++        if (! $record) {
+             $this->jsonError(404);
+             return null;
+         }
+
+-        if (!$record->canView()) {
++        if (! $record->canView()) {
+             $this->jsonError(403, _t(
+-                __CLASS__.'.ErrorItemViewPermissionDenied',
++                __CLASS__ . '.ErrorItemViewPermissionDenied',
+                 "You don't have the necessary permissions to view {ObjectTitle}",
+                 ['ObjectTitle' => $record->i18n_singular_name()]
+             ));
+@@ -232,86 +304,8 @@
+     }
+
+     /**
+-     * Returns a {@link Form} containing the comparison {@link DiffTransformation} view for a record
+-     * between two specified versions.
+-     *
+-     * @param array $context
+-     * @return Form
+-     */
+-    public function getCompareForm(array $context)
+-    {
+-        $this->validateInput($context, ['RecordClass', 'RecordID', 'RecordVersionFrom', 'RecordVersionTo']);
+-
+-        $recordClass = $context['RecordClass'];
+-        $recordId = $context['RecordID'];
+-        $recordVersionFrom = $context['RecordVersionFrom'];
+-        $recordVersionTo = $context['RecordVersionTo'];
+-
+-        // Load record and perform a canView check
+-        $recordFrom = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
+-        $recordTo = $this->getRecordVersion($recordClass, $recordId, $recordVersionTo);
+-        if (!$recordFrom || !$recordTo) {
+-            return null;
+-        }
+-
+-        $effectiveContext = array_merge($context, ['Record' => $recordTo]);
+-
+-        $form = $this->scaffoldForm(self::FORM_NAME_COMPARE, $effectiveContext, [
+-            $recordClass,
+-            $recordId,
+-            $recordVersionFrom,
+-            $recordVersionTo,
+-        ]);
+-
+-        // Enable the "compare mode" diff view
+-        $comparisonTransformation = DiffTransformation::create();
+-        $form->transform($comparisonTransformation);
+-        $form->loadDataFrom($recordFrom);
+-
+-        return $form;
+-    }
+-
+-    public function versionForm(HTTPRequest $request = null)
+-    {
+-        if (!$request) {
+-            $this->jsonError(400);
+-            return null;
+-        }
+-
+-        try {
+-            return $this->getVersionForm([
+-                'RecordClass' => $request->getVar('RecordClass'),
+-                'RecordID' => $request->getVar('RecordID'),
+-                'RecordVersion' => $request->getVar('RecordVersion'),
+-            ]);
+-        } catch (InvalidArgumentException $ex) {
+-            $this->jsonError(400);
+-        }
+-    }
+-
+-    public function compareForm(HTTPRequest $request = null)
+-    {
+-        if (!$request) {
+-            $this->jsonError(400);
+-            return null;
+-        }
+-
+-        try {
+-            return $this->getCompareForm([
+-                'RecordClass' => $request->getVar('RecordClass'),
+-                'RecordID' => $request->getVar('RecordID'),
+-                'RecordVersionFrom' => $request->getVar('RecordVersionFrom'),
+-                'RecordVersionTo' => $request->getVar('RecordVersionTo'),
+-            ]);
+-        } catch (InvalidArgumentException $ex) {
+-            $this->jsonError(400);
+-        }
+-    }
+-
+-    /**
+      * Perform some centralised validation checks on the input request and data within it
+      *
+-     * @param array $context
+      * @param string[] $requiredFields
+      * @return bool
+      * @throws InvalidArgumentException
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer
+ * PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer
+ * PhpCsFixer\Fixer\Operator\ConcatSpaceFixer
+ * PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+ * PhpCsFixer\Fixer\Strict\StrictParamFixer
+
+
+
+5) src/Extensions/ArchiveRestoreAction.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -21,7 +21,6 @@
+     /**
+      * Updates the edit form with a restore button if it is being viewed
+      *
+-     * @param Form $form
+      * @return mixed
+      */
+     public function updateItemEditForm(Form $form)
+@@ -57,25 +56,6 @@
+     }
+
+     /**
+-     * Returns whether the restore action should be displayed
+-     *
+-     * @param $record
+-     * @return bool
+-     */
+-    protected function shouldDisplayAction($record)
+-    {
+-        $admin = $this->owner->popupController;
+-        // If the record is a File, check if the file binary was archived
+-        $hasFileSaved = $record instanceof File ? $record->exists() : true;
+-        return (
+-            $hasFileSaved &&
+-            $admin instanceof ArchiveAdmin &&
+-            DataObject::has_extension($record, Versioned::class) &&
+-            $record->canRestoreToDraft()
+-        );
+-    }
+-
+-    /**
+      * Restore the record to its original place or top level if that's not possible
+      *
+      * @param array $data
+@@ -93,5 +73,24 @@
+         $controller->getEditForm()->sessionMessage($message['text'], $message['type'], ValidationResult::CAST_HTML);
+
+         return $controller->redirect($controller->Link(), 'index');
++    }
++
++    /**
++     * Returns whether the restore action should be displayed
++     *
++     * @param $record
++     * @return bool
++     */
++    protected function shouldDisplayAction($record)
++    {
++        $admin = $this->owner->popupController;
++        // If the record is a File, check if the file binary was archived
++        $hasFileSaved = $record instanceof File ? $record->exists() : true;
++        return
++            $hasFileSaved &&
++            $admin instanceof ArchiveAdmin &&
++            DataObject::has_extension($record, Versioned::class) &&
++            $record->canRestoreToDraft()
++        ;
+     }
+ }
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer
+ * PhpCsFixer\Fixer\ControlStructure\NoUnneededControlParenthesesFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+ * PhpCsFixer\Fixer\Whitespace\NoTrailingWhitespaceFixer
+
+
+
+6) src/Extensions/BlockArchiveExtension.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -6,7 +6,6 @@
+ use SilverStripe\Forms\GridField\GridFieldDataColumns;
+ use SilverStripe\ORM\DataExtension;
+ use SilverStripe\ORM\FieldType\DBDatetime;
+-use SilverStripe\Security\Member;
+ use SilverStripe\VersionedAdmin\ArchiveAdmin;
+ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
+
+@@ -15,17 +14,12 @@
+  */
+ class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
+ {
+-    /**
+-     * @inheritDoc
+-    */
+     public function getArchiveFieldClass()
+     {
+         return BaseElement::class;
+     }
+
+-    /**
+-     * @inheritDoc
+-    */
++
+     public function getArchiveField()
+     {
+         $listField = ArchiveAdmin::createArchiveGridField('Blocks', BaseElement::class);
+@@ -42,7 +36,7 @@
+             'allVersions.first.Author.Name' => _t(
+                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
+                 'Archived By'
+-            )
++            ),
+         ]);
+         $listColumns->setFieldFormatting([
+             'Breadcrumbs' => function ($val, $item) {
+@@ -58,9 +52,7 @@
+         return $listField;
+     }
+
+-    /**
+-     * @inheritDoc
+-    */
++
+     public function isArchiveFieldEnabled()
+     {
+         return true;
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer
+ * PhpCsFixer\Fixer\ClassNotation\NoBlankLinesAfterClassOpeningFixer
+ * PhpCsFixer\Fixer\Import\NoUnusedImportsFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+ * PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer
+ * PhpCsFixer\Fixer\Whitespace\NoWhitespaceInBlankLineFixer
+
+
+
+7) src/Extensions/FileArchiveExtension.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -18,17 +18,12 @@
+  */
+ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
+ {
+-    /**
+-     * @inheritDoc
+-    */
+     public function getArchiveFieldClass()
+     {
+         return File::class;
+     }
+
+-    /**
+-     * @inheritDoc
+-    */
++
+     public function getArchiveField()
+     {
+         $listField = ArchiveAdmin::createArchiveGridField('Files', File::class);
+@@ -55,7 +50,7 @@
+             'allVersions.first.Author.Name' => _t(
+                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
+                 'Archived By'
+-            )
++            ),
+         ]);
+         $listColumns->setFieldFormatting([
+             'appCategory' => function ($val, $item) {
+@@ -74,7 +69,7 @@
+      * so this checks if this option is enabled
+      *
+      * @return boolean
+-    */
++     */
+     public function isArchiveFieldEnabled()
+     {
+         return Config::inst()->get(AssetControlExtension::class, 'keep_archived_assets');
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer
+ * PhpCsFixer\Fixer\ClassNotation\NoBlankLinesAfterClassOpeningFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+ * PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer
+ * PhpCsFixer\Fixer\Whitespace\NoWhitespaceInBlankLineFixer
+
+
+
+8) src/Extensions/SiteTreeArchiveExtension.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -6,7 +6,6 @@
+ use SilverStripe\Forms\GridField\GridFieldDataColumns;
+ use SilverStripe\ORM\DataExtension;
+ use SilverStripe\ORM\FieldType\DBDatetime;
+-use SilverStripe\Security\Member;
+ use SilverStripe\VersionedAdmin\ArchiveAdmin;
+ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
+
+@@ -15,17 +14,12 @@
+  */
+ class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvider
+ {
+-    /**
+-     * @inheritDoc
+-    */
+     public function getArchiveFieldClass()
+     {
+         return SiteTree::class;
+     }
+
+-    /**
+-     * @inheritDoc
+-    */
++
+     public function getArchiveField()
+     {
+         $listField = ArchiveAdmin::createArchiveGridField('Pages', SiteTree::class);
+@@ -42,7 +36,7 @@
+             'allVersions.first.Author.Name' => _t(
+                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
+                 'Archived By'
+-            )
++            ),
+         ]);
+         $listColumns->setFieldFormatting([
+             'ParentID' => function ($val, $item) {
+@@ -51,7 +45,7 @@
+                     $breadcrumbString = '../';
+                     foreach ($breadcrumbs as $item) {
+                         $breadcrumbString = $breadcrumbString . $item->URLSegment . '/';
+-                    };
++                    }
+                     return $breadcrumbString;
+                 }
+             },
+@@ -63,9 +57,7 @@
+         return $listField;
+     }
+
+-    /**
+-     * @inheritDoc
+-    */
++
+     public function isArchiveFieldEnabled()
+     {
+         return true;
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer
+ * PhpCsFixer\Fixer\ClassNotation\NoBlankLinesAfterClassOpeningFixer
+ * PhpCsFixer\Fixer\Import\NoUnusedImportsFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+ * PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer
+ * PhpCsFixer\Fixer\Semicolon\NoEmptyStatementFixer
+ * PhpCsFixer\Fixer\Whitespace\NoWhitespaceInBlankLineFixer
+
+
+
+9) src/Extensions/UsedOnTableExtension.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -7,9 +7,8 @@
+
+ class UsedOnTableExtension extends Extension
+ {
+-
+     /**
+-     * @var array $excludedClasses
++     * @var array
+      */
+     public function updateUsageExcludedClasses(array &$excludedClasses)
+     {
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer
+ * PhpCsFixer\Fixer\Phpdoc\PhpdocVarWithoutNameFixer
+
+
+
+10) src/Forms/DataObjectVersionFormFactory.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -25,7 +25,7 @@
+      *
+      * @var string
+      */
+-    const TYPE_HISTORY = 'history';
++    public const TYPE_HISTORY = 'history';
+
+     /**
+      * Define context types that will automatically be converted to readonly forms
+@@ -41,8 +41,8 @@
+     {
+         // Validate context
+         foreach ($this->getRequiredContext() as $required) {
+-            if (!isset($context[$required])) {
+-                throw new InvalidArgumentException("Missing required context $required");
++            if (! isset($context[$required])) {
++                throw new InvalidArgumentException("Missing required context ${required}");
+             }
+         }
+
+@@ -71,7 +71,6 @@
+     /**
+      * Get form type from 'type' context
+      *
+-     * @param array $context
+      * @return string
+      */
+     public function getFormType(array $context)
+@@ -82,14 +81,18 @@
+     /**
+      * Get whether the current form type should be treated as readonly
+      *
+-     * @param array $context
+      * @return bool
+      */
+     public function isReadonlyFormType(array $context)
+     {
+-        return in_array($this->getFormType($context), $this->config()->get('readonly_types'));
++        return in_array($this->getFormType($context), $this->config()->get('readonly_types'), true);
+     }
+
++    public function getRequiredContext()
++    {
++        return ['Record'];
++    }
++
+     protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
+     {
+         $record = $context['Record'];
+@@ -106,8 +109,6 @@
+
+     /**
+      * Do not return {@link HistoryViewerField} instances in the form - remove them if they are found
+-     *
+-     * @param FieldList $fields
+      */
+     protected function removeHistoryViewerFields(FieldList $fields)
+     {
+@@ -120,7 +121,7 @@
+
+         // Cleanup empty tabs after removing HistoryViewerFields
+         $fields->recursiveWalk(function (FormField $field) {
+-            if ($field instanceof Tab && !$field->Fields()->count()) {
++            if ($field instanceof Tab && ! $field->Fields()->count()) {
+                 $field->getContainerFieldList()->remove($field);
+             }
+         });
+@@ -128,8 +129,6 @@
+
+     /**
+      * Remove right titles from selected form fields by default
+-     *
+-     * @param FieldList $fields
+      */
+     protected function removeSelectedRightTitles(FieldList $fields)
+     {
+@@ -147,10 +146,5 @@
+         $actions = FieldList::create();
+         $this->invokeWithExtensions('updateFormActions', $actions, $controller, $formName, $context);
+         return $actions;
+-    }
+-
+-    public function getRequiredContext()
+-    {
+-        return ['Record'];
+     }
+ }
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer
+ * PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer
+ * PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+ * PhpCsFixer\Fixer\Phpdoc\PhpdocTrimFixer
+ * PhpCsFixer\Fixer\Strict\StrictParamFixer
+ * PhpCsFixer\Fixer\StringNotation\ExplicitStringVariableFixer
+
+
+
+11) src/Forms/DiffField.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -22,7 +22,6 @@
+     protected $comparisonField;
+
+     /**
+-     * @param FormField $field
+      * @return $this
+      */
+     public function setComparisonField(FormField $field)
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+
+
+
+12) src/Forms/DiffTransformation.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -21,7 +21,7 @@
+             return $newField;
+         }
+
+-        if (!$field->hasData()) {
++        if (! $field->hasData()) {
+             // No data; no value.
+             return clone $field;
+         }
+@@ -42,7 +42,7 @@
+             $diffField = parent::transform($field);
+         } catch (BadMethodCallException $e) {
+             $diffField = $field->castedCopy(DiffField::class);
+-            $diffField->addExtraClass("history-viewer__version-detail-diff");
++            $diffField->addExtraClass('history-viewer__version-detail-diff');
+             $diffField->setComparisonField($field);
+         }
+         return $diffField;
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer
+ * PhpCsFixer\Fixer\StringNotation\SingleQuoteFixer
+
+
+
+13) src/Forms/GridField/GridFieldFileRestoreAction.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -10,9 +10,6 @@
+  */
+ class GridFieldFileRestoreAction extends GridFieldRestoreAction
+ {
+-    /**
+-     * @inheritdoc
+-     */
+     public function getRestoreAction($gridField, $record, $columnName)
+     {
+         // Only show the action if the file exists
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ClassNotation\NoBlankLinesAfterClassOpeningFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer
+ * PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer
+
+
+
+14) src/Forms/HistoryViewerField.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ -10,14 +10,6 @@
+ class HistoryViewerField extends FormField
+ {
+     /**
+-     * The default pagination page size
+-     *
+-     * @config
+-     * @var int
+-     */
+-    private static $default_page_size = 30;
+-
+-    /**
+      * Unique context key used to differentiate the different use cases for HistoryViewer
+      *
+      * @var string
+@@ -28,18 +20,19 @@
+
+     protected $inputType = '';
+
++    /**
++     * The default pagination page size
++     *
++     * @config
++     * @var int
++     */
++    private static $default_page_size = 30;
++
+     public function __construct($name, $title = null, $value = null)
+     {
+         parent::__construct($name, $title, $value);
+     }
+
+-    protected function setupDefaultClasses()
+-    {
+-        parent::setupDefaultClasses();
+-
+-        $this->addExtraClass('fill-height');
+-    }
+-
+     /**
+      * Get the source record to view history for
+      *
+@@ -65,13 +58,6 @@
+         return $previewEnabled;
+     }
+
+-    private function getIsRevertable()
+-    {
+-        $record = $this->getSourceRecord();
+-        $member = Security::getCurrentUser();
+-        return $record->canEdit($member);
+-    }
+-
+     public function getContextKey()
+     {
+         if ($this->contextKey) {
+@@ -131,5 +117,19 @@
+     public function Type()
+     {
+         return 'history-viewer__container';
++    }
++
++    protected function setupDefaultClasses()
++    {
++        parent::setupDefaultClasses();
++
++        $this->addExtraClass('fill-height');
++    }
++
++    private function getIsRevertable()
++    {
++        $record = $this->getSourceRecord();
++        $member = Security::getCurrentUser();
++        return $record->canEdit($member);
+     }
+ }
+    ----------- end diff -----------
+
+
+Applied checkers:
+
+ * PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer
+ * PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer
+
+
+ [OK] 14 errors successfully fixed and no other errors found!                                                           
+

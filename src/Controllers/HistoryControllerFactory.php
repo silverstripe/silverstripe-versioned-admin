@@ -20,7 +20,7 @@ class HistoryControllerFactory implements Factory
 {
     use Extensible;
 
-    public function create($service, array $params = array())
+    public function create($service, array $params = [])
     {
         // If no request is available yet, return the default controller
         if (Injector::inst()->has(HTTPRequest::class)) {
@@ -35,7 +35,7 @@ class HistoryControllerFactory implements Factory
                     sprintf('"SiteTree"."ID" = \'%d\'', $id)
                 );
 
-                if ($page && !$this->isEnabled($page)) {
+                if ($page && ! $this->isEnabled($page)) {
                     // Injector is not used to prevent an infinite loop
                     return new CMSPageHistoryController();
                 }
@@ -50,12 +50,11 @@ class HistoryControllerFactory implements Factory
      * Only deactivate for pages that have a history viewer capability removed. Extensions can provide their
      * own two cents about this criteria.
      *
-     * @param SiteTree $record
      * @return bool
      */
     public function isEnabled(SiteTree $record)
     {
         $enabledResults = $this->extend('updateIsEnabled', $record);
-        return (empty($enabledResults) || min($enabledResults) !== false);
+        return empty($enabledResults) || min($enabledResults) !== false;
     }
 }

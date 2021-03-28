@@ -1,0 +1,275 @@
+
+
+---------------------------------
+  Running Rector
+---------------------------------
+  directory of script:     /home/ssu/.config/composer/vendor/bin
+  directory to analyse:    /ss4/silverstripe-versioned-admin/src/
+  also check:              /ss4/silverstripe-versioned-admin/app/_config.php
+  rector config file:      /home/ssu/.config/composer/vendor/bin/../sunnysideup/easy-coding-standards/rector.php
+---------------------------------
+
+
+
+
+5 files with changes
+====================
+
+1) src/ArchiveAdmin.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+         $config->addComponent(new GridFieldRestoreAction());
+         $config->addComponent(new GridField_ActionMenu());
+
+-        $list = singleton($class)->get();
+-        $baseTable = singleton($list->dataClass())->baseTable();
++        $list = \Singleton($class)->get();
++        $baseTable = \Singleton($list->dataClass())->baseTable();
+         $liveTable = $baseTable . '_Live';
+
+         $list = $list
+@@ @@
+                 $archiveProviderClasses[] = $archiveProviderClass;
+             }
+
+-            switch ($filter) {
+-                case 'other':
+-                    $handledClasses = [];
+-                    // Get any subclasses that would also be handled by those providers
+-                    foreach ($archiveProviderClasses as $archiveProviderClass) {
+-                        $handledClasses = array_merge(
+-                            $handledClasses,
+-                            array_keys(ClassInfo::subclassesFor($archiveProviderClass))
+-                        );
++            if ($filter == 'other') {
++                $handledClasses = [];
++                // Get any subclasses that would also be handled by those providers
++                foreach ($archiveProviderClasses as $archiveProviderClass) {
++                    $handledClasses = array_merge(
++                        $handledClasses,
++                        array_keys(ClassInfo::subclassesFor($archiveProviderClass))
++                    );
++                }
++                $versionedClasses = array_filter(
++                    $versionedClasses,
++                    function ($class) use ($handledClasses) {
++                        return ! in_array(strtolower($class), $handledClasses, true);
+                     }
+-                    $versionedClasses = array_filter(
+-                        $versionedClasses,
+-                        function ($class) use ($handledClasses) {
+-                            return ! in_array(strtolower($class), $handledClasses, true);
+-                        }
+-                    );
+-                    break;
+-                default: // 'main'
+-                    $versionedClasses = array_filter(
+-                        $versionedClasses,
+-                        function ($class) use ($archiveProviderClasses) {
+-                            return in_array($class, $archiveProviderClasses, true);
+-                        }
+-                    );
+-                    break;
++                );
++            } else {
++                // 'main'
++                $versionedClasses = array_filter(
++                    $versionedClasses,
++                    function ($class) use ($archiveProviderClasses) {
++                        return in_array($class, $archiveProviderClasses, true);
++                    }
++                );
+             }
+         }
+
+@@ @@
+
+         // Normalize models to have their model class in array key and all names as the value are uppercased
+         foreach ($models as $k => $v) {
+-            $archivedModels[$v] = ['title' => ucfirst(singleton($v)->i18n_plural_name())];
++            $archivedModels[$v] = ['title' => ucfirst(\Singleton($v)->i18n_plural_name())];
+             unset($archivedModels[$k]);
+         }
+
+@@ @@
+      *
+      * @return ArrayList An ArrayList of all managed models to build the tabs for this ModelAdmin
+      */
+-    public function getManagedModelTabs()
++    protected function getManagedModelTabs()
+     {
+         $forms = ArrayList::create();
+         $mainModels = $this->getVersionedModels('main', true);
+@@ @@
+         }
+
+         $otherModels = $this->getVersionedModels('other', true);
+-        if ($otherModels) {
++        if ($otherModels !== []) {
+             $isOtherActive = (
+                 $this->request->getVar('others') !== null ||
+                 array_key_exists($this->modelClass, $otherModels)
+    ----------- end diff -----------
+
+
+Applied rules:
+
+ * Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector
+ * Rector\CodeQuality\Rector\Name\FixClassCaseSensitivityNameRector
+ * Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector
+ * Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector
+
+
+2) src/Controllers/HistoryViewerController.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+      */
+     public function getVersionForm(array $context)
+     {
+-        // Attempt to parse a date if given in case we're fetching a version form for a specific timestamp.
+         try {
+             $specifiesDate = ! empty($context['RecordDate']) && DBDatetime::create()->setValue($context['RecordDate']);
+-        } catch (InvalidArgumentException $e) {
++        } catch (InvalidArgumentException $invalidArgumentException) {
+             $specifiesDate = false;
+         }
+
+@@ @@
+
+     public function versionForm(HTTPRequest $request = null)
+     {
+-        if (! $request) {
++        if ($request === null) {
+             $this->jsonError(400);
+             return null;
+         }
+@@ @@
+
+     public function compareForm(HTTPRequest $request = null)
+     {
+-        if (! $request) {
++        if ($request === null) {
+             $this->jsonError(400);
+             return null;
+         }
+@@ @@
+         // Respond with this schema
+         $response = $this->getResponse();
+         $response->addHeader('Content-Type', 'application/json');
++
+         $schemaID = $this->getRequest()->getURL();
+
+         return $this->getSchemaResponse($schemaID, $form);
+@@ @@
+             $record = DataList::create(DataObject::getSchema()->baseDataClass($recordClass))
+                 ->byID($recordId);
+
+-            if ($record) {
++            if ($record !== null) {
+                 $effectiveContext = array_merge($context, ['Record' => $record]);
+
+                 // Ensure the form is scaffolded with archive date enabled.
+    ----------- end diff -----------
+
+
+Applied rules:
+
+ * Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector
+ * Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector
+ * Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector
+
+
+3) src/Forms/DataObjectVersionFormFactory.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+         // Validate context
+         foreach ($this->getRequiredContext() as $required) {
+             if (! isset($context[$required])) {
+-                throw new InvalidArgumentException("Missing required context ${required}");
++                throw new InvalidArgumentException("Missing required context {$required}");
+             }
+         }
+
+@@ @@
+         $noRightTitle = ['MetaDescription', 'ExtraMeta'];
+
+         foreach ($noRightTitle as $fieldName) {
+-            if ($field = $fields->dataFieldByName($fieldName)) {
++            if (($field = $fields->dataFieldByName($fieldName)) !== null) {
+                 $field->setRightTitle('');
+             }
+         }
+    ----------- end diff -----------
+
+
+Applied rules:
+
+ * Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector
+
+
+4) src/Forms/DiffTransformation.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+         try {
+             // First check if a field implements performDiffTransformation()
+             $diffField = parent::transform($field);
+-        } catch (BadMethodCallException $e) {
++        } catch (BadMethodCallException $badMethodCallException) {
+             $diffField = $field->castedCopy(DiffField::class);
+             $diffField->addExtraClass('history-viewer__version-detail-diff');
+             $diffField->setComparisonField($field);
+    ----------- end diff -----------
+
+
+Applied rules:
+
+ * Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector
+
+
+5) src/Forms/HistoryViewerField.php
+
+    ---------- begin diff ----------
+--- Original
++++ New
+@@ @@
+
+     public function getContextKey()
+     {
+-        if ($this->contextKey) {
++        if ($this->contextKey !== '') {
+             return $this->contextKey;
+         }
+
+@@ @@
+         $sourceRecord = $this->getSourceRecord();
+
+         $data['data'] = array_merge($data['data'], [
+-            'recordId' => $sourceRecord ? $sourceRecord->ID : null,
+-            'recordClass' => $sourceRecord ? $sourceRecord->ClassName : null,
++            'recordId' => $sourceRecord !== null ? $sourceRecord->ID : null,
++            'recordClass' => $sourceRecord !== null ? $sourceRecord->ClassName : null,
+             'contextKey' => $this->getContextKey(),
+             'isPreviewable' => $this->getPreviewEnabled(),
+             'isRevertable' => $this->getIsRevertable(),
+    ----------- end diff -----------
+
+
+Applied rules:
+
+ * Rector\CodeQuality\Rector\If_\ExplicitBoolCompareRector
+
+
+ [OK] 5 files have been changed by Rector.                                                                              
+
