@@ -135,9 +135,9 @@ class ArchiveAdmin extends ModelAdmin
         $config->addComponent(new GridFieldRestoreAction);
         $config->addComponent(new GridField_ActionMenu);
 
-        $list = singleton($class)->get();
-        $baseTable = singleton($list->dataClass())->baseTable();
-        $liveTable = $baseTable . '_Live';
+        $singleton = singleton($class);
+        $list = $singleton->get();
+        $baseTable = $singleton->baseTable();
 
         $list = $list
             ->setDataQueryParam('Versioned.mode', 'latest_versions');
@@ -150,10 +150,13 @@ class ArchiveAdmin extends ModelAdmin
                 "\"{$baseTable}\".\"ID\" = \"{$draftTable}\".\"ID\""
             );
 
-        $list = $list->leftJoin(
-            $liveTable,
-            "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
-        );
+        if ($singleton->hasStages()) {
+            $liveTable = $baseTable . '_Live';
+            $list = $list->leftJoin(
+                $liveTable,
+                "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
+            );
+        }
 
         $list = $list->where("\"{$draftTable}\".\"ID\" IS NULL");
         $list = $list->sort('LastEdited DESC');
@@ -184,10 +187,7 @@ class ArchiveAdmin extends ModelAdmin
         $versionedClasses = array_filter(
             ClassInfo::subclassesFor(DataObject::class),
             function ($class) {
-                return (
-                    DataObject::has_extension($class, Versioned::class) &&
-                    DataObject::singleton($class)->hasStages()
-                );
+                return DataObject::has_extension($class, Versioned::class);
             }
         );
 
