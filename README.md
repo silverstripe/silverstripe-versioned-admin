@@ -19,7 +19,9 @@ $ composer require silverstripe/versioned-admin
 
 ## Documentation
 
-See ["Versioning" on docs.silverstripe.org](https://docs.silverstripe.org/en/4/developer_guides/model/versioning/)
+For Developer documentation see ["Versioning" on docs.silverstripe.org](https://docs.silverstripe.org/en/4/developer_guides/model/versioning/)
+
+For CMS User help see ["Using history" on userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/4/optional_features/content_blocks/history/)
 
 ## Versioning
 
