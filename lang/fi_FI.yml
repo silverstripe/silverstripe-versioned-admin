@@ -5,8 +5,12 @@ fi_FI:
     COLUMN_ORIGIN: Alkuperä
     COLUMN_TITLE: Otsikko
     COLUMN_TYPE: Tyyppi
+    MENUTITLE: ''
     SELECT_EMPTY: Valitse...
     SELECT_TYPE: 'Valitse sisältötyyppi'
-    TAB_OTHERS: Muut
+    TAB_OTHERS: ''
+  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
+    MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Oikeutesi eivät riitä {ObjectTitle} tarkasteluun'
+    MENUTITLE: ''
