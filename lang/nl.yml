@@ -5,12 +5,12 @@ nl:
     COLUMN_ORIGIN: Oorsprong
     COLUMN_TITLE: Titel
     COLUMN_TYPE: Type
-    MENUTITLE: ''
+    MENUTITLE: 'Archief'
     SELECT_EMPTY: Selecteer...
     SELECT_TYPE: 'Selecteer type'
-    TAB_OTHERS: ''
+    TAB_OTHERS: 'Andere'
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
+    MENUTITLE: 'Geschiedenis'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Je hebt geen toestemming om {ObjectTitle} te bekijken.'
-    MENUTITLE: ''
+    MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
