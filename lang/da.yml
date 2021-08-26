@@ -13,4 +13,4 @@ da:
     MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Du har ikke de nødvendige rettigheder for at se {ObjectTitle}'
-    MENUTITLE: ""
+    MENUTITLE: ''

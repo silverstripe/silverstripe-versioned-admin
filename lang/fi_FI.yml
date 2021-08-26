@@ -1,7 +1,7 @@
 fi_FI:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: 'Arkistoinut »'
-    COLUMN_DATEARCHIVED: 'Arkistointipäivä'
+    COLUMN_DATEARCHIVED: Arkistointipäivä
     COLUMN_ORIGIN: Alkuperä
     COLUMN_TITLE: Otsikko
     COLUMN_TYPE: Tyyppi
@@ -13,4 +13,4 @@ fi_FI:
     MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Oikeutesi eivät riitä {ObjectTitle} tarkasteluun'
-    MENUTITLE: ""
+    MENUTITLE: ''

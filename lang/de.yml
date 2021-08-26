@@ -13,4 +13,4 @@ de:
     MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Sie haben nicht die nötigen Berechtigungen, um {ObjectTitle} auszuwählen'
-    MENUTITLE: ""
+    MENUTITLE: ''
