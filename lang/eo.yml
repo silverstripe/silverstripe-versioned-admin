@@ -1,6 +1,6 @@
 eo:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
-    COLUMN_ARCHIVEDBY: 'Enarĥivigis'
+    COLUMN_ARCHIVEDBY: Enarĥivigis
     COLUMN_DATEARCHIVED: 'Dato de enarĥivigo'
     COLUMN_ORIGIN: Origino
     COLUMN_TITLE: Titolo
