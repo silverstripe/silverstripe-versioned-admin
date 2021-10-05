@@ -5,7 +5,7 @@ ar:
     COLUMN_ORIGIN: الأصل
     COLUMN_TITLE: العنوان
     COLUMN_TYPE: النوع
-    MENUTITLE: 'أرشفت بواسطة'
+    MENUTITLE: ''
     SELECT_EMPTY: اختر...
     SELECT_TYPE: 'اختر نوع المحتوى'
     TAB_OTHERS: أخرى
@@ -14,3 +14,5 @@ ar:
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'ليس لديك الصلاحيات اللازمة لعرض {ObjectTitle}'
     MENUTITLE: ''
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: ''

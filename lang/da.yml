@@ -5,12 +5,14 @@ da:
     COLUMN_ORIGIN: Oprindelse
     COLUMN_TITLE: Titel
     COLUMN_TYPE: Type
-    MENUTITLE: Arkiver
+    MENUTITLE: Arkiv
     SELECT_EMPTY: Vælg...
     SELECT_TYPE: 'Vælg en indholdstype'
     TAB_OTHERS: Andre
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
+    MENUTITLE: 'Rediger side'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Du har ikke de nødvendige rettigheder for at se {ObjectTitle}'
-    MENUTITLE: ''
+    MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: 'Ingen diff tilgængelig'

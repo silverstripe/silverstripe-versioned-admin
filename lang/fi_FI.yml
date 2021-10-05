@@ -5,7 +5,7 @@ fi_FI:
     COLUMN_ORIGIN: Alkuperä
     COLUMN_TITLE: Otsikko
     COLUMN_TYPE: Tyyppi
-    MENUTITLE: Arkistot
+    MENUTITLE: ''
     SELECT_EMPTY: Valitse...
     SELECT_TYPE: 'Valitse sisältötyyppi'
     TAB_OTHERS: Muut
@@ -14,3 +14,5 @@ fi_FI:
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Oikeutesi eivät riitä {ObjectTitle} tarkasteluun'
     MENUTITLE: ''
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: ''

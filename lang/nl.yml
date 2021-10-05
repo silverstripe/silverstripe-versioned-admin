@@ -10,7 +10,9 @@ nl:
     SELECT_TYPE: 'Selecteer type'
     TAB_OTHERS: Andere
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
+    MENUTITLE: 'Bewerk pagina'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Je hebt geen toestemming om {ObjectTitle} te bekijken.'
-    MENUTITLE: ''
+    MENUTITLE: Geschiedenis
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: 'Geen vergelijking'
