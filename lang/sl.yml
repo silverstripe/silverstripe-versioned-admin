@@ -1,12 +1,12 @@
 sl:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
-    COLUMN_ARCHIVEDBY: Arhiviral
+    COLUMN_ARCHIVEDBY: 'Arhiviral'
     COLUMN_DATEARCHIVED: 'Datum arhiviranja'
     COLUMN_ORIGIN: Izvor
     COLUMN_TITLE: Naslov
     COLUMN_TYPE: Tip
-    MENUTITLE: ''
-    SELECT_EMPTY: "Izberite\_..."
+    MENUTITLE: Arhiv
+    SELECT_EMPTY: Izberite ...
     SELECT_TYPE: 'Izberite tip vsebine'
     TAB_OTHERS: Drugo
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
