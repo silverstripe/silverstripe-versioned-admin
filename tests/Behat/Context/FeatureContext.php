@@ -3,6 +3,7 @@
 namespace SilverStripe\VersionedAdmin\Tests\Behat\Context;
 
 use Behat\Mink\Element\NodeElement;
+use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\SilverStripeContext;
 
 if (!class_exists(SilverStripeContext::class)) {
@@ -25,7 +26,7 @@ class FeatureContext extends SilverStripeContext
     public function iShouldSeeAListOfVersionsInDescendingOrder()
     {
         $versions = $this->getVersions();
-        assertNotEmpty($versions, 'I see a list of versions');
+        Assert::assertNotEmpty($versions, 'I see a list of versions');
 
         $previous = null;
 
@@ -43,7 +44,7 @@ class FeatureContext extends SilverStripeContext
      */
     public function iClickOnTheFirstVersion()
     {
-        assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
+        Assert::assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
         $this->getLatestVersion()->click();
     }
 
@@ -61,7 +62,7 @@ class FeatureContext extends SilverStripeContext
                 break;
             }
         }
-        assertNotNull($desiredVersion, 'Desired version ' . $versionNo . ' was not found in the page.');
+        Assert::assertNotNull($desiredVersion, 'Desired version ' . $versionNo . ' was not found in the page.');
         $this->clickVersion($desiredVersion);
     }
 
@@ -71,7 +72,7 @@ class FeatureContext extends SilverStripeContext
     public function iOpenTheHistoryViewerActionsMenu()
     {
         $button = $this->getSession()->getPage()->find('css', '.history-viewer__heading .history-viewer__actions .btn');
-        assertNotNull($button, 'History viewer actions menu not found in the page.');
+        Assert::assertNotNull($button, 'History viewer actions menu not found in the page.');
 
         $button->click();
     }
@@ -85,7 +86,7 @@ class FeatureContext extends SilverStripeContext
             'xpath',
             sprintf('//del[contains(normalize-space(string(.)), \'%s\')]', $text)
         );
-        assertNotNull($result, $text . ' was not shown as deleted');
+        Assert::assertNotNull($result, $text . ' was not shown as deleted');
     }
 
     /**
@@ -97,7 +98,7 @@ class FeatureContext extends SilverStripeContext
             'xpath',
             sprintf('//ins[contains(normalize-space(string(.)), \'%s\')]', $text)
         );
-        assertNotNull($result, $text . ' was not shown as added');
+        Assert::assertNotNull($result, $text . ' was not shown as added');
     }
 
     /**
@@ -158,7 +159,7 @@ class FeatureContext extends SilverStripeContext
         $authorColumn = $version->find('css', '.history-viewer__author');
 
         $exists = strpos($authorColumn->getText(), $text) !== false;
-        assertTrue($exists, 'Author column contains ' . $text);
+        Assert::assertTrue($exists, 'Author column contains ' . $text);
     }
 
     /**
@@ -172,7 +173,7 @@ class FeatureContext extends SilverStripeContext
         $recordColumn = $version->find('css', '.history-viewer__version-state');
 
         $exists = strpos($recordColumn->getText(), $text) !== false;
-        assertTrue($exists, 'Record column contains ' . $text);
+        Assert::assertTrue($exists, 'Record column contains ' . $text);
     }
 
     /**
@@ -184,7 +185,7 @@ class FeatureContext extends SilverStripeContext
         $versionColumn = $version->find('css', '.history-viewer__version-no');
 
         $exists = strpos($versionColumn->getText(), $text) !== false;
-        assertTrue($exists, 'Version column contains ' . $text);
+        Assert::assertTrue($exists, 'Version column contains ' . $text);
     }
 
     /**

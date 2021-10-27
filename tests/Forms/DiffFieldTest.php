@@ -19,7 +19,7 @@ class DiffFieldTest extends SapphireTest
         $diffField->setComparisonField($newField);
         $diffField->setValue('old');
 
-        $this->assertRegExp('/^<ins>new<\/ins> *<del>old<\/del>$/', $diffField->Value());
+        $this->assertMatchesRegularExpression('/^<ins>new<\/ins> *<del>old<\/del>$/', $diffField->Value());
     }
 
     /**
