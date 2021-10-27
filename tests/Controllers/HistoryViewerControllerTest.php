@@ -85,22 +85,18 @@ class HistoryViewerControllerTest extends SapphireTest
         $this->assertSame('application/json', $result->getHeader('Content-Type'));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Missing required field/
-     */
     public function testGetVersionFormThrowsExceptionWhenArgsAreMissing()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Missing required field/');
         $controller = new HistoryViewerController();
         $controller->getVersionForm([]);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Missing required field/
-     */
     public function testGetVersionFormThrowsExceptionWhenArgsAreFalsy()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Missing required field/');
         $controller = new HistoryViewerController();
         $controller->getVersionForm([
             'RecordClass' => 'Page',
@@ -109,12 +105,10 @@ class HistoryViewerControllerTest extends SapphireTest
         ]);
     }
 
-    /**
-     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
-     * @expectedExceptionCode 404
-     */
     public function testGetVersionFormThrowsExceptionWhenRecordVersionDoesntExist()
     {
+        $this->expectException(\SilverStripe\Control\HTTPResponse_Exception::class);
+        $this->expectExceptionCode(404);
         $controller = new HistoryViewerController();
         $controller->getVersionForm([
             'RecordClass' => UnviewableVersionedObject::class,
@@ -123,13 +117,11 @@ class HistoryViewerControllerTest extends SapphireTest
         ]);
     }
 
-    /**
-     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
-     * @expectedExceptionCode 403
-     * @expectedExceptionMessage You don't have the necessary permissions to view Unviewable Versioned Object
-     */
     public function testGetVersionFormThrowsExceptionWhenCanViewIsFalse()
     {
+        $this->expectException(\SilverStripe\Control\HTTPResponse_Exception::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage("You don't have the necessary permissions to view Unviewable Versioned Object");
         $controller = new HistoryViewerController();
         $controller->getVersionForm([
             'RecordClass' => UnviewableVersionedObject::class,
@@ -151,32 +143,26 @@ class HistoryViewerControllerTest extends SapphireTest
         $this->assertInstanceOf(LeftAndMainFormRequestHandler::class, $result->getRequestHandler());
     }
 
-    /**
-     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
-     * @expectedExceptionCode 400
-     */
     public function testVersionFormThrowsExceptionWithoutRequest()
     {
+        $this->expectException(\SilverStripe\Control\HTTPResponse_Exception::class);
+        $this->expectExceptionCode(400);
         $controller = new HistoryViewerController();
         $controller->versionForm(null);
     }
 
-    /**
-     * @expectedException \SilverStripe\Control\HTTPResponse_Exception
-     * @expectedExceptionCode 400
-     */
     public function testCompareFormThrowsExceptionWithoutRequest()
     {
+        $this->expectException(\SilverStripe\Control\HTTPResponse_Exception::class);
+        $this->expectExceptionMessage(400);
         $controller = new HistoryViewerController();
         $controller->compareForm(null);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Missing required field/
-     */
     public function testVersionFormThrowsExceptionWhenArgsAreFalsy()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Missing required field/');
         $controller = new HistoryViewerController();
         $controller->getVersionForm([
             'RecordClass' => 'Page',
