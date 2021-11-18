@@ -5,7 +5,7 @@ it:
     COLUMN_ORIGIN: Origine
     COLUMN_TITLE: Titolo
     COLUMN_TYPE: Tipo
-    MENUTITLE: Archivia
+    MENUTITLE: Archivio
     SELECT_EMPTY: Selezionare...
     SELECT_TYPE: 'Selezionare tipo di contenuto'
     TAB_OTHERS: Altro
@@ -14,3 +14,5 @@ it:
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Non hai i necessari permessi per vedere {ObjectTitle}'
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: 'Diff non disponibile'

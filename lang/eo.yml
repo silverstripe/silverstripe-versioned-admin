@@ -1,6 +1,6 @@
 eo:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
-    COLUMN_ARCHIVEDBY: Enarĥivigis
+    COLUMN_ARCHIVEDBY: 'Enarĥivigis'
     COLUMN_DATEARCHIVED: 'Dato de enarĥivigo'
     COLUMN_ORIGIN: Origino
     COLUMN_TITLE: Titolo
@@ -14,3 +14,5 @@ eo:
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Vi ne havas la necesajn permesojn por vidigi je {ObjectTitle}'
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: ''

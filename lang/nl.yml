@@ -1,7 +1,7 @@
 nl:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: 'Gearchiveerd door'
-    COLUMN_DATEARCHIVED: Archiefdatum
+    COLUMN_DATEARCHIVED: 'Archiefdatum'
     COLUMN_ORIGIN: Oorsprong
     COLUMN_TITLE: Titel
     COLUMN_TYPE: Type
@@ -10,7 +10,9 @@ nl:
     SELECT_TYPE: 'Selecteer type'
     TAB_OTHERS: Andere
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
+    MENUTITLE: 'Bewerk pagina'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Je hebt geen toestemming om {ObjectTitle} te bekijken.'
-    MENUTITLE: ''
+    MENUTITLE: Geschiedenis
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: 'Geen vergelijking'

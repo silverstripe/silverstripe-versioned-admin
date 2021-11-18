@@ -1,12 +1,12 @@
 sl:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
-    COLUMN_ARCHIVEDBY: Arhiviral
+    COLUMN_ARCHIVEDBY: 'Arhiviral'
     COLUMN_DATEARCHIVED: 'Datum arhiviranja'
     COLUMN_ORIGIN: Izvor
     COLUMN_TITLE: Naslov
     COLUMN_TYPE: Tip
     MENUTITLE: Arhiv
-    SELECT_EMPTY: "Izberite\_..."
+    SELECT_EMPTY: Izberite ...
     SELECT_TYPE: 'Izberite tip vsebine'
     TAB_OTHERS: Drugo
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
@@ -14,3 +14,5 @@ sl:
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Nimate pravic za ogled {ObjectTitle}'
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: ''
