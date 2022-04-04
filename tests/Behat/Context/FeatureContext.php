@@ -158,7 +158,7 @@ class FeatureContext extends SilverStripeContext
         $version = $this->getSpecificVersion($versionNumber);
         $authorColumn = $version->find('css', '.history-viewer__author');
 
-        $exists = strpos($authorColumn->getText(), $text) !== false;
+        $exists = strpos((string) $authorColumn->getText(), (string) $text) !== false;
         Assert::assertTrue($exists, 'Author column contains ' . $text);
     }
 
@@ -172,7 +172,7 @@ class FeatureContext extends SilverStripeContext
         $version = $this->getSpecificVersion($versionNumber);
         $recordColumn = $version->find('css', '.history-viewer__version-state');
 
-        $exists = strpos($recordColumn->getText(), $text) !== false;
+        $exists = strpos((string) $recordColumn->getText(), (string) $text) !== false;
         Assert::assertTrue($exists, 'Record column contains ' . $text);
     }
 
@@ -184,7 +184,7 @@ class FeatureContext extends SilverStripeContext
         $version = $this->getSpecificVersion($versionNumber);
         $versionColumn = $version->find('css', '.history-viewer__version-no');
 
-        $exists = strpos($versionColumn->getText(), $text) !== false;
+        $exists = strpos((string) $versionColumn->getText(), (string) $text) !== false;
         Assert::assertTrue($exists, 'Version column contains ' . $text);
     }
 
@@ -194,7 +194,7 @@ class FeatureContext extends SilverStripeContext
     protected function getLatestVersion()
     {
         $versions = $this->getVersions();
-        return current($versions);
+        return current($versions ?: []);
     }
 
     /**
@@ -208,7 +208,7 @@ class FeatureContext extends SilverStripeContext
         $versions = $this->getVersions();
         foreach ($versions as $version) {
             /** @var NodeElement $version */
-            if (strpos($version->getText(), $versionNumber) !== false) {
+            if (strpos((string) $version->getText(), (string) $versionNumber) !== false) {
                 return $version;
             }
         }

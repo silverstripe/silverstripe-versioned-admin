@@ -87,7 +87,7 @@ class DataObjectVersionFormFactory implements FormFactory
      */
     public function isReadonlyFormType(array $context)
     {
-        return in_array($this->getFormType($context), $this->config()->get('readonly_types'));
+        return in_array($this->getFormType($context), $this->config()->get('readonly_types') ?: []);
     }
 
     protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
