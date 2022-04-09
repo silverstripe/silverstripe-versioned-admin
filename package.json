@@ -69,7 +69,7 @@
     "graphql-tag": "^2.10.0",
     "griddle-react": "^0.8.2",
     "jquery": "^3.5.0",
-    "moment": "^2.21.0",
+    "moment": "^2.29.2",
     "popper.js": "^1.14.4",
     "prop-types": "^15.6.2",
     "qs": "^6.1.0",
