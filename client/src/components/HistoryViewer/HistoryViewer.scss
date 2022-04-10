@@ -71,11 +71,13 @@ $diff-added-color: #b9f1c8;
 
 .history-viewer__version-detail-diff {
   del {
+    display: inline-block;
     background-color: $diff-removed-color;
     border-radius: 1px;
   }
 
   ins {
+    display: inline-block;
     background-color: $diff-added-color;
     border-radius: 1px;
     text-decoration: none;
