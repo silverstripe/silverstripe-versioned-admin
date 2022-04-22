@@ -78,7 +78,7 @@ class HistoryViewerController extends LeftAndMain
     public function schema($request)
     {
         $formName = $request->param('FormName');
-        if (!in_array($formName, $this->formNames)) {
+        if (!in_array($formName, $this->formNames ?? [])) {
             return parent::schema($request);
         }
 

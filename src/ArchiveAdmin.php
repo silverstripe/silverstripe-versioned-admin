@@ -49,7 +49,10 @@ class ArchiveAdmin extends ModelAdmin
         // Set the default model class to SiteTree, as long as silverstripe/cms is installed
         // This is done otherwise File will be the default set in ModelAdmin::init() which is basically random
         $class = 'SilverStripe\\CMS\\Model\\SiteTree';
-        if (!$this->getRequest()->param('ModelClass') && !$this->request->getVar('others') && class_exists($class)) {
+        if (!$this->getRequest()->param('ModelClass') &&
+            !$this->request->getVar('others') &&
+            class_exists($class ?? '')
+        ) {
             $this->modelClass = $class;
         }
     }
@@ -77,7 +80,7 @@ class ArchiveAdmin extends ModelAdmin
 
             // If a valid other model name is passed via a request param
             // then show a gridfield with archived records
-            if (array_search($modelClass, $otherVersionedObjects)) {
+            if (array_search($modelClass, $otherVersionedObjects ?? [])) {
                 $listField = $this->createArchiveGridField('Others', $modelClass);
 
                 $listColumns = $listField->getConfig()->getComponentByType(GridFieldDataColumns::class);
@@ -185,7 +188,7 @@ class ArchiveAdmin extends ModelAdmin
     {
         // Get dataobjects with staged versioning
         $versionedClasses = array_filter(
-            ClassInfo::subclassesFor(DataObject::class),
+            ClassInfo::subclassesFor(DataObject::class) ?? [],
             function ($class) {
                 return DataObject::has_extension($class, Versioned::class);
             }
@@ -203,13 +206,13 @@ class ArchiveAdmin extends ModelAdmin
 
                 $disabledHandledClasses = array_merge(
                     $disabledHandledClasses,
-                    array_keys(ClassInfo::subclassesFor($disabledProviderClass))
+                    array_keys(ClassInfo::subclassesFor($disabledProviderClass) ?? [])
                 );
             }
         }
 
         // Remove any subclasses that would also be handled by those disabled providers
-        $versionedClasses = array_diff_key($versionedClasses, array_flip($disabledHandledClasses));
+        $versionedClasses = array_diff_key($versionedClasses ?? [], array_flip($disabledHandledClasses ?? []));
 
         // If there is a valid filter passed
         if ($filter && in_array($filter, ['main', 'other'])) {
@@ -228,21 +231,21 @@ class ArchiveAdmin extends ModelAdmin
                     foreach ($archiveProviderClasses as $archiveProviderClass) {
                         $handledClasses = array_merge(
                             $handledClasses,
-                            array_keys(ClassInfo::subclassesFor($archiveProviderClass))
+                            array_keys(ClassInfo::subclassesFor($archiveProviderClass) ?? [])
                         );
                     }
                     $versionedClasses = array_filter(
-                        $versionedClasses,
+                        $versionedClasses ?? [],
                         function ($class) use ($handledClasses) {
-                            return !in_array(strtolower($class), $handledClasses);
+                            return !in_array(strtolower($class ?? ''), $handledClasses ?? []);
                         }
                     );
                     break;
                 default: // 'main'
                     $versionedClasses = array_filter(
-                        $versionedClasses,
+                        $versionedClasses ?? [],
                         function ($class) use ($archiveProviderClasses) {
-                            return in_array($class, $archiveProviderClasses);
+                            return in_array($class, $archiveProviderClasses ?? []);
                         }
                     );
                     break;
@@ -251,10 +254,10 @@ class ArchiveAdmin extends ModelAdmin
 
         // Formats array as [$className => i18n_plural_name]
         if ($forDisplay) {
-            $versionedClasses = array_flip($versionedClasses);
+            $versionedClasses = array_flip($versionedClasses ?? []);
 
-            foreach (array_keys($versionedClasses) as $className) {
-                $versionedClasses[$className] = ucfirst($className::singleton()->i18n_plural_name());
+            foreach (array_keys($versionedClasses ?? []) as $className) {
+                $versionedClasses[$className] = ucfirst($className::singleton()->i18n_plural_name() ?? '');
             }
         }
 
@@ -314,7 +317,7 @@ class ArchiveAdmin extends ModelAdmin
 
         // Normalize models to have their model class in array key and all names as the value are uppercased
         foreach ($models as $k => $v) {
-            $archivedModels[$v] = array('title' => ucfirst(singleton($v)->i18n_plural_name()));
+            $archivedModels[$v] = array('title' => ucfirst(singleton($v)->i18n_plural_name() ?? ''));
             unset($archivedModels[$k]);
         }
 
@@ -335,7 +338,7 @@ class ArchiveAdmin extends ModelAdmin
         // Pages, Blocks, Files are treated specially and have extensions defined in _config/archive-admin.yml
         $order = ['Pages', 'Blocks', 'Files'];
         uasort($mainModels, function ($a, $b) use ($order) {
-            return array_search($a, $order) < array_search($b, $order) ? -1 : 1;
+            return array_search($a, $order ?? []) < array_search($b, $order ?? []) ? -1 : 1;
         });
 
         foreach ($mainModels as $class => $title) {
@@ -356,7 +359,7 @@ class ArchiveAdmin extends ModelAdmin
         if ($otherModels) {
             $isOtherActive = (
                 $this->request->getVar('others') !== null ||
-                array_key_exists($this->modelClass, $otherModels)
+                array_key_exists($this->modelClass, $otherModels ?? [])
             );
             $forms->push(ArrayData::create([
                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Other'),
