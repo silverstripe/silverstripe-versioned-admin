@@ -13,6 +13,6 @@ ar:
     MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'ليس لديك الصلاحيات اللازمة لعرض {ObjectTitle}'
-    MENUTITLE: ""
+    MENUTITLE: ''
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: ''
