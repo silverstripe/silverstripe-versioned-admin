@@ -1,6 +1,6 @@
 # SilverStripe Versioned Admin Module
 
-[![Build Status](https://api.travis-ci.com/silverstripe/silverstripe-versioned-admin.svg?branch=1)](https://travis-ci.com/silverstripe/silverstripe-versioned-admin)
+[![CI](https://github.com/silverstripe/silverstripe-versioned-admin/actions/workflows/ci.yml/badge.svg)](https://github.com/silverstripe/silverstripe-versioned-admin/actions/workflows/ci.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/silverstripe/silverstripe-versioned-admin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/silverstripe/silverstripe-versioned-admin/?branch=master)
 [![codecov](https://codecov.io/gh/silverstripe/silverstripe-versioned-admin/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-versioned-admin)
 [![SilverStripe supported module](https://img.shields.io/badge/silverstripe-supported-0071C4.svg)](https://www.silverstripe.org/software/addons/silverstripe-commercially-supported-module-list/)
