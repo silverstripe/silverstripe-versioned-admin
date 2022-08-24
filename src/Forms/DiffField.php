@@ -3,7 +3,9 @@
 namespace SilverStripe\VersionedAdmin\Forms;
 
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly;
 use SilverStripe\Forms\HTMLReadonlyField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\View\Parsers\Diff;
 
 /**
@@ -49,8 +51,27 @@ class DiffField extends HTMLReadonlyField
         if (is_object($oldValue) || is_object($newValue)) {
             return sprintf('(%s)', _t(__CLASS__ . '.NO_DIFF_AVAILABLE', 'No diff available'));
         }
-
-        return Diff::compareHTML($oldValue, $newValue);
+        // Escape content from everything except HTMLEditorFields
+        $escape = true;
+        if ($this->getComparisonField() instanceof HTMLEditorField_Readonly) {
+            $escape = false;
+        }
+        // Ensure that the emtpy placeholder value is not escaped
+        // The empty placeholder value is usually going to be `<i>('none')</i>`
+        $emptyPlaceholder = ReadonlyField::create('na')->Value();
+        if ($oldValue === $newValue && $newValue === $emptyPlaceholder) {
+            // if both the old and new valus are empty, let the surronding <i> tags render as HTML (escape = false)
+            $escape = false;
+        } else {
+            // if either the new or old values are the empty placeholder, but the corresponding valued
+            // diffed against is not, then strip the surronding <i> tags and do not render as HTML (escape = true)
+            if ($oldValue === $emptyPlaceholder) {
+                $oldValue = strip_tags($emptyPlaceholder);
+            } elseif ($newValue === $emptyPlaceholder) {
+                $newValue = strip_tags($emptyPlaceholder);
+            }
+        }
+        return Diff::compareHTML($oldValue, $newValue, $escape);
     }
 
     /**
