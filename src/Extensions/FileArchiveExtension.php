@@ -47,12 +47,12 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
         $listColumns->setDisplayFields([
             'Name' => File::singleton()->fieldLabel('Name'),
             'appCategory' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_TYPE', 'Type'),
-            'allVersions.first.LastEdited' => _t(
+            'Versions.first.LastEdited' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_DATEARCHIVED',
                 'Date Archived'
             ),
             'Parent.Name' => _t('SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ORIGIN', 'Origin'),
-            'allVersions.first.Author.Name' => _t(
+            'Versions.first.Author.Name' => _t(
                 'SilverStripe\\VersionedAdmin\\ArchiveAdmin.COLUMN_ARCHIVEDBY',
                 'Archived By'
             )
@@ -61,7 +61,7 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
             'appCategory' => function ($val, $item) {
                 return ucfirst($val ?: $item->i18n_singular_name());
             },
-            'allVersions.first.LastEdited' => function ($val, $item) {
+            'Versions.first.LastEdited' => function ($val, $item) {
                 return DBDatetime::create_field('Datetime', $val)->Ago();
             },
         ]);
