@@ -14,8 +14,8 @@ if (!class_exists(CMSMain::class)) {
 }
 
 /**
- * The history viewer controller replaces the {@link CMSPageHistoryController} and uses the React based
- * {@link HistoryViewerField} to display the history for a {@link DataObject} that has the {@link Versioned}
+ * The history viewer controller uses the React based {@link HistoryViewerField} to
+ * display the history for a {@link DataObject} that has the {@link Versioned}
  * extension.
  */
 class CMSPageHistoryViewerController extends CMSMain
@@ -24,11 +24,6 @@ class CMSPageHistoryViewerController extends CMSMain
 
     private static $url_rule = '/$Action/$ID/$VersionID/$OtherVersionID';
 
-    /**
-     * {@inheritDoc}
-     *
-     * This is one higher than CMSPageHistoryController to give it priority
-     */
     private static $url_priority = 43;
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
