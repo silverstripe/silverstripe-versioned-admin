@@ -9,7 +9,8 @@ Feature: View a list of versions
     And I have a config file "enable-historyviewer.yml"
     And a "page" "Home" with "Content"="Background"
 
-    Given I am logged in with "ADMIN" permissions
+    Given the "group" "EDITOR" has permissions "Access to 'Pages' section"
+    And I am logged in as a member of "EDITOR" group
     And I go to "/admin/pages"
     And I wait 3 seconds
     And I click on "Home" in the tree
@@ -29,7 +30,7 @@ Feature: View a list of versions
     And I go to "/admin/pages/history/show/1"
     And I wait for 3 seconds
     Then I should see a list of versions
-    And I should see "ADMIN User" in the author column in version 1
+    And I should see "EDITOR User" in the author column in version 1
     And I should see "Published" in the record column in version 1
     And I should see "01/01/2100" in the record column in version 1
     And I should see the "Live" badge
@@ -44,7 +45,7 @@ Feature: View a list of versions
     And I go to "/admin/pages/history/show/1"
     And I wait for 3 seconds
     Then I should see a list of versions
-    And I should see "ADMIN User" in the author column in version 1
+    And I should see "EDITOR User" in the author column in version 1
     And I should see "Saved" in the record column in version 1
     And I should see "01/01/2100" in the record column in version 1
     And I should not see the "Live" badge
