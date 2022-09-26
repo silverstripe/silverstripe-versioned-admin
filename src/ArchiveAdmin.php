@@ -74,7 +74,7 @@ class ArchiveAdmin extends ModelAdmin
             $listField = $classInst->getArchiveField();
             $fields->push($listField);
         } else {
-            $otherVersionedObjects = $this->getVersionedModels('other');
+            $otherVersionedObjects = static::getVersionedModels('other');
             $modelSelectField = $this->getOtherModelSelectorField($modelClass);
             $fields->push($modelSelectField);
 
@@ -112,7 +112,7 @@ class ArchiveAdmin extends ModelAdmin
             $this->BaseCSSClasses()
         );
         $form->setFormAction(Controller::join_links(
-            $this->Link($this->sanitiseClassName($this->modelClass)),
+            $this->getLinkForModelTab($this->modelTab),
             'EditForm'
         ));
 
@@ -184,7 +184,7 @@ class ArchiveAdmin extends ModelAdmin
      * @param boolean $forDisplay Include titles as values in the returned array
      * @return array
      */
-    public function getVersionedModels($filter = null, $forDisplay = false)
+    public static function getVersionedModels($filter = null, $forDisplay = false)
     {
         // Get dataobjects with staged versioning
         $versionedClasses = array_filter(
@@ -272,7 +272,7 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getOtherModelSelectorField($currentModel = '')
     {
-        $otherVersionedObjects = $this->getVersionedModels('other', true);
+        $otherVersionedObjects = static::getVersionedModels('other', true);
 
         $modelSelectField = DropdownField::create(
             'OtherDropdown',
@@ -311,9 +311,9 @@ class ArchiveAdmin extends ModelAdmin
      *
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      */
-    public function getManagedModels()
+    public static function getManagedModels()
     {
-        $models = $this->getVersionedModels();
+        $models = static::getVersionedModels();
 
         // Normalize models to have their model class in array key and all names as the value are uppercased
         foreach ($models as $k => $v) {
@@ -332,7 +332,7 @@ class ArchiveAdmin extends ModelAdmin
     public function getManagedModelTabs()
     {
         $forms = ArrayList::create();
-        $mainModels = $this->getVersionedModels('main', true);
+        $mainModels = static::getVersionedModels('main', true);
 
         // Display order should be Pages > Blocks > Files > Other
         // Pages, Blocks, Files are treated specially and have extensions defined in _config/archive-admin.yml
@@ -355,7 +355,7 @@ class ArchiveAdmin extends ModelAdmin
             }
         }
 
-        $otherModels = $this->getVersionedModels('other', true);
+        $otherModels = static::getVersionedModels('other', true);
         if ($otherModels) {
             $isOtherActive = (
                 $this->request->getVar('others') !== null ||

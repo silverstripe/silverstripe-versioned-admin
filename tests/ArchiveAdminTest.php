@@ -30,8 +30,7 @@ class ArchiveAdminTest extends SapphireTest
 
     public function testGetVersionedModels()
     {
-        $archiveAdmin = ArchiveAdmin::create();
-        $allVersionedObjects = $archiveAdmin->getVersionedModels();
+        $allVersionedObjects = ArchiveAdmin::getVersionedModels();
 
         $this->assertContains(ChildVersionedObject::class, $allVersionedObjects);
         $this->assertContains(VersionedObject::class, $allVersionedObjects);
@@ -40,14 +39,14 @@ class ArchiveAdminTest extends SapphireTest
         $this->assertContains(ViewProviderVersionedObject::class, $allVersionedObjects);
         $this->assertNotContains(UnversionedObject::class, $allVersionedObjects);
 
-        $mainVersionedObjects = $archiveAdmin->getVersionedModels('main');
+        $mainVersionedObjects = ArchiveAdmin::getVersionedModels('main');
         $this->assertNotContains(ChildVersionedObject::class, $mainVersionedObjects);
         $this->assertNotContains(VersionedObject::class, $mainVersionedObjects);
         $this->assertNotContains(SingleStageObject::class, $mainVersionedObjects);
         $this->assertNotContains(ViewProviderChildObject::class, $mainVersionedObjects);
         $this->assertContains(ViewProviderVersionedObject::class, $mainVersionedObjects);
 
-        $otherVersionedObjects = $archiveAdmin->getVersionedModels('other');
+        $otherVersionedObjects = ArchiveAdmin::getVersionedModels('other');
         $this->assertContains(ChildVersionedObject::class, $otherVersionedObjects);
         $this->assertContains(VersionedObject::class, $otherVersionedObjects);
         $this->assertContains(SingleStageObject::class, $otherVersionedObjects);
