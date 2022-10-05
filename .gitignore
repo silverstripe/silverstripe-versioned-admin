@@ -6,3 +6,6 @@ coverage/
 /**/*.css.map
 artifacts/
 coverage/
+/vendor/
+/_resources/
+composer.lock
