@@ -4,9 +4,9 @@ namespace SilverStripe\VersionedAdmin\Tests\Navigator;
 
 use SilverStripe\Admin\Navigator\SilverStripeNavigator;
 use SilverStripe\Admin\Navigator\SilverStripeNavigatorItem_Unversioned;
-use SilverStripe\Versioned\Navigator\SilverStripeNavigatorItem_ArchiveLink;
-use SilverStripe\Versioned\Navigator\SilverStripeNavigatorItem_LiveLink;
-use SilverStripe\Versioned\Navigator\SilverStripeNavigatorItem_StageLink;
+use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink;
+use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink;
+use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink;
 use SilverStripe\Dev\SapphireTest;
 
 class SilverStripeNavigatorTest extends SapphireTest
