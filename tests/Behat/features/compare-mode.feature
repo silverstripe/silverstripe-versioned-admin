@@ -8,7 +8,8 @@ Feature: Compare mode
     Given I have a config file "enable-historyviewer.yml"
     And a "page" "Home" with "Content"="<p>Hello world</p>"
 
-    Given I am logged in with "ADMIN" permissions
+    Given the "group" "EDITOR" has permissions "Access to 'Pages' section"
+    And I am logged in as a member of "EDITOR" group
     And I go to "/admin/pages"
     And I wait 3 seconds
     And I click on "Home" in the tree
