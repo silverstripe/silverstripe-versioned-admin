@@ -72,10 +72,8 @@ class HistoryViewerController extends LeftAndMain
      *
      * WARNING: Experimental API.
      * @internal
-     * @param HTTPRequest $request
-     * @return HTTPResponse
      */
-    public function schema($request)
+    public function schema(HTTPRequest $request): HTTPResponse
     {
         $formName = $request->param('FormName');
         if (!in_array($formName, $this->formNames ?? [])) {
@@ -90,11 +88,9 @@ class HistoryViewerController extends LeftAndMain
      * if an unexpected value is provided.
      *
      * @param string $formName
-     * @param HTTPRequest $request
-     * @return HTTPResponse
      * @throws InvalidArgumentException
      */
-    protected function generateSchemaForForm($formName, HTTPRequest $request)
+    protected function generateSchemaForForm($formName, HTTPRequest $request): HTTPResponse
     {
         switch ($formName) {
             // Get schema for history form

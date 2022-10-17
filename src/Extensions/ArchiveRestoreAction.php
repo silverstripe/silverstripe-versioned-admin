@@ -3,6 +3,7 @@
 namespace SilverStripe\VersionedAdmin\Extensions;
 
 use SilverStripe\Assets\File;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -77,12 +78,8 @@ class ArchiveRestoreAction extends DataExtension
 
     /**
      * Restore the record to its original place or top level if that's not possible
-     *
-     * @param array $data
-     * @param Form $form
-     * @return HTTPResponse
      */
-    public function doRestore($data, $form)
+    public function doRestore(array $data, Form $form): HTTPResponse
     {
         $record = $this->owner->getRecord();
 
