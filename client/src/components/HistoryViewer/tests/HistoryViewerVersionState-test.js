@@ -22,7 +22,11 @@ describe('HistoryViewerVersionState', () => {
   describe('getPublishedState', () => {
     it('returns the correct state', () => {
       const mockVersion = {
-        published: true
+        published: true,
+        publisher: {
+          firstName: 'Sarah',
+          surname: 'Smith',
+        },
       };
 
       component = ReactTestUtils.renderIntoDocument(

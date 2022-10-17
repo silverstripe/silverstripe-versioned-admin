@@ -36,7 +36,10 @@ class HistoryViewerVersionState extends Component {
         }
         return i18n._t('HistoryViewer.Unpublished', 'Unpublished');
       }
-      return i18n._t('HistoryViewer.Published', 'Published');
+
+      if (version.liveVersion || version.publisher) {
+        return i18n._t('HistoryViewer.Published', 'Published');
+      }
     }
 
     return i18n._t('HistoryViewer.Saved', 'Saved');
