@@ -14,7 +14,7 @@ use SilverStripe\Versioned\Versioned;
  * The history controller factory decides which CMS history controller to use, out of the default from the
  * silverstripe/cms module or the history viewer controller from this module, depending on the current page type
  *
- * @deprecated 1.1.0:2.0.0
+ * @deprecated 1.1.0:2.0.0 Will be removed without equivalent functionality to replace it
  */
 class HistoryControllerFactory implements Factory
 {
