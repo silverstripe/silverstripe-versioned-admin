@@ -52,7 +52,7 @@ class HistoryViewerControllerTest extends SapphireTest
             'RecordVersionTo' => 236,
         ]);
 
-        $controllerMock->expects($this->exactly(2))->method('getSchemaResponse')->willReturn(true);
+        $controllerMock->expects($this->exactly(2))->method('getSchemaResponse')->willReturn(new HTTPResponse());
 
         $request = $this->getMockBuilder(HTTPRequest::class)
             ->setConstructorArgs(['GET', '/'])
