@@ -2,6 +2,7 @@
 
 namespace SilverStripe\VersionedAdmin\Controllers;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\CMS\Controllers\CMSPageHistoryController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\HTTPRequest;
@@ -14,11 +15,20 @@ use SilverStripe\Versioned\Versioned;
  * The history controller factory decides which CMS history controller to use, out of the default from the
  * silverstripe/cms module or the history viewer controller from this module, depending on the current page type
  *
- * @deprecated 1.1.0:2.0.0
+ * @deprecated 1.1.0 Will be removed without equivalent functionality to replace it
  */
 class HistoryControllerFactory implements Factory
 {
     use Extensible;
+
+    public function __construct()
+    {
+        Deprecation::notice(
+            '1.1.0',
+            'Will be removed without equivalent functionality to replace it',
+            Deprecation::SCOPE_CLASS
+        );
+    }
 
     public function create($service, array $params = array())
     {
