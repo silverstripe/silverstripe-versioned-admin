@@ -5,9 +5,9 @@
  */
 
 // Expose fields (see webpack config for matching "externals" config)
-require('expose-loader?HistoryViewer!components/HistoryViewer/HistoryViewer');
+require('expose-loader?exposes=HistoryViewer!components/HistoryViewer/HistoryViewer');
 
-require('expose-loader?versionType!types/versionType');
+require('expose-loader?exposes=versionType!types/versionType');
 
 // Legacy CMS
 require('../legacy/ArchiveAdmin/ArchiveAdmin');
