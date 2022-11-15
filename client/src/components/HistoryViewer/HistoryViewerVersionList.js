@@ -126,10 +126,10 @@ class HistoryViewerVersionList extends PureComponent {
 HistoryViewerVersionList.propTypes = {
   extraClass: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object]),
   showHeader: PropTypes.bool,
-  FormAlertComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  HeadingComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  FormAlertComponent: PropTypes.elementType.isRequired,
+  HeadingComponent: PropTypes.elementType.isRequired,
   messages: PropTypes.arrayOf(messageType),
-  VersionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  VersionComponent: PropTypes.elementType.isRequired,
   versions: PropTypes.arrayOf(versionType),
   compare: compareType,
   compareModeAvailable: PropTypes.bool,

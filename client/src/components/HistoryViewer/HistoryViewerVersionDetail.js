@@ -217,11 +217,11 @@ HistoryViewerVersionDetail.propTypes = {
   isLatestVersion: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   isRevertable: PropTypes.bool,
-  ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  PreviewComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  ListComponent: PropTypes.elementType.isRequired,
+  PreviewComponent: PropTypes.elementType,
   recordId: PropTypes.number.isRequired,
   schemaUrl: PropTypes.string.isRequired,
-  ToolbarComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  ToolbarComponent: PropTypes.elementType.isRequired,
   version: versionType,
   compare: PropTypes.oneOfType([
     PropTypes.shape({

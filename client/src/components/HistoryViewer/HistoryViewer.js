@@ -390,7 +390,7 @@ class HistoryViewer extends Component {
 HistoryViewer.propTypes = {
   contextKey: PropTypes.string,
   limit: PropTypes.number,
-  ListComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  ListComponent: PropTypes.elementType.isRequired,
   offset: PropTypes.number,
   recordId: PropTypes.number.isRequired,
   currentVersion: PropTypes.oneOfType([PropTypes.bool, versionType]),
@@ -398,8 +398,8 @@ HistoryViewer.propTypes = {
   isInGridField: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   isRevertable: PropTypes.bool,
-  VersionDetailComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  CompareWarningComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  VersionDetailComponent: PropTypes.elementType.isRequired,
+  CompareWarningComponent: PropTypes.elementType.isRequired,
   versions: PropTypes.shape({
     versions: PropTypes.shape({
       pageInfo: PropTypes.shape({
