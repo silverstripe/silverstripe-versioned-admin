@@ -1,14 +1,15 @@
 <?php
 namespace SilverStripe\VersionedAdmin\Tests\Controllers;
 
-use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryControllerFactory\HistoryControllerFactoryExtension;
-use SilverStripe\CMS\Controllers\CMSPageHistoryController;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController;
+use SilverStripe\CMS\Controllers\CMSPageHistoryController;
 use SilverStripe\VersionedAdmin\Controllers\HistoryControllerFactory;
+use SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController;
+use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryControllerFactory\HistoryControllerFactoryExtension;
 
 class HistoryControllerFactoryTest extends SapphireTest
 {
@@ -24,6 +25,9 @@ class HistoryControllerFactoryTest extends SapphireTest
 
     public function testCreateController()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $factory = new HistoryControllerFactory;
 
         $controller = $factory->create(null);
