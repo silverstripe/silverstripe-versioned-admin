@@ -7,10 +7,6 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\CMS\Controllers\CMSPageHistoryController:
     class: SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController
 
-SilverStripe\CMS\Controllers\CMSMain:
-  extensions:
-    - SilverStripe\VersionedAdmin\Extensions\CMSMainExtension
-
 SilverStripe\Admin\Forms\UsedOnTable:
   extensions:
     - SilverStripe\VersionedAdmin\Extensions\UsedOnTableExtension
