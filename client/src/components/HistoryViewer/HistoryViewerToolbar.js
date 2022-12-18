@@ -75,8 +75,8 @@ HistoryViewerToolbar.propTypes = {
   actions: PropTypes.shape({
     revertToVersion: PropTypes.func.isRequired,
   }),
-  FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  ViewModeComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  FormActionComponent: PropTypes.elementType.isRequired,
+  ViewModeComponent: PropTypes.elementType.isRequired,
   isLatestVersion: PropTypes.bool,
   isPreviewable: PropTypes.bool,
   isRevertable: PropTypes.bool,

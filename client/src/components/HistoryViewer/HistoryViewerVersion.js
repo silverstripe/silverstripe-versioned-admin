@@ -244,8 +244,8 @@ HistoryViewerVersion.propTypes = {
   onCompareMode: PropTypes.func,
   compare: compareType,
   compareModeAvailable: PropTypes.bool,
-  StateComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  FormActionComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  StateComponent: PropTypes.elementType.isRequired,
+  FormActionComponent: PropTypes.elementType.isRequired,
 };
 
 HistoryViewerVersion.defaultProps = {

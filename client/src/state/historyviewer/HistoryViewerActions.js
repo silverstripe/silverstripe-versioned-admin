@@ -1,5 +1,5 @@
+import { v1 as uuidv1 } from 'uuid';
 import HISTORY_VIEWER from './HistoryViewerActionTypes';
-import uuidv1 from 'uuid/v1';
 
 /**
  * Setting the current version will enable context views for a specific record
