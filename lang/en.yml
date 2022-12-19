@@ -16,3 +16,8 @@ en:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'No diff available'
+  SilverStripe\Versioned\RestoreAction:
+    RESTORE: 'Restore to draft'
+    RESTORE_DESC: 'Restore the archived version to draft'
+    RESTORE_TO_ROOT: 'Restore to draft at top level'
+    RESTORE_TO_ROOT_DESC: 'Restore the archived version to draft as a top level item'
