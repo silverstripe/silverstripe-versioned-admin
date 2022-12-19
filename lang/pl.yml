@@ -1,5 +1,18 @@
 pl:
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     MENUTITLE: Archiwum
+    COLUMN_ARCHIVEDBY: 'Zarchiwizowane przez'
+    COLUMN_DATEARCHIVED: 'Data archiwizacji'
+    COLUMN_ORIGIN: Źródło
+    COLUMN_TITLE: Tytuł
+    COLUMN_TYPE: Typ
+    SELECT_EMPTY: Wybierz...
+    SELECT_TYPE: 'Wybierz rodzaj treści'
+    TAB_OTHERS: Inny
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: 'Edytuj stronę'
+    MENUTITLE: Edytuj
+  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
+    ErrorItemViewPermissionDenied: 'Nie masz niezbędnych uprawnień, aby wyświetlić {ObjectTitle}'
+    MENUTITLE: HistoryViewer
+  SilverStripe\VersionedAdmin\Forms\DiffField:
+    NO_DIFF_AVAILABLE: 'Nie znaleziono różnic w stronach'
