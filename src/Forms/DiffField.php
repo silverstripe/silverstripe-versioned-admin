@@ -6,7 +6,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\View\Parsers\Diff;
+use SilverStripe\View\Parsers\HtmlDiff;
 
 /**
  * This form field is both a field object in it's own right, and a decorator for another field type.
@@ -71,7 +71,8 @@ class DiffField extends HTMLReadonlyField
                 $newValue = strip_tags($emptyPlaceholder);
             }
         }
-        return Diff::compareHTML($oldValue, $newValue, $escape);
+
+        return HtmlDiff::compareHtml($oldValue ?? '', $newValue ?? '', $escape);
     }
 
     /**
