@@ -2,6 +2,7 @@
 
 namespace SilverStripe\VersionedAdmin\Forms;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly;
 use SilverStripe\Forms\HTMLReadonlyField;
@@ -71,7 +72,9 @@ class DiffField extends HTMLReadonlyField
                 $newValue = strip_tags($emptyPlaceholder);
             }
         }
-        return Diff::compareHTML($oldValue, $newValue, $escape);
+        return Deprecation::withNoReplacement(function () use ($oldValue, $newValue, $escape) {
+            return Diff::compareHTML($oldValue, $newValue, $escape);
+        });
     }
 
     /**
