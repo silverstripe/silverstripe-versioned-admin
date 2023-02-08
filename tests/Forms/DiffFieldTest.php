@@ -21,7 +21,7 @@ class DiffFieldTest extends SapphireTest
         $diffField->setComparisonField($newField);
         $diffField->setValue('old');
 
-        $this->assertMatchesRegularExpression('/^<ins>new<\/ins> *<del>old<\/del>$/', $diffField->Value());
+        $this->assertMatchesRegularExpression('/^<del>old<\/del> *<ins>new<\/ins>$/', $diffField->Value());
     }
 
     /**
@@ -90,14 +90,14 @@ class DiffFieldTest extends SapphireTest
                 ReadonlyField::class,
                 '',
                 'Something',
-                '<ins>$emptyPlaceholderNoTags</ins> <del>Something</del>',
+                '<del>Something</del> <ins>$emptyPlaceholderNoTags</ins>',
                 'No value is escaped without tags removed when value added'
             ],
             [
                 ReadonlyField::class,
                 'Something',
                 '',
-                '<ins>Something</ins> <del>$emptyPlaceholderNoTags</del>',
+                '<del>$emptyPlaceholderNoTags</del> <ins>Something</ins>',
                 'No value is escaped without tags removed when value removed'
             ],
         ];
