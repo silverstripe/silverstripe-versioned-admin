@@ -2,6 +2,7 @@
 
 namespace SilverStripe\VersionedAdmin\Forms;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly;
 use SilverStripe\Forms\HTMLReadonlyField;
