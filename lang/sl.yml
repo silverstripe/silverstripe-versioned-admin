@@ -16,3 +16,8 @@ sl:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Spremembe niso na voljo'
+  SilverStripe\Versioned\RestoreAction:
+    RESTORE: ''
+    RESTORE_DESC: ''
+    RESTORE_TO_ROOT: ''
+    RESTORE_TO_ROOT_DESC: ''
