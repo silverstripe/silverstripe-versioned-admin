@@ -16,3 +16,8 @@ eo:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Mankas diff'
+  SilverStripe\Versioned\RestoreAction:
+    RESTORE: 'Restaŭri al malneto'
+    RESTORE_DESC: 'Restaŭri la enarkivigitan version al malneto'
+    RESTORE_TO_ROOT: 'Restaŭri al malneto ĉe la supra nivelo'
+    RESTORE_TO_ROOT_DESC: 'Restaŭri la enarkivigitan version al malneto kiel supranivelan elementon'
