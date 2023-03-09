@@ -21,10 +21,10 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "silverstripe/admin": "^1.6",
-        "silverstripe/framework": "^4.10",
-        "silverstripe/versioned": "^1.6",
-        "silverstripe/graphql": "^3.5 || ^4",
+        "silverstripe/admin": "1.13.x-dev",
+        "silverstripe/framework": "4.13.x-dev",
+        "silverstripe/versioned": "1.13.x-dev",
+        "silverstripe/graphql": "3.8.x-dev || 4.2.x-dev",
         "silverstripe/vendor-plugin": "^1"
     },
     "require-dev": {
