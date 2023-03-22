@@ -20,7 +20,7 @@ jQuery.entwine('ss', ($) => {
         'Are you sure you want to remove your record from the published site?\n\nThis record will still be available in the CMS as draft.'
       );
 
-      if (confirm(message)) {
+      if (confirm(message)) { // eslint-disable-line no-alert
         // Add a loading indicator and continue
         this.parents('form:first').addClass('loading');
 
@@ -49,7 +49,7 @@ jQuery.entwine('ss', ($) => {
         'Warning: This record will be unpublished before being sent to the archive.\n\nAre you sure you want to proceed?'
       );
 
-      if (confirm(message)) {
+      if (confirm(message)) { // eslint-disable-line no-alert
         // Add a loading indicator and continue
         this.parents('form:first').addClass('loading');
 
