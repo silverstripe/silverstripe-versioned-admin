@@ -9,15 +9,5 @@ ar:
     SELECT_EMPTY: اختر...
     SELECT_TYPE: 'اختر نوع المحتوى'
     TAB_OTHERS: أخرى
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'ليس لديك الصلاحيات اللازمة لعرض {ObjectTitle}'
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Forms\DiffField:
-    NO_DIFF_AVAILABLE: ''
-  SilverStripe\Versioned\RestoreAction:
-    RESTORE: ''
-    RESTORE_DESC: ''
-    RESTORE_TO_ROOT: ''
-    RESTORE_TO_ROOT_DESC: ''
