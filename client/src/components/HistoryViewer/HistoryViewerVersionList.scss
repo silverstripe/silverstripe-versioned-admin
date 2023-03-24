@@ -100,7 +100,7 @@
 
 // In detail views, pulls the content (and content tabs) closer to the selected version table
 .history-viewer__table--current {
-  margin-bottom: $panel-padding-y / 2;
+  margin-bottom: calc($panel-padding-y / 2);
 }
 
 .history-viewer {
