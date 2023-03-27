@@ -8,16 +8,3 @@ fi:
     MENUTITLE: Arkistot
     SELECT_EMPTY: Valitse...
     SELECT_TYPE: 'Valitse sisällön tyyppi'
-    TAB_OTHERS: ''
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Forms\DiffField:
-    NO_DIFF_AVAILABLE: ''
-  SilverStripe\Versioned\RestoreAction:
-    RESTORE: ''
-    RESTORE_DESC: ''
-    RESTORE_TO_ROOT: ''
-    RESTORE_TO_ROOT_DESC: ''

@@ -9,15 +9,5 @@ de:
     SELECT_EMPTY: Auswählen...
     SELECT_TYPE: 'Inhaltstyp auswählen'
     TAB_OTHERS: Andere
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Sie haben nicht die nötigen Berechtigungen, um {ObjectTitle} auszuwählen'
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Forms\DiffField:
-    NO_DIFF_AVAILABLE: ''
-  SilverStripe\Versioned\RestoreAction:
-    RESTORE: ''
-    RESTORE_DESC: ''
-    RESTORE_TO_ROOT: ''
-    RESTORE_TO_ROOT_DESC: ''
