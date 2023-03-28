@@ -7,17 +7,3 @@ sv:
     COLUMN_TYPE: Typ
     SELECT_EMPTY: Välj...
     SELECT_TYPE: 'Välj en innehållstyp'
-    TAB_OTHERS: ''
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: ''
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Forms\DiffField:
-    NO_DIFF_AVAILABLE: ''
-  SilverStripe\Versioned\RestoreAction:
-    RESTORE: ''
-    RESTORE_DESC: ''
-    RESTORE_TO_ROOT: ''
-    RESTORE_TO_ROOT_DESC: ''

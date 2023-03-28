@@ -9,15 +9,5 @@ fi_FI:
     SELECT_EMPTY: Valitse...
     SELECT_TYPE: 'Valitse sisältötyyppi'
     TAB_OTHERS: Muut
-  SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: ''
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Oikeutesi eivät riitä {ObjectTitle} tarkasteluun'
-    MENUTITLE: ''
-  SilverStripe\VersionedAdmin\Forms\DiffField:
-    NO_DIFF_AVAILABLE: ''
-  SilverStripe\Versioned\RestoreAction:
-    RESTORE: ''
-    RESTORE_DESC: ''
-    RESTORE_TO_ROOT: ''
-    RESTORE_TO_ROOT_DESC: ''
