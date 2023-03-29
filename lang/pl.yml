@@ -16,8 +16,3 @@ pl:
     MENUTITLE: HistoryViewer
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Nie znaleziono różnic w stronach'
-  SilverStripe\Versioned\RestoreAction:
-    RESTORE: ''
-    RESTORE_DESC: ''
-    RESTORE_TO_ROOT: ''
-    RESTORE_TO_ROOT_DESC: ''
