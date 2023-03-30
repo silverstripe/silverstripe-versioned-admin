@@ -10,7 +10,7 @@ import url from 'url';
 import qs from 'qs';
 
 class HistoryViewerVersionDetail extends PureComponent {
-  componentWillMount() {
+  componentDidMount() {
     this.toggleToolbarClass(true);
   }
 
@@ -18,13 +18,9 @@ class HistoryViewerVersionDetail extends PureComponent {
    * When new props are received (from Redux dispatch events), check whether the preview
    * state changes. If so, we want to add or remove the legacy CSS modifier for the CMS
    * north toolbar based on whether the view mode is "split" (add) or anything else (remove)
-   *
-   * @param {Object} nextProps
    */
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.previewState !== this.props.previewState) {
-      this.toggleToolbarClass(nextProps.previewState === 'split');
-    }
+  componentDidUpdate() {
+      this.toggleToolbarClass(this.props.previewState === 'split');
   }
 
   componentWillUnmount() {
