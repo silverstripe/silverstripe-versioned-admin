@@ -29,3 +29,14 @@ Feature: View a version
     And I wait for 3 seconds until I see the "#Form_versionForm" element
     Then I should see an "#Form_versionForm_Title[readonly]" element
     And I should see an "#Form_versionForm_URLSegment[readonly]" element
+
+  Scenario: Show page published status
+    When I go to "/admin/pages"
+    And I click on "Home" in the tree
+    And I fill in "<p>lorem</p>" for the "Content" HTML field
+    And I press the "Save" button
+    And I fill in "<p>ipsum</p>" for the "Content" HTML field
+    And I press the "Publish" button
+    And I click on "History" in the header tabs
+    Then I should see "Saved"
+    And I should see "Published"
