@@ -10,15 +10,15 @@ using [silverstripe/versioned](https://github.com/silverstripe/silverstripe-vers
 
 ## Installation
 
-```
-$ composer require silverstripe/versioned-admin
+```sh
+composer require silverstripe/versioned-admin
 ```
 
 ## Documentation
 
-For Developer documentation see ["Versioning" on docs.silverstripe.org](https://docs.silverstripe.org/en/4/developer_guides/model/versioning/)
+For Developer documentation see ["Versioning" on docs.silverstripe.org](https://docs.silverstripe.org/en/developer_guides/model/versioning/)
 
-For CMS User help see ["Using history" on userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/4/optional_features/content_blocks/history/)
+For CMS User help see ["Using history" on userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/optional_features/content_blocks/history/)
 
 ## Versioning
 
