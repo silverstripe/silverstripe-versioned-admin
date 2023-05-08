@@ -1,120 +1,122 @@
-/* global jest, describe, it, expect */
+/* global jest, test, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
 import { Component as HistoryViewerVersionState } from '../HistoryViewerVersionState';
+import { render } from '@testing-library/react';
 
-describe('HistoryViewerVersionState', () => {
-  let component = null;
-  HistoryViewerVersionState.defaultProps.BadgeComponent = () => <div />;
+function makeProps(obj = {}) {
+  return {
+    BadgeComponent: ({ status, message }) => <div className="test-badge" data-status={status} data-message={message} />,
+    ...obj
+  };
+}
 
-  describe('getClassNames()', () => {
-    it('adds extra classes to the default class', () => {
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState extraClass="foobar" />
-      );
+test('HistoryViewerVersionState adds extra classes to the default class', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      extraClass: 'foobar',
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state.foobar')).not.toBeNull();
+});
 
-      expect(component.getClassNames()).toContain('foobar');
-      expect(component.getClassNames()).toContain('history-viewer__version-state');
-    });
-  });
-
-  describe('getPublishedState', () => {
-    it('returns the correct state', () => {
-      const mockVersion = {
+test('HistoryViewerVersionState returns the correct state', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
         published: true
-      };
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state').textContent).toContain('Published');
+});
 
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={mockVersion} />
-      );
-
-      expect(component.getPublishedState()).toBe('Published');
-    });
-
-    it('returns the Unpublished state correctly', () => {
-      const mockVersion = {
+test('HistoryViewerVersionState returns the Unplublished state correctly', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
         published: true,
         deleted: true,
-      };
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state').textContent).toContain('Unpublished');
+});
 
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={mockVersion} />
-      );
-
-      expect(component.getPublishedState()).toBe('Unpublished');
-    });
-
-    it('returns the Archived state correctly', () => {
-      const mockVersion = {
+test('HistoryViewerVersionState returns the Archived state correctly', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
         published: true,
         deleted: true,
         draft: true,
-      };
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state').textContent).toContain('Archived');
+});
 
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={mockVersion} />
-      );
-
-      expect(component.getPublishedState()).toBe('Archived');
-    });
-
-    it('returns the Created state correctly', () => {
-      const mockVersion = {
+test('HistoryViewerVersionState returns the Created state correctly', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
         version: 1,
-      };
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state').textContent).toContain('Created');
+});
 
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={mockVersion} />
-      );
+test('HistoryViewerVersionState defaults to "Modified" if not defined', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {},
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state').textContent).toContain('Saved');
+});
 
-      expect(component.getPublishedState()).toBe('Created');
-    });
-
-    it('defaults to "Modified" if not defined', () => {
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={{}} />
-      );
-
-      expect(component.getPublishedState()).toBe('Saved');
-    });
-  });
-
-  describe('getDate', () => {
-    it('returns a formatted date', () => {
-      const mockVersion = {
+test('HistoryViewerVersionState returns a formatted date', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
         lastEdited: '2018-05-03 17:12:00'
-      };
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state .text-muted').textContent).toBe('05/03/2018 5:12 PM');
+});
 
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={mockVersion} />
-      );
-
-      // NB: default locale in i18n is en_US
-      expect(component.getDate()).toBe('05/03/2018 5:12 PM');
-    });
-  });
-
-  describe('getBadges', () => {
-    it('returns a Badge when the version is live', () => {
-      const mockVersion = {
+test('HistoryViewerVersionState returns a badge when the version is live', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
         liveVersion: true
-      };
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState version={mockVersion} />
-      );
+      },
+    })}
+    />
+  );
+  const badge = container.querySelector('.test-badge');
+  expect(badge.getAttribute('data-message')).toBe('Live');
+  expect(badge.getAttribute('data-status')).toBe('success');
+});
 
-      const badge = component.getBadges();
-      expect(badge.props.message).toEqual('Live');
-      expect(badge.props.status).toEqual('success');
-    });
 
-    it('returns an empty string when version is not live', () => {
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerVersionState />
-      );
-
-      expect(component.getBadges()).toBe('');
-    });
-  });
+test('HistoryViewerVersionState doess not return a badge when the version is false', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
+        liveVersion: false
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.test-badge')).toBeNull();
 });
