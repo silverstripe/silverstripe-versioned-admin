@@ -1,42 +1,29 @@
-/* global jest, describe, it, expect */
+/* global jest, test, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
 import { Component as HistoryViewerToolbar } from '../HistoryViewerToolbar';
+import { render, fireEvent } from '@testing-library/react';
 
-describe('HistoryViewerToolbar', () => {
-  const FormActionComponent = () => <div />;
-  const ViewModeComponent = () => <div />;
-  let component = null;
-  let mockRevertMutation;
-  let revertHandler;
-
-  beforeEach(() => {
-    mockRevertMutation = jest.fn((recordID, versionID) => Promise.resolve(versionID));
-    revertHandler = jest.fn();
-  });
-
-  describe('render()', () => {
-    it('calls revert function then onAfterRevert on success, and it renders', () => {
-      component = ReactTestUtils.renderIntoDocument(
-        <HistoryViewerToolbar
-          onAfterRevert={revertHandler}
-          actions={{ revertToVersion: mockRevertMutation }}
-          FormActionComponent={FormActionComponent}
-          ViewModeComponent={ViewModeComponent}
-          recordId={123}
-          versionId={234}
-        />
-      );
-
-      return component.handleRevert()
-        .then(() => {
-          expect(mockRevertMutation.mock.calls.length).toBe(1);
-          expect(mockRevertMutation.mock.calls[0][0]).toBe(123);
-          expect(mockRevertMutation.mock.calls[0][1]).toBe(234);
-          expect(revertHandler.mock.calls.length).toBe(1);
-          expect(revertHandler.mock.calls[0][0]).toBe(234);
-        });
-    });
-  });
+test('HistoryViewerToolbar renders', async () => {
+  const revertHandler = jest.fn();
+  const mockRevertMutation = jest.fn((recordID, versionID) => Promise.resolve(versionID));
+  const { container } = render(
+    <HistoryViewerToolbar {...{
+      FormActionComponent: ({ onClick }) => <div className="test-form-action" onClick={onClick} />,
+      ViewModeComponent: () => <div className="test-view-mode" />,
+      recordId: 123,
+      versionId: 234,
+      isRevertable: true,
+      onAfterRevert: revertHandler,
+      actions: {
+        revertToVersion: mockRevertMutation
+      }
+    }}
+    />
+  );
+  expect(container.querySelector('.toolbar')).not.toBeNull();
+  fireEvent.click(container.querySelector('.test-form-action'));
+  expect(mockRevertMutation).toBeCalledWith(123, 234, 'DRAFT', 'DRAFT');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  expect(revertHandler).toBeCalledWith(234);
 });

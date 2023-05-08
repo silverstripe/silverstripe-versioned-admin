@@ -1,325 +1,202 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* global jest, describe, it, expect */
+/* global jest, test, describe, it, expect */
 
 import React from 'react';
 import { Component as HistoryViewer } from '../HistoryViewer';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16/build/index';
+import { render, screen, fireEvent } from '@testing-library/react';
 
-Enzyme.configure({ adapter: new Adapter() });
-
-describe('HistoryViewer', () => {
-  const ListComponent = () => <table />;
-  const VersionDetailComponent = () => <div />;
-  const CompareWarningComponent = () => <div />;
-
-  // Mock select functions to replace the ones provided by mapDispatchToProps
-  let mockOnSelect;
-  let mockOnSetPage;
-
-  beforeEach(() => {
-    mockOnSelect = jest.fn();
-    mockOnSetPage = jest.fn();
-  });
-
-  const versions = {
+function makeProps(obj = {}) {
+  return {
+    ListComponent: ({ versions }) => (
+      <div data-testid="test-list">
+        {versions.map((version) => <div data-testid="test-version" data-id={version.version} key={version.version}/>)}
+      </div>
+    ),
+    VersionDetailComponent: ({ isLatestVersion, version, compareModeAvailable }) => (
+      <div
+        data-testid="test-version-detail"
+        data-islatestversion={isLatestVersion}
+        data-version={version.version}
+        data-comparemodeavailable={compareModeAvailable}
+      />
+      ),
+    CompareWarningComponent: () => <div data-testid="test-compare-warning"/>,
     versions: {
-      pageInfo: {
-        totalCount: 2
+      versions: {
+        pageInfo: {
+          totalCount: 2
+        },
+        nodes: [
+          {
+            version: 14,
+            author: {
+              firstName: 'Michelle',
+              surname: 'Masters'
+            },
+            publisher: null,
+            published: false,
+            latestDraftVersion: false,
+            liveVersion: false,
+            lastEdited: '2018-03-08 11:57:58'
+          },
+          {
+            version: 13,
+            author: {
+              firstName: 'Scott',
+              surname: 'Stockman'
+            },
+            publisher: null,
+            published: false,
+            latestDraftVersion: true,
+            liveVersion: false,
+            lastEdited: '2018-03-08 11:57:56'
+          },
+        ],
       },
-      nodes: [
-        {
-          version: 14,
-          author: {
-            firstName: 'Michelle',
-            surname: 'Masters'
-          },
-          publisher: null,
-          published: false,
-          latestDraftVersion: false,
-          liveVersion: false,
-          lastEdited: '2018-03-08 11:57:58'
-        },
-        {
-          version: 13,
-          author: {
-            firstName: 'Scott',
-            surname: 'Stockman'
-          },
-          publisher: null,
-          published: false,
-          latestDraftVersion: true,
-          liveVersion: false,
-          lastEdited: '2018-03-08 11:57:56'
-        },
-      ],
     },
+    onSelect: () => null,
+    onSetPage: () => null,
+    onResize: () => null,
+    recordId: 1,
+    limit: 100,
+    page: 1,
+    compare: false,
+    ...obj
   };
+}
 
-  describe('getVersions()', () => {
-    it('returns the node element from each version edge', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          versions={versions}
-          recordId={1}
-          limit={100}
-          compare={false}
-        />
-      );
+test('HistoryViewer returns the node element from each version edge', async () => {
+  render(
+    <HistoryViewer {...makeProps()}/>
+  );
+  const versions = await screen.findAllByTestId('test-version');
+  expect(versions[0].getAttribute('data-id')).toEqual('14');
+  expect(versions[1].getAttribute('data-id')).toEqual('13');
+});
 
-      expect(wrapper.instance().getVersions().map((version) => version.version)).toEqual([14, 13]);
-    });
-  });
+test('HistoryViewer knows which version is the the latestDraftVersion', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      }
+    })}
+    />
+  );
+  const el = await screen.findByTestId('test-version-detail');
+  expect(el.getAttribute('data-islatestversion')).toEqual('false');
+});
 
-  describe('getLatestVersion()', () => {
-    it('returns the version marked as LatestDraftVersion', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          versions={versions}
-          recordId={1}
-          limit={100}
-          page={1}
-          compare={false}
-        />
-      );
+test('HistoryViewer knows which versions are not the the latestDraftVersion', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 13
+      }
+    })}
+    />
+  );
+  const el = await screen.findByTestId('test-version-detail');
+  expect(el.getAttribute('data-islatestversion')).toEqual('true');
+});
 
-      expect(wrapper.instance().getLatestVersion().version).toEqual(13);
-    });
+test('HistoryViewer gives priority to the currentVersion', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 123,
+        latestDraftVersion: true
+      }
+    })}
+    />
+  );
+  const version = await screen.findByTestId('test-version-detail');
+  expect(version.getAttribute('data-version')).toEqual('123');
+});
 
-    it('gives priority to the currentVersion', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          versions={versions}
-          recordId={1}
-          limit={100}
-          page={1}
-          compare={false}
-          currentVersion={{
-            version: 123,
-            latestDraftVersion: true
-          }}
-        />
-      );
+test('HistoryViewer shows a loading state while loading results', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      loading: true
+    })}
+    />
+  );
+  expect(container.querySelectorAll('.cms-content-loading-spinner')).toHaveLength(1);
+});
 
-      expect(wrapper.instance().getLatestVersion().version).toEqual(123);
-    });
-  });
+test('HistoryViewer should have called onSetPage and handleNextPage after next button in navigation clicked', async () => {
+  const onSetPage = jest.fn();
+  render(
+    <HistoryViewer {...makeProps({
+      onSetPage,
+      limit: 1,
+      page: 2
+    })}
+    />
+  );
+  const button = await screen.findByText('Previous');
+  fireEvent.click(button);
+  expect(onSetPage).toBeCalledWith(1);
+});
 
-  describe('render()', () => {
-    it('shows a loading state while loading results', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          versions={versions}
-          recordId={1}
-          limit={100}
-          loading
-        />
-      );
+test('HistoryViewer onSelect() called when components unmounts', async () => {
+  const onSelect = jest.fn();
+  const unmount = render(
+    <HistoryViewer {...makeProps({
+      onSelect
+    })}
+    />
+  ).unmount;
+  unmount();
+  expect(onSelect).toBeCalled();
+});
 
-      const result = wrapper.find(
-        'cms-content-loading-spinner'
-      );
+test('HistoryViewer isListView() returns there is a currentVersion and compare mode is false', async () => {
+  // the only way that isListView() is used is as part of the logic to determine if the css class
+  // history-viewer--no-margins is added
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      },
+      compare: false,
+      isInGridField: true
+    })}
+    />
+  );
+  expect(container.querySelectorAll('.history-viewer')[0].classList).toContain('history-viewer--no-margins');
+});
 
-      expect(result).toBeTruthy();
-    });
-  });
+test('HistoryViewer compoareModeAvailable() returns true when more than one version is present', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      }
+    })}
+    />
+  );
+  const el = await screen.findByTestId('test-version-detail');
+  expect(el.getAttribute('data-comparemodeavailable')).toEqual('true');
+});
 
-  describe('handlePagination()', () => {
-    it('should have called onSetPage and handlePrevPage after prev button in navigation clicked', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-          compare={false}
-        />
-    );
-      wrapper.instance().handlePrevPage();
-      expect(mockOnSetPage).toBeCalledWith(1);
-    });
-  });
-
-  describe('onSelect()', () => {
-    it('called when components unmounts', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-          compare={false}
-        />
-      );
-
-      wrapper.instance().componentWillUnmount();
-      expect(mockOnSelect).toBeCalled();
-    });
-  });
-
-  describe('isListView()', () => {
-    it('returns true when no current version or compare mode is set', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-          currentVersion={false}
-          compare={false}
-        />
-      );
-
-      expect(wrapper.instance().isListView()).toBe(true);
-    });
-
-    it('returns false current version is set and compare mode is not', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-          currentVersion={{
-            ID: 1,
-          }}
-          compare={false}
-        />
-      );
-
-      expect(wrapper.instance().isListView()).toBe(false);
-    });
-
-    it('returns true when current version is set with only compare FROM', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-          currentVersion={{
-            id: 1,
-          }}
-          compare={{
-            versionFrom: {
-              id: 1,
-            },
-          }}
-        />
-      );
-
-      expect(wrapper.instance().isListView()).toBe(true);
-    });
-
-    it('returns false when in compare mode', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-          currentVersion={{
-            ID: 1
-          }}
-          compare={{
-            versionFrom: {
-              ID: 1,
-            },
-            versionTo: {
-              ID: 2,
-            },
-          }}
-        />
-      );
-
-      expect(wrapper.instance().isListView()).toBe(false);
-    });
-  });
-
-  describe('compareModeAvailable()', () => {
-    it('returns true when more than one version is present', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={versions}
-        />
-      );
-
-      expect(wrapper.instance().compareModeAvailable()).toBe(true);
-    });
-
-    it('returns false with only one version', () => {
-      const wrapper = shallow(
-        <HistoryViewer
-          ListComponent={ListComponent}
-          VersionDetailComponent={VersionDetailComponent}
-          CompareWarningComponent={CompareWarningComponent}
-          recordId={1}
-          onSelect={mockOnSelect}
-          onSetPage={mockOnSetPage}
-          limit={1}
-          page={2}
-          versions={{
-            versions: {
-              pageInfo: { totalCount: 1 },
-              nodes: [
-                { version: 14 },
-              ],
-            }
-          }}
-        />
-      );
-
-      expect(wrapper.instance().compareModeAvailable()).toBe(false);
-    });
-  });
+test('HistoryViewer compoareModeAvailable() returns false with only one version', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      },
+      versions: {
+        versions: {
+          pageInfo: {
+            totalCount: 1
+          },
+          nodes: [makeProps().versions.versions.nodes[0]]
+        }
+      }
+    })}
+    />
+  );
+  const el = await screen.findByTestId('test-version-detail');
+  expect(el.getAttribute('data-comparemodeavailable')).toEqual('false');
 });

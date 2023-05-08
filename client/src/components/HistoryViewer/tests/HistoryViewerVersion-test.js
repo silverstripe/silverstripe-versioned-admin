@@ -1,28 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* global jest, describe, it, expect */
+/* global jest, test, describe, it, expect */
 
 import React from 'react';
 import { Component as HistoryViewerVersion } from '../HistoryViewerVersion';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16/build/index';
+import { render, screen, fireEvent } from '@testing-library/react';
 
-Enzyme.configure({ adapter: new Adapter() });
-
-describe('HistoryViewerVersion', () => {
-  const StateComponent = () => <div />;
-  const FormActionComponent = () => <div />;
-
-  let mockOnCompareMode;
-  let mockOnCompareSelect;
-  let mockOnSelect;
-  let version = {};
-
-  beforeEach(() => {
-    mockOnCompareMode = jest.fn();
-    mockOnCompareSelect = jest.fn();
-    mockOnSelect = jest.fn();
-
-    version = {
+function makeProps(obj = {}) {
+  return {
+    version: {
       author: {
         firstName: 'John',
         surname: 'Smith',
@@ -33,196 +18,152 @@ describe('HistoryViewerVersion', () => {
         surname: 'Smith',
       },
       version: 3,
-    };
-  });
+    },
+    isActive: true,
+    onSelect: () => null,
+    StateComponent: () => <div data-testid="test-state" />,
+    FormActionComponent: ({ onClick, extraClass }) => <div data-testid="test-form-action" onClick={onClick} data-extraclass={extraClass} />,
+    ...obj
+  };
+}
 
-  describe('handleCompare()', () => {
-    it('calls onCompareMode to dispatch an action as the result of handleCompare call', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          onCompareMode={mockOnCompareMode}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-        />
-      );
+test('HistoryViewerVersion calls onCompareMode to dispatch an action as the result of handleCompare call', async () => {
+  const onCompareMode = jest.fn();
+  render(
+    <HistoryViewerVersion {...makeProps({
+      onCompareMode,
+      compare: false,
+    })}
+    />
+  );
+  const actions = await screen.findAllByTestId('test-form-action');
+  fireEvent.click(actions[0]);
+  expect(onCompareMode).toBeCalledWith(makeProps().version);
+});
 
-      wrapper.instance().handleCompare();
-      expect(mockOnCompareMode).toBeCalledWith(version);
-    });
-  });
+test('HistoryViewerVersion getAuthor() returns the author name when unpublished', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps()}/>
+  );
+  await screen.findByText('Already selected');
+  expect(container.querySelector('.history-viewer__author').textContent).toBe('John Smith');
+});
 
-  describe('getAuthor()', () => {
-    it('returns the author name when unpublished', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-        />
-      );
+test('HistoryViewerVersion getAuthor() returns the publisher name when published', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      version: {
+        ...makeProps().version,
+        published: true
+      }
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  expect(container.querySelector('.history-viewer__author').textContent).toBe('Sarah Smith');
+});
 
-      expect(wrapper.instance().getAuthor()).toEqual('John Smith');
-    });
+test('HistoryViewerVersion handleClick() does nothing on row click when the clear button is shown', async () => {
+  const onSelect = jest.fn();
+  const onCompareMode = jest.fn();
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      onCompareMode,
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  fireEvent.click(container.querySelector('.history-viewer__row'));
+  expect(onSelect).not.toBeCalled();
+  expect(onCompareMode).not.toBeCalled();
+});
 
-    it('returns the publisher name when published', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={{
-            ...version,
-            published: true
-          }}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-        />
-      );
+test('HistoryViewerVersion handleClick() renders version details when version clicked', async () => {
+  const onSelect = jest.fn();
+  const onCompareMode = jest.fn();
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      onCompareMode,
+      isActive: false
+    })}
+    />
+  );
+  await screen.findByText('John Smith');
+  fireEvent.click(container.querySelector('.history-viewer__version-link'));
+  expect(onSelect).toBeCalledWith(makeProps().version, false);
+  expect(onCompareMode).not.toBeCalled();
+});
 
-      expect(wrapper.instance().getAuthor()).toEqual('Sarah Smith');
-    });
-  });
+test('HistoryViewerVersion handleClick() renders version details when version clicked', async () => {
+  // Note: handleClick is only fired when isActive is false
+  const onSelect = jest.fn();
+  const onCompareMode = jest.fn();
+  const compare = {
+    versionFrom: { Version: 0 },
+    versionTo: { Version: 0 },
+  };
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      onCompareMode,
+      isActive: false,
+      compare,
+    })}
+    />
+  );
+  await screen.findByText('John Smith');
+  fireEvent.click(container.querySelector('.history-viewer__version-link'));
+  expect(onSelect).toBeCalledWith(makeProps().version, compare);
+  expect(onCompareMode).not.toBeCalled();
+});
 
-  describe('handleClick()', () => {
-    it('does nothing on row click when the clear button is shown', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          isActive
-        />
-      );
+test('HistoryViewerVersion render() renders the close button in the version details', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps()}/>
+  );
+  await screen.findByText('Already selected');
+  expect(container.querySelectorAll('[data-extraclass="history-viewer__close-button"')).toHaveLength(1);
+});
 
-      wrapper.simulate('click');
-      expect(mockOnCompareSelect).not.toHaveBeenCalled();
-      expect(mockOnSelect).not.toHaveBeenCalled();
-    });
+test('HistoryViewerVersion render() renders the close button in the version details', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps()}/>
+  );
+  await screen.findByText('Already selected');
+  expect(container.querySelectorAll('[data-extraclass="history-viewer__compare-button"')).toHaveLength(1);
+});
 
-    it('renders version details when version clicked', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          isActive={false}
-          compare={false}
-        />
-      );
+test('HistoryViewerVersion handleClose() return back to list view when closing version via action dispatch', async () => {
+  const onSelect = jest.fn();
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  fireEvent.click(container.querySelector('[data-extraclass="history-viewer__close-button"'));
+  expect(onSelect).toBeCalled();
+});
 
-      wrapper.instance().handleClick();
-      expect(mockOnCompareSelect).not.toHaveBeenCalled();
-      expect(mockOnSelect).toHaveBeenCalledWith(version, false);
-    });
-
-    it('renders version details when version clicked', () => {
-      const compare = {
+test('HistoryViewerVersion handleClose() deselect version when closing version in compare mode', async () => {
+  const onSelect = jest.fn();
+  const onCompareMode = jest.fn();
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      onCompareMode,
+      compare: {
         versionFrom: { Version: 0 },
         versionTo: { Version: 0 },
-      };
-
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          isActive={false}
-          compare={compare}
-        />
-      );
-
-      wrapper.instance().handleClick();
-      expect(mockOnCompareSelect).not.toHaveBeenCalled();
-      expect(mockOnSelect).toHaveBeenCalledWith(version, compare);
-    });
-
-    it('chooses version when version clicked in compare mode', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          onCompareSelect={mockOnCompareSelect}
-          compare={{
-            versionFrom: { Version: 0 },
-            versionTo: { Version: 0 },
-          }}
-        />
-      );
-
-      wrapper.instance().handleClick();
-      expect(mockOnSelect).toHaveBeenCalled();
-      expect(mockOnCompareMode).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('render()', () => {
-    it('renders the close button in the version details', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          isActive
-        />
-      );
-
-      expect(wrapper.find(FormActionComponent).at(1).props().extraClass).toEqual('history-viewer__close-button');
-    });
-
-    it('renders the compare button in the version details', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          isActive
-        />
-      );
-
-      expect(wrapper.find(FormActionComponent).at(0).props().extraClass).toEqual('history-viewer__compare-button');
-    });
-  });
-
-  describe('handleClose()', () => {
-    it('return back to list view when closing version via action dispatch', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          isActive
-          compare={false}
-        />
-      );
-
-      wrapper.instance().handleClose();
-      expect(mockOnSelect).toHaveBeenCalled();
-    });
-
-    it('deselect version when closing version in compare mode', () => {
-      const wrapper = shallow(
-        <HistoryViewerVersion
-          version={version}
-          StateComponent={StateComponent}
-          FormActionComponent={FormActionComponent}
-          onSelect={mockOnSelect}
-          onCompareSelect={mockOnCompareSelect}
-          isActive
-          compare={{
-            versionFrom: { Version: 0 },
-            versionTo: { Version: 0 },
-          }}
-        />
-      );
-
-      wrapper.instance().handleClose();
-      expect(mockOnSelect).toHaveBeenCalled();
-      expect(mockOnCompareMode).not.toHaveBeenCalled();
-    });
-  });
+      },
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  fireEvent.click(container.querySelector('[data-extraclass="history-viewer__close-button"'));
+  expect(onSelect).toBeCalled();
+  expect(onCompareMode).not.toBeCalled();
 });

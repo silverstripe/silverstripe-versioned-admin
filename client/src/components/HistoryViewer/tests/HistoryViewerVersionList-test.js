@@ -1,31 +1,19 @@
-/* global jest, describe, it, expect */
+/* global jest, test, describe, it, expect */
 
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
 import { Component as HistoryViewerVersionList } from '../HistoryViewerVersionList';
+import { render } from '@testing-library/react';
 
-describe('HistoryViewerVersionList', () => {
-  const FormAlertComponent = () => <div />;
-  const HeadingComponent = () => <li />;
-  const VersionComponent = () => <div />;
-
-  const component = ReactTestUtils.renderIntoDocument(
-    <HistoryViewerVersionList
-      FormAlertComponent={FormAlertComponent}
-      HeadingComponent={HeadingComponent}
-      VersionComponent={VersionComponent}
-      versions={[]}
+test('HistoryViewerVersionList returns an unordered list', () => {
+  const { container } = render(
+    <HistoryViewerVersionList {...{
+      FormAlertComponent: () => <div />,
+      HeadingComponent: () => <li />,
+      VersionComponent: () => <div />,
+      versions: [],
+    }}
     />
   );
-
-  describe('render()', () => {
-    it('returns an unordered list', () => {
-      const list = ReactTestUtils.scryRenderedDOMComponentsWithTag(
-        component,
-        'ul'
-      );
-
-      expect(list[0].className).toContain('history-viewer__table');
-    });
-  });
+  expect(container.querySelector('ul.history-viewer__table')).not.toBeNull();
 });
+
