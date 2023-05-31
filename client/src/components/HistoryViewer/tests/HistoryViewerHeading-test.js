@@ -1,44 +1,32 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* global jest, describe, it, expect */
+/* global jest, test, describe, it, expect */
 
 import React from 'react';
 import { Component as HistoryViewerHeading } from '../HistoryViewerHeading';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16/build/index';
+import { render, fireEvent } from '@testing-library/react';
 
-Enzyme.configure({ adapter: new Adapter() });
-
-describe('HistoryViewerHeading', () => {
-  // Mock select functions to replace the ones provided by mapDispatchToProps
-  const mockOnCompareModeSelect = jest.fn();
-  const mockOnCompareModeUnselect = jest.fn();
-
-  describe('onChange()', () => {
-    it('triggers mapDispatchToProps functions to notify and update the Redux store', () => {
-      const wrapper = shallow(
-        <HistoryViewerHeading
-          compareModeSelected
-          onCompareModeSelect={mockOnCompareModeSelect}
-          onCompareModeUnselect={mockOnCompareModeUnselect}
-        />
-      );
-
-      wrapper.find('.history-viewer-heading__compare-mode-checkbox').at(0).simulate('change');
-      expect(mockOnCompareModeUnselect).toHaveBeenCalled();
-    });
-
-    it('simulate change event in disabled compare mode', () => {
-      const wrapper = shallow(
-        <HistoryViewerHeading
-          compareModeSelected={false}
-          onCompareModeSelect={mockOnCompareModeSelect}
-          onCompareModeUnselect={mockOnCompareModeUnselect}
-        />
-      );
-
-      wrapper.find('.history-viewer-heading__compare-mode-checkbox').at(0).simulate('change');
-      expect(mockOnCompareModeSelect).toHaveBeenCalled();
-    });
-  });
+test('HistoryViewerHeading triggers mapDispatchToProps functions to notify and update the Redux store', () => {
+  const onCompareModeUnselect = jest.fn();
+  const { container } = render(
+    <HistoryViewerHeading {...{
+      compareModeSelected: true,
+      onCompareModeUnselect
+    }}
+    />
+  );
+  fireEvent.click(container.querySelector('.history-viewer-heading__compare-mode-checkbox'));
+  expect(onCompareModeUnselect).toHaveBeenCalled();
 });
 
+test('HistoryViewerHeading simulates change event in disabled compare mode', () => {
+  const onCompareModeSelect = jest.fn();
+  const { container } = render(
+    <HistoryViewerHeading {...{
+      compareModeSelected: false,
+      onCompareModeSelect
+    }}
+    />
+  );
+  fireEvent.click(container.querySelector('.history-viewer-heading__compare-mode-checkbox'));
+  expect(onCompareModeSelect).toHaveBeenCalled();
+});

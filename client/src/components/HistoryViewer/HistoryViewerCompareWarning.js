@@ -61,6 +61,8 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+export { HistoryViewerCompareWarning as Component };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
