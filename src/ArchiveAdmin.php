@@ -313,10 +313,10 @@ class ArchiveAdmin extends ModelAdmin
      */
     public function getManagedModels()
     {
-        $models = $this->getVersionedModels();
+        $archivedModels = $this->getVersionedModels();
 
         // Normalize models to have their model class in array key and all names as the value are uppercased
-        foreach ($models as $k => $v) {
+        foreach ($archivedModels as $k => $v) {
             $archivedModels[$v] = array('title' => ucfirst(singleton($v)->i18n_plural_name() ?? ''));
             unset($archivedModels[$k]);
         }
