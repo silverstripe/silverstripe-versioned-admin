@@ -16,3 +16,5 @@ sl:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Spremembe niso na voljo'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: Objavljeno
