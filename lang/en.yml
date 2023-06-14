@@ -1,4 +1,6 @@
 en:
+  SilverStripe\Admin\Navigator\SilverStripeNavigatorItem:
+    WONT_BE_SHOWN: 'Note: this message will not be shown to your visitors'
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: 'Archived By'
     COLUMN_DATEARCHIVED: 'Date Archived'
@@ -12,20 +14,20 @@ en:
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
     MENUTITLE: 'Edit Page'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: 'You don''t have the necessary permissions to view {ObjectTitle}'
+    ErrorItemViewPermissionDenied: "You don't have the necessary permissions to view {ObjectTitle}"
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'No diff available'
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink:
     ARCHIVED_FROM: 'Archived site from {date}'
     PREVIEW: 'Preview version'
-    TITLE: 'Archived'
+    TITLE: Archived
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
     PUBLISHED_SITE: 'Published Site'
-    TITLE: 'Published'
+    TITLE: Published
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink:
     DRAFT_SITE: 'Draft Site'
-    TITLE: 'Draft'
+    TITLE: Draft
   SilverStripe\Versioned\RestoreAction:
     RESTORE: 'Restore to draft'
     RESTORE_DESC: 'Restore the archived version to draft'
