@@ -21,3 +21,5 @@ nl:
     RESTORE_DESC: 'Het de gearchiveerde versie naar concept'
     RESTORE_TO_ROOT: 'Herstel naar concept in hoofdmenu'
     RESTORE_TO_ROOT_DESC: 'Herstel de gearchiveerde versie naar concept in hoofdmenu'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: 'Gepubliceerd '
