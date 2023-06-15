@@ -16,3 +16,5 @@ da:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Ingen diff tilgængelig'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: Udgivet

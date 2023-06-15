@@ -11,3 +11,5 @@ de:
     TAB_OTHERS: Andere
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Sie haben nicht die nötigen Berechtigungen, um {ObjectTitle} auszuwählen'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: Veröffentlicht

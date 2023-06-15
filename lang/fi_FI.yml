@@ -11,3 +11,5 @@ fi_FI:
     TAB_OTHERS: Muut
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Oikeutesi eivät riitä {ObjectTitle} tarkasteluun'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: Julkaistu
