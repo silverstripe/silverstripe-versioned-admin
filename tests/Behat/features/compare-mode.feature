@@ -39,8 +39,9 @@ Feature: Compare mode
     Given I click on "Content" in the header tabs
     Then I fill in the "Content" HTML field with "<p>Hello universe</p>"
     And I press the "Save" button
-    # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
-    And I go to "/admin/pages/history/show/1"
+    And I wait 3 seconds
+    And I click on the ".toast__close" element
+    And I click on "History" in the header tabs
     And I wait for 3 seconds
     Then I should see a list of versions
 

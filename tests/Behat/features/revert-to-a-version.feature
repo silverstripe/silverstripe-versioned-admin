@@ -16,7 +16,9 @@ Feature: Revert to a version
     And I wait 3 seconds
     And I fill in the "Content" HTML field with "<p>Second version</p>"
     And I press the "Save" button
-    And I go to "/admin/pages/history/show/1"
+    And I wait 3 seconds
+    And I click on the ".toast__close" element
+    And I click on "History" in the header tabs
     And I wait for 3 seconds
     Then I should see a list of versions
 
