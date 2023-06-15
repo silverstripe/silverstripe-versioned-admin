@@ -16,3 +16,5 @@ pl:
     MENUTITLE: HistoryViewer
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Nie znaleziono różnic w stronach'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: Opublikowano
