@@ -26,8 +26,8 @@ Feature: View a list of versions
     And I press the "Publish" button
     And I wait 3 seconds
     Then I should see a "Published 'Home' successfully." success toast
-    # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
-    And I go to "/admin/pages/history/show/1"
+    When I click on the ".toast__close" element
+    And I click on "History" in the header tabs
     And I wait for 3 seconds
     Then I should see a list of versions
     And I should see "EDITOR User" in the author column in version 1
@@ -41,8 +41,8 @@ Feature: View a list of versions
     And I press the "Save" button
     And I wait 3 seconds
     Then I should see a "Saved 'Home' successfully." success toast
-    # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
-    And I go to "/admin/pages/history/show/1"
+    When I click on the ".toast__close" element
+    And I click on "History" in the header tabs
     And I wait for 3 seconds
     Then I should see a list of versions
     And I should see "EDITOR User" in the author column in version 1
@@ -54,8 +54,9 @@ Feature: View a list of versions
     Given I should see an edit page form
     When I fill in the "Content" HTML field with "<p>Order scenario</p>"
     And I press the "Publish" button
+    And I wait 3 seconds
     Then I should see a "Published 'Home' successfully." success toast
-    # This is a workaround @todo remove when https://github.com/silverstripe/silverstripe-cms/issues/2128 is resolved in framework
-    And I go to "/admin/pages/history/show/1"
+    When I click on the ".toast__close" element
+    And I click on "History" in the header tabs
     And I wait for 3 seconds
     Then I should see a list of versions in descending order

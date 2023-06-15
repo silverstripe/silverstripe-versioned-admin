@@ -2,6 +2,7 @@
  * File: ArchiveAdmin.js
  */
 import jQuery from 'jquery';
+import { joinUrlPaths } from 'lib/urls';
 
 jQuery.entwine('ss', ($) => {
   $('.ArchiveAdmin__action--restore').entwine({
@@ -22,7 +23,7 @@ jQuery.entwine('ss', ($) => {
       const othersArchiveUrl = $(this).data('others-archive-url');
       if (targetClassName) {
         targetClassName = targetClassName.replace(/\\/g, '-');
-        const url = othersArchiveUrl + targetClassName;
+        const url = joinUrlPaths(othersArchiveUrl, targetClassName);
 
         $('.cms-container').loadPanel(url, '', { pjax: 'CurrentForm' });
       }
