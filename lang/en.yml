@@ -35,13 +35,3 @@ en:
     RESTORE_TO_ROOT_DESC: 'Restore the archived version to draft as a top level item'
   SilverStripe\Admin\Navigator\SilverStripeNavigatorItem:
     WONT_BE_SHOWN: 'Note: this message will not be shown to your visitors'
-  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink:
-    ARCHIVED_FROM: 'Archived site from {date}'
-    PREVIEW: 'Preview version'
-    TITLE: Archived
-  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
-    PUBLISHED_SITE: 'Published Site'
-    TITLE: Published
-  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink:
-    DRAFT_SITE: 'Draft Site'
-    TITLE: Draft
