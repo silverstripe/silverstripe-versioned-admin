@@ -2,8 +2,8 @@
 /* global jest, test, describe, it, expect */
 
 import React from 'react';
-import { Component as HistoryViewerHeading } from '../HistoryViewerHeading';
 import { render, fireEvent } from '@testing-library/react';
+import { Component as HistoryViewerHeading } from '../HistoryViewerHeading';
 
 test('HistoryViewerHeading triggers mapDispatchToProps functions to notify and update the Redux store', () => {
   const onCompareModeUnselect = jest.fn();

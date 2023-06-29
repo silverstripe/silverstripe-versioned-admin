@@ -338,7 +338,6 @@ class HistoryViewer extends Component {
       compare: { versionFrom: hasVersionFrom },
     } = this.props;
 
-
     return (
       <div className={this.getContainerClasses()}>
         <CompareWarningComponent />
@@ -363,7 +362,7 @@ class HistoryViewer extends Component {
     const { compare } = this.props;
 
     if (compare && compare.versionFrom && compare.versionTo) {
-        return this.renderVersionDetail();
+      return this.renderVersionDetail();
     }
     return this.renderVersionList();
   }
@@ -435,7 +434,6 @@ HistoryViewer.defaultProps = {
     },
   },
 };
-
 
 function mapStateToProps(state) {
   const {

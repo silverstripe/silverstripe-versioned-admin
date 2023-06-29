@@ -1,8 +1,8 @@
 /* global jest, test, describe, it, expect */
 
 import React from 'react';
-import { Component as HistoryViewerToolbar } from '../HistoryViewerToolbar';
 import { render, fireEvent } from '@testing-library/react';
+import { Component as HistoryViewerToolbar } from '../HistoryViewerToolbar';
 
 test('HistoryViewerToolbar renders', async () => {
   const revertHandler = jest.fn();

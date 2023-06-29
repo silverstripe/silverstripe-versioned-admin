@@ -1,5 +1,5 @@
-import HISTORY_VIEWER from './HistoryViewerActionTypes';
 import { defaultCompare } from 'types/compareType';
+import HISTORY_VIEWER from './HistoryViewerActionTypes';
 
 const initialState = {
   currentPage: 1,

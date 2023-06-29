@@ -91,7 +91,6 @@ HistoryViewerToolbar.defaultProps = {
   isRevertable: false,
 };
 
-
 function mapDispatchToProps(dispatch) {
   return {
     onAfterRevert(versionId) {

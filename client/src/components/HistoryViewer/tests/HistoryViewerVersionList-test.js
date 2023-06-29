@@ -1,8 +1,8 @@
 /* global jest, test, describe, it, expect */
 
 import React from 'react';
-import { Component as HistoryViewerVersionList } from '../HistoryViewerVersionList';
 import { render } from '@testing-library/react';
+import { Component as HistoryViewerVersionList } from '../HistoryViewerVersionList';
 
 test('HistoryViewerVersionList returns an unordered list', () => {
   const { container } = render(
@@ -16,4 +16,3 @@ test('HistoryViewerVersionList returns an unordered list', () => {
   );
   expect(container.querySelector('ul.history-viewer__table')).not.toBeNull();
 });
-

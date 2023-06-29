@@ -2,8 +2,8 @@
 /* global jest, test, describe, it, expect */
 
 import React from 'react';
-import { Component as HistoryViewerVersion } from '../HistoryViewerVersion';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { Component as HistoryViewerVersion } from '../HistoryViewerVersion';
 
 function makeProps(obj = {}) {
   return {
