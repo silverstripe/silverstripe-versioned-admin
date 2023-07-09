@@ -2,8 +2,8 @@
 /* global jest, test, describe, it, expect */
 
 import React from 'react';
-import { Component as HistoryViewer } from '../HistoryViewer';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { Component as HistoryViewer } from '../HistoryViewer';
 
 function makeProps(obj = {}) {
   return {
@@ -19,7 +19,7 @@ function makeProps(obj = {}) {
         data-version={version.version}
         data-comparemodeavailable={compareModeAvailable}
       />
-      ),
+    ),
     CompareWarningComponent: () => <div data-testid="test-compare-warning"/>,
     versions: {
       versions: {

@@ -1,8 +1,8 @@
 /* global jest, test, describe, it, expect */
 
 import React from 'react';
-import { Component as HistoryViewerVersionState } from '../HistoryViewerVersionState';
 import { render } from '@testing-library/react';
+import { Component as HistoryViewerVersionState } from '../HistoryViewerVersionState';
 
 function makeProps(obj = {}) {
   return {
@@ -107,7 +107,6 @@ test('HistoryViewerVersionState returns a badge when the version is live', () =>
   expect(badge.getAttribute('data-message')).toBe('Live');
   expect(badge.getAttribute('data-status')).toBe('success');
 });
-
 
 test('HistoryViewerVersionState doess not return a badge when the version is false', () => {
   const { container } = render(

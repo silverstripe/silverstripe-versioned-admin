@@ -20,7 +20,7 @@ class HistoryViewerVersionDetail extends PureComponent {
    * north toolbar based on whether the view mode is "split" (add) or anything else (remove)
    */
   componentDidUpdate() {
-      this.toggleToolbarClass(this.props.previewState === 'split');
+    this.toggleToolbarClass(this.props.previewState === 'split');
   }
 
   componentWillUnmount() {
