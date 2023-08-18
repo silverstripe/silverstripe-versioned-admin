@@ -77,6 +77,9 @@ class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
     */
     public function isArchiveFieldEnabled()
     {
-        return Config::inst()->get(AssetControlExtension::class, 'keep_archived_assets');
+        // This should really only check File.keep_archived_assets, though it was originally
+        // only checking AssetControlExtension.keep_archived_assets, so keeping that for BC
+        return Config::inst()->get(AssetControlExtension::class, 'keep_archived_assets')
+          || Config::inst()->get(File::class, 'keep_archived_assets');
     }
 }
