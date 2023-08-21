@@ -6,24 +6,24 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('eo', {
+    "HistoryViewer.Author": "Aŭtoro",
+    "HistoryViewer.BadgeLive": "Realtempa",
+    "HistoryViewer.COMPARE_MODE": "Kompari reĝimon",
+    "HistoryViewer.EXIT": "Eliri",
     "HistoryViewer.NEXT": "Sekva",
     "HistoryViewer.PREVIOUS": "Antaŭa",
-    "HistoryViewer.COMPARE_MODE": "Kompari reĝimon",
-    "HistoryViewer.SELECT_PROMPT": "Elekti du versiojn",
-    "HistoryViewer.EXIT": "Eliri",
-    "HistoryViewerHeading.COMPARE_VERSIONS": "Kompari du versiojn",
-    "HistoryViewer.Record": "Registri",
-    "HistoryViewer.Author": "Aŭtoro",
-    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Nehavebla por la aktuala versio",
-    "HistoryViewerToolbar.REVERT_TO_VERSION": "Malfari al ĉi tiu versio",
-    "HistoryViewerToolbar.REVERTED_MESSAGE": "Sukcesis malfari ĝis versio 1%s",
-    "HistoryViewerVersion.COMPARE": "Kompari",
-    "HistoryViewerVersion.CLOSE": "Fermi",
-    "HistoryViewerVersion.SELECTED": "Jam elektita",
-    "HistoryViewerVersion.GO_TO_VERSION": "Iru al versio {version}",
-    "HistoryViewerVersionList.CLOSE": "Fermi",
     "HistoryViewer.Published": "Publikigis",
+    "HistoryViewer.Record": "Registri",
+    "HistoryViewer.SELECT_PROMPT": "Elekti du versiojn",
     "HistoryViewer.Saved": "Konservita",
-    "HistoryViewer.BadgeLive": "Realtempa"
+    "HistoryViewerHeading.COMPARE_VERSIONS": "Kompari du versiojn",
+    "HistoryViewerToolbar.REVERTED_MESSAGE": "Sukcesis malfari ĝis versio 1%s",
+    "HistoryViewerToolbar.REVERT_TO_VERSION": "Malfari al ĉi tiu versio",
+    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Nehavebla por la aktuala versio",
+    "HistoryViewerVersion.CLOSE": "Fermi",
+    "HistoryViewerVersion.COMPARE": "Kompari",
+    "HistoryViewerVersion.GO_TO_VERSION": "Iru al versio {version}",
+    "HistoryViewerVersion.SELECTED": "Jam elektita",
+    "HistoryViewerVersionList.CLOSE": "Fermi"
 });
 }
