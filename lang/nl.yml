@@ -16,10 +16,10 @@ nl:
     MENUTITLE: Geschiedenis
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Geen vergelijking'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    TITLE: 'Gepubliceerd '
   SilverStripe\Versioned\RestoreAction:
     RESTORE: 'Herstel naar concept'
     RESTORE_DESC: 'Het de gearchiveerde versie naar concept'
     RESTORE_TO_ROOT: 'Herstel naar concept in hoofdmenu'
     RESTORE_TO_ROOT_DESC: 'Herstel de gearchiveerde versie naar concept in hoofdmenu'
-  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
-    TITLE: 'Gepubliceerd '

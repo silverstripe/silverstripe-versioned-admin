@@ -6,24 +6,24 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('pl', {
+    "HistoryViewer.Author": "Autor",
+    "HistoryViewer.BadgeLive": "Na żywo",
+    "HistoryViewer.COMPARE_MODE": "Compare mode",
+    "HistoryViewer.EXIT": "Wyjdź",
     "HistoryViewer.NEXT": "Następny",
     "HistoryViewer.PREVIOUS": "Poprzedni",
-    "HistoryViewer.COMPARE_MODE": "Compare mode",
-    "HistoryViewer.SELECT_PROMPT": "Zaznacz dwie wersje",
-    "HistoryViewer.EXIT": "Wyjdź",
-    "HistoryViewerHeading.COMPARE_VERSIONS": "Porównaj dwie wersje",
-    "HistoryViewer.Record": "Rekord",
-    "HistoryViewer.Author": "Autor",
-    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Niedostępne w obecnej wersji",
-    "HistoryViewerToolbar.REVERT_TO_VERSION": "Wróć do tej wersji",
-    "HistoryViewerToolbar.REVERTED_MESSAGE": "Pomyślnie przywrócono do wersji %s",
-    "HistoryViewerVersion.COMPARE": "Porównaj",
-    "HistoryViewerVersion.CLOSE": "Zamknij",
-    "HistoryViewerVersion.SELECTED": "Już zaznaczono",
-    "HistoryViewerVersion.GO_TO_VERSION": "Wróć do wersji {version}",
-    "HistoryViewerVersionList.CLOSE": "Zamknij",
     "HistoryViewer.Published": "Opublikowano",
+    "HistoryViewer.Record": "Rekord",
+    "HistoryViewer.SELECT_PROMPT": "Zaznacz dwie wersje",
     "HistoryViewer.Saved": "Zapisano",
-    "HistoryViewer.BadgeLive": "Na żywo"
+    "HistoryViewerHeading.COMPARE_VERSIONS": "Porównaj dwie wersje",
+    "HistoryViewerToolbar.REVERTED_MESSAGE": "Pomyślnie przywrócono do wersji %s",
+    "HistoryViewerToolbar.REVERT_TO_VERSION": "Wróć do tej wersji",
+    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Niedostępne w obecnej wersji",
+    "HistoryViewerVersion.CLOSE": "Zamknij",
+    "HistoryViewerVersion.COMPARE": "Porównaj",
+    "HistoryViewerVersion.GO_TO_VERSION": "Wróć do wersji {version}",
+    "HistoryViewerVersion.SELECTED": "Już zaznaczono",
+    "HistoryViewerVersionList.CLOSE": "Zamknij"
 });
 }

@@ -1,4 +1,6 @@
 eo:
+  SilverStripe\Admin\Navigator\SilverStripeNavigatorItem:
+    WONT_BE_SHOWN: 'Noto: ĉi tiu mesaĝo ne vidiĝos al viaj vizitantoj'
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: Enarĥivigis
     COLUMN_DATEARCHIVED: 'Dato de enarĥivigo'
@@ -16,10 +18,18 @@ eo:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Mankas diff'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink:
+    ARCHIVED_FROM: 'Enarĥivigis retejon ek de {date}'
+    PREVIEW: 'Antaŭvidi version'
+    TITLE: Enarkivigita
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    PUBLISHED_SITE: 'Publikigis retejon'
+    TITLE: Publikigis
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink:
+    DRAFT_SITE: 'Malneta retejo'
+    TITLE: Malneto
   SilverStripe\Versioned\RestoreAction:
     RESTORE: 'Restaŭri al malneto'
     RESTORE_DESC: 'Restaŭri la enarkivigitan version al malneto'
     RESTORE_TO_ROOT: 'Restaŭri al malneto ĉe la supra nivelo'
     RESTORE_TO_ROOT_DESC: 'Restaŭri la enarkivigitan version al malneto kiel supranivelan elementon'
-  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
-    TITLE: Publikigis
