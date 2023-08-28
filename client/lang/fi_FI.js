@@ -6,24 +6,24 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('fi_FI', {
+    "HistoryViewer.Author": "Tekijä",
+    "HistoryViewer.BadgeLive": "Julkinen",
+    "HistoryViewer.COMPARE_MODE": "Vertailutila",
+    "HistoryViewer.EXIT": "Poistu",
     "HistoryViewer.NEXT": "Seuraava",
     "HistoryViewer.PREVIOUS": "Edellinen",
-    "HistoryViewer.COMPARE_MODE": "Vertailutila",
-    "HistoryViewer.SELECT_PROMPT": "Valitse kaksi versiota",
-    "HistoryViewer.EXIT": "Poistu",
-    "HistoryViewerHeading.COMPARE_VERSIONS": "Vertaa kahta versiota",
-    "HistoryViewer.Record": "Tietue",
-    "HistoryViewer.Author": "Tekijä",
-    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Ei saatavilla nykyiseen versioon",
-    "HistoryViewerToolbar.REVERT_TO_VERSION": "Palaa tähän versioon",
-    "HistoryViewerToolbar.REVERTED_MESSAGE": "Palattiin onnistuneesti versioon %s",
-    "HistoryViewerVersion.COMPARE": "Vertaile",
-    "HistoryViewerVersion.CLOSE": "Sulje",
-    "HistoryViewerVersion.SELECTED": "On jo valittu",
-    "HistoryViewerVersion.GO_TO_VERSION": "Siirry versioon {version}",
-    "HistoryViewerVersionList.CLOSE": "Sulje",
     "HistoryViewer.Published": "Julkaistu",
+    "HistoryViewer.Record": "Tietue",
+    "HistoryViewer.SELECT_PROMPT": "Valitse kaksi versiota",
     "HistoryViewer.Saved": "Tallennettu",
-    "HistoryViewer.BadgeLive": "Julkinen"
+    "HistoryViewerHeading.COMPARE_VERSIONS": "Vertaa kahta versiota",
+    "HistoryViewerToolbar.REVERTED_MESSAGE": "Palattiin onnistuneesti versioon %s",
+    "HistoryViewerToolbar.REVERT_TO_VERSION": "Palaa tähän versioon",
+    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Ei saatavilla nykyiseen versioon",
+    "HistoryViewerVersion.CLOSE": "Sulje",
+    "HistoryViewerVersion.COMPARE": "Vertaile",
+    "HistoryViewerVersion.GO_TO_VERSION": "Siirry versioon {version}",
+    "HistoryViewerVersion.SELECTED": "On jo valittu",
+    "HistoryViewerVersionList.CLOSE": "Sulje"
 });
 }

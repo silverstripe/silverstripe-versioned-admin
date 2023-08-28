@@ -6,24 +6,24 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('nl', {
+    "HistoryViewer.Author": "Auteur",
+    "HistoryViewer.BadgeLive": "Live",
+    "HistoryViewer.COMPARE_MODE": "Vergelijken",
+    "HistoryViewer.EXIT": "Exit",
     "HistoryViewer.NEXT": "Volgende",
     "HistoryViewer.PREVIOUS": "Vorige",
-    "HistoryViewer.COMPARE_MODE": "Vergelijken",
-    "HistoryViewer.SELECT_PROMPT": "Selecteer 2 versies",
-    "HistoryViewer.EXIT": "Exit",
-    "HistoryViewerHeading.COMPARE_VERSIONS": "Vergelijk 2 versies",
-    "HistoryViewer.Record": "Versie",
-    "HistoryViewer.Author": "Auteur",
-    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Niet beschikbaar voor de huidige versie",
-    "HistoryViewerToolbar.REVERT_TO_VERSION": "Keer terug naar deze versie",
-    "HistoryViewerToolbar.REVERTED_MESSAGE": "Succesvol teruggekeerd naar versie %s",
-    "HistoryViewerVersion.COMPARE": "Vergelijk",
-    "HistoryViewerVersion.CLOSE": "Sluit",
-    "HistoryViewerVersion.SELECTED": "Reeds geselecteerd",
-    "HistoryViewerVersion.GO_TO_VERSION": "Ga naar versie {version}",
-    "HistoryViewerVersionList.CLOSE": "Sluit",
     "HistoryViewer.Published": "Gepubliceerd ",
+    "HistoryViewer.Record": "Versie",
+    "HistoryViewer.SELECT_PROMPT": "Selecteer 2 versies",
     "HistoryViewer.Saved": "Opgeslagen",
-    "HistoryViewer.BadgeLive": "Live"
+    "HistoryViewerHeading.COMPARE_VERSIONS": "Vergelijk 2 versies",
+    "HistoryViewerToolbar.REVERTED_MESSAGE": "Succesvol teruggekeerd naar versie %s",
+    "HistoryViewerToolbar.REVERT_TO_VERSION": "Keer terug naar deze versie",
+    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Niet beschikbaar voor de huidige versie",
+    "HistoryViewerVersion.CLOSE": "Sluit",
+    "HistoryViewerVersion.COMPARE": "Vergelijk",
+    "HistoryViewerVersion.GO_TO_VERSION": "Ga naar versie {version}",
+    "HistoryViewerVersion.SELECTED": "Reeds geselecteerd",
+    "HistoryViewerVersionList.CLOSE": "Sluit"
 });
 }
