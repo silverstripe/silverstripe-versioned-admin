@@ -6,24 +6,24 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('sl', {
+    "HistoryViewer.Author": "Avtor",
+    "HistoryViewer.BadgeLive": "Javno",
+    "HistoryViewer.COMPARE_MODE": "Primerjava",
+    "HistoryViewer.EXIT": "Izhod",
     "HistoryViewer.NEXT": "Naslednja",
     "HistoryViewer.PREVIOUS": "Pretekla",
-    "HistoryViewer.COMPARE_MODE": "Primerjava",
-    "HistoryViewer.SELECT_PROMPT": "Izberite dve različici",
-    "HistoryViewer.EXIT": "Izhod",
-    "HistoryViewerHeading.COMPARE_VERSIONS": "Primerjajte dve različici",
-    "HistoryViewer.Record": "Zapis",
-    "HistoryViewer.Author": "Avtor",
-    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Ni na voljo za izbrano različico",
-    "HistoryViewerToolbar.REVERT_TO_VERSION": "Povrni izbrano različico",
-    "HistoryViewerToolbar.REVERTED_MESSAGE": "Povrnili smo v različico %s",
-    "HistoryViewerVersion.COMPARE": "Primerjaj",
-    "HistoryViewerVersion.CLOSE": "Zapri",
-    "HistoryViewerVersion.SELECTED": "Že izbrana",
-    "HistoryViewerVersion.GO_TO_VERSION": "Pojdi na različico {version}",
-    "HistoryViewerVersionList.CLOSE": "Zapri",
     "HistoryViewer.Published": "Objavljeno",
+    "HistoryViewer.Record": "Zapis",
+    "HistoryViewer.SELECT_PROMPT": "Izberite dve različici",
     "HistoryViewer.Saved": "Shranjeno",
-    "HistoryViewer.BadgeLive": "Javno"
+    "HistoryViewerHeading.COMPARE_VERSIONS": "Primerjajte dve različici",
+    "HistoryViewerToolbar.REVERTED_MESSAGE": "Povrnili smo v različico %s",
+    "HistoryViewerToolbar.REVERT_TO_VERSION": "Povrni izbrano različico",
+    "HistoryViewerToolbar.REVERT_UNAVAILABLE": "Ni na voljo za izbrano različico",
+    "HistoryViewerVersion.CLOSE": "Zapri",
+    "HistoryViewerVersion.COMPARE": "Primerjaj",
+    "HistoryViewerVersion.GO_TO_VERSION": "Pojdi na različico {version}",
+    "HistoryViewerVersion.SELECTED": "Že izbrana",
+    "HistoryViewerVersionList.CLOSE": "Zapri"
 });
 }
