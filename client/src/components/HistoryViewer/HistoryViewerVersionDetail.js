@@ -63,7 +63,7 @@ class HistoryViewerVersionDetail extends PureComponent {
 
   /**
    * Until the CMS is fully React driven, we must control certain aspects of the CMS DOM with
-   * manual CSS tweaks. @todo remove this when React drives the CMS.
+   * manual CSS tweaks.
    *
    * @param {boolean} add
    */
@@ -226,8 +226,6 @@ HistoryViewerVersionDetail.propTypes = {
     }),
     PropTypes.bool,
   ]),
-  // @todo replace this with import { VIEW_MODE_STATES } from 'state/viewMode/ViewModeStates'
-  // when webpack-config has this export available via silverstripe/admin
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
 };
 
