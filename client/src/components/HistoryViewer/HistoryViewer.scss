@@ -59,7 +59,6 @@ $diff-added-color: #b9f1c8;
   }
 }
 
-// Todo: remove this when the CMS is React driven and we don't need this hack
 .history-viewer__preview {
   margin-top: -54px;
 }
@@ -84,7 +83,7 @@ $diff-added-color: #b9f1c8;
   }
 }
 
-// Hide preview on small devices. @todo replace this with a view toggle component
+// Hide preview on small devices.
 @include media-breakpoint-down(md) {
   .history-viewer__preview {
     display: none;

@@ -409,8 +409,6 @@ HistoryViewer.propTypes = {
   }),
   page: PropTypes.number,
   schemaUrl: PropTypes.string,
-  // @todo replace this with import { VIEW_MODE_STATES } from 'state/viewMode/ViewModeStates'
-  // when webpack-config has this export available via silverstripe/admin
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
   actions: PropTypes.object,
   onSelect: PropTypes.func,
