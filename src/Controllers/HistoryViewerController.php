@@ -9,7 +9,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\FormFactory;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -332,7 +331,6 @@ class HistoryViewerController extends LeftAndMain
      */
     protected function scaffoldForm($formName, array $context = [], array $extra = [])
     {
-        /** @var FormFactory $scaffolder */
         $scaffolder = Injector::inst()->get(DataObjectVersionFormFactory::class);
         $form = $scaffolder->getForm($this, $formName, $context);
 
