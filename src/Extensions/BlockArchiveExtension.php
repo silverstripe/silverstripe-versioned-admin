@@ -12,6 +12,8 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
 /**
  * Adds a archive view for Elemental blocks
+ *
+ * @extends DataExtension<BaseElement>
  */
 class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
 {

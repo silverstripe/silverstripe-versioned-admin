@@ -12,10 +12,13 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Versioned\RestoreAction;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Versioned\VersionedGridFieldItemRequest;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 
 /**
  * Adds a restore action to the item edit form of ArchiveAdmin
+ *
+ * @extends DataExtension<VersionedGridFieldItemRequest>
  */
 class ArchiveRestoreAction extends DataExtension
 {

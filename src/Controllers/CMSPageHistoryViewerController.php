@@ -4,9 +4,7 @@ namespace SilverStripe\VersionedAdmin\Controllers;
 
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
 
 if (!class_exists(CMSMain::class)) {
@@ -30,10 +28,8 @@ class CMSPageHistoryViewerController extends CMSMain
 
     public function getEditForm($id = null, $fields = null)
     {
-        /** @var DataObject $record */
         $record = $this->getRecord($id ?: $this->currentPageID());
 
-        /** @var Form $form */
         $form = parent::getEditForm($id);
         $form->addExtraClass('history-viewer__form');
         // Disable default CMS preview

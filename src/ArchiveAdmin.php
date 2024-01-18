@@ -293,9 +293,6 @@ class ArchiveAdmin extends ModelAdmin
 
     /**
      * Use 'Archive' as the top title rather than the model title
-     *
-     * @param bool $unlinked
-     * @return ArrayList
      */
     public function Breadcrumbs($unlinked = false)
     {
@@ -327,7 +324,7 @@ class ArchiveAdmin extends ModelAdmin
     /**
      * Add the special 'Others' tab
      *
-     * @return ArrayList An ArrayList of all managed models to build the tabs for this ModelAdmin
+     * @return ArrayList<ArrayData> An ArrayList of all managed models to build the tabs for this ModelAdmin
      */
     public function getManagedModelTabs()
     {

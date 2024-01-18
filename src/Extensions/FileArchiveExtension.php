@@ -15,6 +15,8 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 
 /**
  * Adds a archive view for Files
+ *
+ * @extends DataExtension<File>
  */
 class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
 {
