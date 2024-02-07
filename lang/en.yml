@@ -1,6 +1,4 @@
 en:
-  SilverStripe\Admin\Navigator\SilverStripeNavigatorItem:
-    WONT_BE_SHOWN: 'Note: this message will not be shown to your visitors'
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: 'Archived By'
     COLUMN_DATEARCHIVED: 'Date Archived'
