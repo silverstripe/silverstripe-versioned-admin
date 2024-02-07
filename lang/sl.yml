@@ -1,4 +1,6 @@
 sl:
+  SilverStripe\Admin\Navigator\SilverStripeNavigatorItem:
+    WONT_BE_SHOWN: 'Tega sporočila obiskovalcem ne bomo prikazali'
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: Arhiviral
     COLUMN_DATEARCHIVED: 'Datum arhiviranja'
@@ -16,5 +18,18 @@ sl:
     MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Spremembe niso na voljo'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink:
+    ARCHIVED_FROM: 'Arhivsko spletišče z dne {date}'
+    PREVIEW: Predogled
+    TITLE: Arhivirana
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    PUBLISHED_SITE: 'Objavljeno spletišče'
     TITLE: Objavljeno
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink:
+    DRAFT_SITE: 'Osnutek spletišča'
+    TITLE: Osnutek
+  SilverStripe\Versioned\RestoreAction:
+    RESTORE: 'Povrni v osnutek'
+    RESTORE_DESC: 'Arhivirano različico povrni v osnutek'
+    RESTORE_TO_ROOT: 'Povrni v osnutek na vrhnjem nivoju'
+    RESTORE_TO_ROOT_DESC: 'Arhivirano različico povrni v osnutek na vrhnjem nivoju'
