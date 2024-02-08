@@ -13,7 +13,6 @@ it:
     MENUTITLE: 'Modifica Pagina'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Non hai i necessari permessi per vedere {ObjectTitle}'
-    MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Diff non disponibile'
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:

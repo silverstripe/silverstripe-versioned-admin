@@ -4,7 +4,6 @@ nl:
     COLUMN_DATEARCHIVED: Archiefdatum
     COLUMN_ORIGIN: Oorsprong
     COLUMN_TITLE: Titel
-    COLUMN_TYPE: Type
     MENUTITLE: Archief
     SELECT_EMPTY: Selecteer...
     SELECT_TYPE: 'Selecteer type'
