@@ -4,8 +4,6 @@ fr:
     COLUMN_DATEARCHIVED: 'Archivé le'
     COLUMN_ORIGIN: Origine
     COLUMN_TITLE: Titre
-    COLUMN_TYPE: Type
-    MENUTITLE: Archive
     SELECT_EMPTY: Sélectionner…
     SELECT_TYPE: 'Sélectionner un type de contenu'
     TAB_OTHERS: Autre
