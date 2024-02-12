@@ -68,7 +68,7 @@ class ArchiveAdmin extends ModelAdmin
     {
         $fields = FieldList::create();
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
-        $classInst = Injector::inst()->get($this->modelClass);
+        $classInst = $modelClass !== 'others' ? Injector::inst()->get($this->modelClass) : null;
 
         if (ClassInfo::hasMethod($classInst, 'getArchiveField')) {
             $listField = $classInst->getArchiveField();
