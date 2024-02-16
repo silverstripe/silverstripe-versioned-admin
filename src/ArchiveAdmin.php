@@ -68,7 +68,7 @@ class ArchiveAdmin extends ModelAdmin
     {
         $fields = FieldList::create();
         $modelClass = $this->request->getVar('others') ? 'others' : $this->modelClass;
-        $classInst = Injector::inst()->get($this->modelClass);
+        $classInst = $modelClass !== 'others' ? Injector::inst()->get($this->modelClass) : null;
 
         if (ClassInfo::hasMethod($classInst, 'getArchiveField')) {
             $listField = $classInst->getArchiveField();
@@ -337,32 +337,31 @@ class ArchiveAdmin extends ModelAdmin
         uasort($mainModels, function ($a, $b) use ($order) {
             return array_search($a, $order ?? []) < array_search($b, $order ?? []) ? -1 : 1;
         });
+        $isOthersActive = $this->request->getVar('others') !== null
+            || array_key_exists($this->modelClass, $otherModels ?? []);
 
         foreach ($mainModels as $class => $title) {
             $classInst = Injector::inst()->get($class);
             if (ClassInfo::hasMethod($classInst, 'isArchiveFieldEnabled')
                 && $classInst->isArchiveFieldEnabled()
             ) {
+                $isCurrent = $class === $this->modelClass && !$isOthersActive;
                 $forms->push(ArrayData::create([
                     'Title' => $title,
                     'ClassName' => $class,
                     'Link' => $this->Link($this->sanitiseClassName($class)),
-                    'LinkOrCurrent' => ($class === $this->modelClass) ? 'current' : 'link'
+                    'LinkOrCurrent' => $isCurrent ? 'current' : 'link'
                 ]));
             }
         }
 
         $otherModels = $this->getVersionedModels('other', true);
         if ($otherModels) {
-            $isOtherActive = (
-                $this->request->getVar('others') !== null ||
-                array_key_exists($this->modelClass, $otherModels ?? [])
-            );
             $forms->push(ArrayData::create([
                 'Title' => _t(__CLASS__ . '.TAB_OTHERS', 'Other'),
-                'ClassName' => 'Others',
+                'ClassName' => 'Others ',
                 'Link' => $this->Link('?others=1'),
-                'LinkOrCurrent' => ($isOtherActive ? 'current' : 'link')
+                'LinkOrCurrent' => $isOthersActive ? 'current' : 'link',
             ]));
         }
 
