@@ -89,6 +89,6 @@ class ArchiveRestoreAction extends DataExtension
         $controller->getRequest()->addHeader('X-Pjax', 'Content');
         $controller->getEditForm()->sessionMessage($message['text'], $message['type'], ValidationResult::CAST_HTML);
 
-        return $controller->redirect($controller->Link(), 'index');
+        return $controller->redirect($controller->Link());
     }
 }
