@@ -1,0 +1,3 @@
+SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\ViewableVersionedObject:
+  object_1:
+    Title: My Object
