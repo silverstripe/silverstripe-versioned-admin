@@ -15,6 +15,7 @@ sl:
     MENUTITLE: 'Uredi stran'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Nimate pravic za ogled {ObjectTitle}'
+    MENUTITLE: SilverStripe\VersionedAdmin\Controllers\HistoryViewerController
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Spremembe niso na voljo'
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink:
