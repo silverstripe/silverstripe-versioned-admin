@@ -7,13 +7,11 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
 } else {
   ss.i18n.addDictionary('it', {
     "HistoryViewer.Author": "Autore",
-    "HistoryViewer.BadgeLive": "Live",
     "HistoryViewer.COMPARE_MODE": "Modalità comparazione",
     "HistoryViewer.EXIT": "Uscita",
     "HistoryViewer.NEXT": "Prossimo",
     "HistoryViewer.PREVIOUS": "Precedente",
     "HistoryViewer.Published": "Pubblicato",
-    "HistoryViewer.Record": "Record",
     "HistoryViewer.SELECT_PROMPT": "Selezionare due versioni",
     "HistoryViewer.Saved": "Salvato",
     "HistoryViewerHeading.COMPARE_VERSIONS": "Comparare due versioni",
