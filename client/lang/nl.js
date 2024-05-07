@@ -7,9 +7,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
 } else {
   ss.i18n.addDictionary('nl', {
     "HistoryViewer.Author": "Auteur",
-    "HistoryViewer.BadgeLive": "Live",
     "HistoryViewer.COMPARE_MODE": "Vergelijken",
-    "HistoryViewer.EXIT": "Exit",
     "HistoryViewer.NEXT": "Volgende",
     "HistoryViewer.PREVIOUS": "Vorige",
     "HistoryViewer.Published": "Gepubliceerd ",

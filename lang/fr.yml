@@ -10,6 +10,6 @@ fr:
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
     MENUTITLE: 'Éditer la page'
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
-    ErrorItemViewPermissionDenied: 'Vous n''avez pas les permissions nécessaires pour voir {ObjectTitle}'
+    ErrorItemViewPermissionDenied: "Vous n'avez pas les permissions nécessaires pour voir {ObjectTitle}"
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
     TITLE: Publié
