@@ -8,7 +8,6 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('pl', {
     "HistoryViewer.Author": "Autor",
     "HistoryViewer.BadgeLive": "Na żywo",
-    "HistoryViewer.COMPARE_MODE": "Compare mode",
     "HistoryViewer.EXIT": "Wyjdź",
     "HistoryViewer.NEXT": "Następny",
     "HistoryViewer.PREVIOUS": "Poprzedni",
