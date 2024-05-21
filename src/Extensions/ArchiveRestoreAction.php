@@ -28,7 +28,7 @@ class ArchiveRestoreAction extends DataExtension
      * @param Form $form
      * @return mixed
      */
-    public function updateItemEditForm(Form $form)
+    protected function updateItemEditForm(Form $form)
     {
         $record = $this->owner->getRecord();
 

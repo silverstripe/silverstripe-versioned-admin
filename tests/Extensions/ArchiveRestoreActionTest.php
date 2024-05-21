@@ -18,6 +18,8 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\Versioned\VersionedGridFieldItemRequest;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\ViewableVersionedObject;
+use ReflectionMethod;
+use SilverStripe\VersionedAdmin\Extensions\ArchiveRestoreAction;
 
 class ArchiveRestoreActionTest extends SapphireTest
 {
@@ -79,7 +81,12 @@ class ArchiveRestoreActionTest extends SapphireTest
             'test'
         );
 
-        $itemRequest->updateItemEditForm($form);
+        $ext = new ArchiveRestoreAction();
+        $method = new ReflectionMethod(ArchiveRestoreAction::class, 'updateItemEditForm');
+        $method->setAccessible(true);
+        $ext->setOwner($itemRequest);
+        $method->invokeArgs($ext, [$form]);
+
         $actions = $form->Actions();
         $this->assertInstanceOf(FormAction::class, $actions->fieldByName('action_doRestore'));
     }

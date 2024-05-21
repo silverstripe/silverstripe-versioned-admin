@@ -14,7 +14,7 @@ class UsedOnTableExtension extends Extension
     /**
      * @var array $excludedClasses
      */
-    public function updateUsageExcludedClasses(array &$excludedClasses)
+    protected function updateUsageExcludedClasses(array &$excludedClasses)
     {
         $excludedClasses[] = ChangeSetItem::class;
     }
