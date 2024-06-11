@@ -5,7 +5,6 @@
   margin: (-$panel-padding-y) (-$panel-padding-x) 0;
   border-bottom: 1px solid $border-color;
   padding: ($panel-padding-y * 2) ($panel-padding-x * 2);
-
   background-color: $white;
 
   // If there is a message, fix spacing
@@ -15,8 +14,8 @@
     margin-top: 0;
   }
 
-  &::after {
-    border-bottom: none;
+  &:after {
+    border-bottom: 0;
   }
 
   .form__field-label {

@@ -1,5 +1,5 @@
 .history-viewer__compare-notice {
-  border-top: none;
+  border-top: 0;
   border-radius: 0 0 $border-radius $border-radius;
   padding: 0;
   position: absolute;
@@ -17,7 +17,7 @@
     border-width: 0 0 0 $border-width;
     border-color: lighten($color-notice, 10%);
     margin-right: 0;
-    border-radius: 0 0 $border-radius 0;
+    border-radius: 0 0 $border-radius;
 
     &:hover {
       background-color: lighten($color-notice, 10%);
