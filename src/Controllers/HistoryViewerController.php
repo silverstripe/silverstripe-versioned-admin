@@ -41,8 +41,8 @@ class HistoryViewerController extends LeftAndMain
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
     private static $allowed_actions = [
-        self::FORM_NAME_VERSION,
-        self::FORM_NAME_COMPARE,
+        HistoryViewerController::FORM_NAME_VERSION,
+        HistoryViewerController::FORM_NAME_COMPARE,
         'schema',
     ];
 
@@ -51,7 +51,7 @@ class HistoryViewerController extends LeftAndMain
      *
      * @var string[]
      */
-    protected $formNames = [self::FORM_NAME_VERSION, self::FORM_NAME_COMPARE];
+    protected $formNames = [HistoryViewerController::FORM_NAME_VERSION, HistoryViewerController::FORM_NAME_COMPARE];
 
     public function getClientConfig()
     {
@@ -93,7 +93,7 @@ class HistoryViewerController extends LeftAndMain
     {
         switch ($formName) {
             // Get schema for history form
-            case self::FORM_NAME_VERSION:
+            case HistoryViewerController::FORM_NAME_VERSION:
                 $form = $this->getVersionForm([
                     'RecordClass' => $request->getVar('RecordClass'),
                     'RecordID' => $request->getVar('RecordID'),
@@ -101,7 +101,7 @@ class HistoryViewerController extends LeftAndMain
                     'RecordDate' => $request->getVar('RecordDate'),
                 ]);
                 break;
-            case self::FORM_NAME_COMPARE:
+            case HistoryViewerController::FORM_NAME_COMPARE:
                 $form = $this->getCompareForm([
                     'RecordClass' => $request->getVar('RecordClass'),
                     'RecordID' => $request->getVar('RecordID'),
@@ -163,7 +163,7 @@ class HistoryViewerController extends LeftAndMain
                 $effectiveContext = array_merge($context, ['Record' => $record]);
 
                 // Ensure the form is scaffolded with archive date enabled.
-                $form = $this->scaffoldForm(self::FORM_NAME_VERSION, $effectiveContext, [
+                $form = $this->scaffoldForm(HistoryViewerController::FORM_NAME_VERSION, $effectiveContext, [
                     $recordClass,
                     $recordId,
                 ]);
@@ -191,7 +191,7 @@ class HistoryViewerController extends LeftAndMain
 
         $effectiveContext = array_merge($context, ['Record' => $record]);
 
-        return $this->scaffoldForm(self::FORM_NAME_VERSION, $effectiveContext, [
+        return $this->scaffoldForm(HistoryViewerController::FORM_NAME_VERSION, $effectiveContext, [
             $recordClass,
             $recordId,
         ]);
@@ -251,7 +251,7 @@ class HistoryViewerController extends LeftAndMain
 
         $effectiveContext = array_merge($context, ['Record' => $recordTo]);
 
-        $form = $this->scaffoldForm(self::FORM_NAME_COMPARE, $effectiveContext, [
+        $form = $this->scaffoldForm(HistoryViewerController::FORM_NAME_COMPARE, $effectiveContext, [
             $recordClass,
             $recordId,
             $recordVersionFrom,
