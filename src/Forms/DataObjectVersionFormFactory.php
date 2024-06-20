@@ -34,7 +34,7 @@ class DataObjectVersionFormFactory implements FormFactory
      * @var string[]
      */
     private static $readonly_types = [
-        self::TYPE_HISTORY,
+        DataObjectVersionFormFactory::TYPE_HISTORY,
     ];
 
     public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])

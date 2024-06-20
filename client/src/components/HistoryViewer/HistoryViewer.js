@@ -368,7 +368,11 @@ class HistoryViewer extends Component {
   }
 
   render() {
-    const { loading, compare, currentVersion } = this.props;
+    const { loading, compare, currentVersion, recordId } = this.props;
+
+    if (!recordId) {
+      return null;
+    }
 
     if (loading) {
       return <Loading />;
@@ -391,7 +395,7 @@ HistoryViewer.propTypes = {
   limit: PropTypes.number,
   ListComponent: PropTypes.elementType.isRequired,
   offset: PropTypes.number,
-  recordId: PropTypes.number.isRequired,
+  recordId: PropTypes.number,
   currentVersion: PropTypes.oneOfType([PropTypes.bool, versionType]),
   compare: compareType,
   isInGridField: PropTypes.bool,
