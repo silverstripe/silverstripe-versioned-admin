@@ -1,4 +1,4 @@
-@javascript
+@javascript @retry @job2
 Feature: Revert to a version
   As a CMS author
   I want to revert to an older version
