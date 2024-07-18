@@ -1,4 +1,4 @@
-@javascript
+@javascript @retry @job1
 Feature: View a list of versions
   As a cms author
   I want to view a list past revisions of a versioned DataObject (incl. pages)
