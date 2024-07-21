@@ -1,4 +1,4 @@
-@javascript
+@javascript @retry @job2
 Feature: View a version
   As a cms author
   I want to view a version

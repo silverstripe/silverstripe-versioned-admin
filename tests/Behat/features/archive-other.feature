@@ -1,3 +1,4 @@
+@retry @job1
 Feature: Archive admin other tab
   As a CMS author
   I want to view the other tab in the archive section
