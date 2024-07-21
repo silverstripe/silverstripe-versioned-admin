@@ -1,4 +1,4 @@
-@javascript
+@javascript @retry @job1
 Feature: Compare mode
   As a cms author
   I want to enter compare mode
