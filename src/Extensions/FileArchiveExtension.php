@@ -6,7 +6,7 @@ use SilverStripe\Assets\AssetControlExtension;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Versioned\GridFieldRestoreAction;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
@@ -16,9 +16,9 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 /**
  * Adds a archive view for Files
  *
- * @extends DataExtension<File>
+ * @extends Extension<File>
  */
-class FileArchiveExtension extends DataExtension implements ArchiveViewProvider
+class FileArchiveExtension extends Extension implements ArchiveViewProvider
 {
     /**
      * @inheritDoc

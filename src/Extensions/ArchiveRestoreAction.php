@@ -7,7 +7,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Versioned\RestoreAction;
@@ -18,9 +18,9 @@ use SilverStripe\VersionedAdmin\ArchiveAdmin;
 /**
  * Adds a restore action to the item edit form of ArchiveAdmin
  *
- * @extends DataExtension<VersionedGridFieldItemRequest>
+ * @extends Extension<VersionedGridFieldItemRequest>
  */
-class ArchiveRestoreAction extends DataExtension
+class ArchiveRestoreAction extends Extension
 {
     /**
      * Updates the edit form with a restore button if it is being viewed

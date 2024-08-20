@@ -4,7 +4,7 @@ namespace SilverStripe\VersionedAdmin\Extensions;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
@@ -13,9 +13,9 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 /**
  * Adds a archive view for Pages
  *
- * @extends DataExtension<SiteTree>
+ * @extends Extension<SiteTree>
  */
-class SiteTreeArchiveExtension extends DataExtension implements ArchiveViewProvider
+class SiteTreeArchiveExtension extends Extension implements ArchiveViewProvider
 {
     /**
      * @inheritDoc
