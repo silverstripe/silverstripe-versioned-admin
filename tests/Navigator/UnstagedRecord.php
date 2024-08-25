@@ -41,7 +41,7 @@ class UnstagedRecord extends DataObject implements TestOnly, CMSPreviewable
         return 'text/html';
     }
 
-    public function CMSEditLink()
+    public function CMSEditLink(): ?string
     {
         return null;
     }
