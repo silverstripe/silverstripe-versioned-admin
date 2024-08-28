@@ -7,6 +7,9 @@ import Griddle from 'griddle-react';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
+import backend from 'lib/Backend';
+import Config from 'lib/Config';
+import getJsonErrorMessage from 'lib/getJsonErrorMessage';
 import Loading from 'components/Loading/Loading';
 import {
   setCurrentPage,
@@ -22,7 +25,7 @@ import PropTypes from 'prop-types';
 
 /**
  * The HistoryViewer component is abstract, and requires an Injector component
- * to be connected providing the GraphQL query implementation for the appropriate
+ * to be connected providing the query implementation for the appropriate
  * DataObject type
  */
 class HistoryViewer extends Component {
@@ -32,6 +35,17 @@ class HistoryViewer extends Component {
     this.handleSetPage = this.handleSetPage.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.handlePrevPage = this.handlePrevPage.bind(this);
+    this.handleAfterRevert = this.handleAfterRevert.bind(this);
+    this.refreshVersionData = this.refreshVersionData.bind(this);
+
+    this.state = {
+      versions: [],
+      totalCount: 0,
+    };
+  }
+
+  componentDidMount() {
+    this.refreshVersionData();
   }
 
   /**
@@ -41,16 +55,11 @@ class HistoryViewer extends Component {
    * @param {object} prevProps
    */
   componentDidUpdate(prevProps) {
-    if (!this.props.actions || !this.props.actions.versions) {
+    if (this.state.versions.length === 0) {
       return;
     }
-
-    const { page: prevPage } = prevProps;
-    const { page: currentPage } = this.props;
-    const { actions: { versions } } = this.props;
-
-    if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
-      versions.goToPage(currentPage);
+    if (prevProps.page !== this.props.page) {
+      this.refreshVersionData();
     }
   }
 
@@ -66,15 +75,28 @@ class HistoryViewer extends Component {
   }
 
   /**
-   * Returns the result of the GraphQL version history query
-   *
-   * @returns {Array}
+   * Refetch version data from the "read" endpoint
    */
-  getVersions() {
-    const { versions } = this.props;
-    return (versions && versions.versions && versions.versions.nodes)
-      ? versions.versions.nodes
-      : [];
+  refreshVersionData() {
+    if (!this.props.recordId) {
+      return;
+    }
+    const sectionConfig = Config.getSection('SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController');
+    const endpoint = sectionConfig.endpoints.read;
+    const dataClass = this.props.recordClass;
+    const url = `${endpoint}?dataClass=${dataClass}&id=${this.props.recordId}&page=${this.props.page}`;
+    backend.get(url)
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          versions: responseJson.versions,
+          totalCount: responseJson.pageInfo.totalCount,
+        });
+      })
+      .catch(async (err) => {
+        const message = await getJsonErrorMessage(err);
+        this.props.actions.toasts.error(message);
+      });
   }
 
   /**
@@ -111,7 +133,7 @@ class HistoryViewer extends Component {
     }
 
     // Look for one in the list of available versions
-    const latestDraftVersion = this.getVersions()
+    const latestDraftVersion = this.state.versions
       .filter(version => version.latestDraftVersion === true);
 
     if (latestDraftVersion.length) {
@@ -171,6 +193,22 @@ class HistoryViewer extends Component {
   }
 
   /**
+   * Handler for after reverting
+   */
+  handleAfterRevert() {
+    if (window.location.href.indexOf('/admin/pages/history/show/') !== -1) {
+      // if we're editing page history, then the browser will refresh the page when switching
+      // between the content and history tabs, so just refresh version data
+      this.refreshVersionData();
+    } else {
+      // if we're editing a datobject, then we need to reload the entire edit form so that
+      // we're showing the correct version of the object (the one we just reverted to) in the edit form
+      // set a timeout so that the user can see the success message before the page reloads
+      setTimeout(() => window.location.reload(), 1500);
+    }
+  }
+
+  /**
    * Handler for decrementing the set page
    */
   handlePrevPage() {
@@ -190,7 +228,7 @@ class HistoryViewer extends Component {
    * @returns {boolean}
    */
   compareModeAvailable() {
-    return this.getVersions().length > 1;
+    return this.state.versions.length > 1;
   }
 
   /**
@@ -241,6 +279,8 @@ class HistoryViewer extends Component {
       compare,
       compareModeAvailable: this.compareModeAvailable(),
       previewState,
+      recordClass: this.props.recordClass,
+      onAfterRevert: this.handleAfterRevert
     };
 
     return (
@@ -263,23 +303,20 @@ class HistoryViewer extends Component {
    * @returns {XML|null}
    */
   renderPagination() {
-    const { limit, page, versions } = this.props;
+    const { limit, page } = this.props;
+    const { versions } = this.state;
+    const totalCount = this.state.totalCount;
 
-    if (!versions) {
+    if (versions.length === 0) {
       return null;
     }
-
-    const totalVersions = versions.versions
-      ? versions.versions.pageInfo.totalCount
-      : 0;
-
-    if (totalVersions <= limit) {
+    if (totalCount <= limit) {
       return null;
     }
 
     const props = {
       setPage: this.handleSetPage,
-      maxPage: Math.ceil(totalVersions / limit),
+      maxPage: Math.ceil(totalCount / limit),
       next: this.handleNextPage,
       nextText: i18n._t('HistoryViewer.NEXT', 'Next'),
       previous: this.handlePrevPage,
@@ -345,7 +382,7 @@ class HistoryViewer extends Component {
         <div className={isInGridField ? '' : 'panel panel--padded panel--scrollable'}>
           {this.renderComparisonSelectionList()}
           <ListComponent
-            versions={this.getVersions()}
+            versions={this.state.versions}
             showHeader={!compare || (compare && !hasVersionFrom)}
             compareModeAvailable={this.compareModeAvailable()}
           />
@@ -403,14 +440,6 @@ HistoryViewer.propTypes = {
   isRevertable: PropTypes.bool,
   VersionDetailComponent: PropTypes.elementType.isRequired,
   CompareWarningComponent: PropTypes.elementType.isRequired,
-  versions: PropTypes.shape({
-    versions: PropTypes.shape({
-      pageInfo: PropTypes.shape({
-        totalCount: PropTypes.number,
-      }),
-      nodes: PropTypes.arrayOf(versionType),
-    }),
-  }),
   page: PropTypes.number,
   schemaUrl: PropTypes.string,
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
@@ -427,14 +456,6 @@ HistoryViewer.defaultProps = {
   isInGridField: false,
   isPreviewable: false,
   schemaUrl: '',
-  versions: {
-    versions: {
-      pageInfo: {
-        totalCount: 0,
-      },
-      nodes: [],
-    },
-  },
 };
 
 function mapStateToProps(state) {

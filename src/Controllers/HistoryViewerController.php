@@ -15,6 +15,8 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Forms\DataObjectVersionFormFactory;
 use SilverStripe\VersionedAdmin\Forms\DiffTransformation;
+use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
+use SilverStripe\Security\SecurityToken;
 
 /**
  * The HistoryViewerController provides AJAX endpoints for React to enable functionality, such as retrieving the form
@@ -40,10 +42,17 @@ class HistoryViewerController extends LeftAndMain
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
-    private static $allowed_actions = [
+    private static array $url_handlers = [
+        'GET api/read' => 'apiRead',
+        'POST api/revert' => 'apiRevert',
+    ];
+
+    private static array $allowed_actions = [
         HistoryViewerController::FORM_NAME_VERSION,
         HistoryViewerController::FORM_NAME_COMPARE,
         'schema',
+        'apiRevert',
+        'apiRead',
     ];
 
     /**
@@ -53,24 +62,104 @@ class HistoryViewerController extends LeftAndMain
      */
     protected $formNames = [HistoryViewerController::FORM_NAME_VERSION, HistoryViewerController::FORM_NAME_COMPARE];
 
+    /**
+     * Returns configuration required by the client app
+     */
     public function getClientConfig()
     {
         $clientConfig = parent::getClientConfig();
-
         foreach ($this->formNames as $formName) {
             $clientConfig['form'][$formName] = [
                 'schemaUrl' => $this->Link('schema/' . $formName),
             ];
         }
-
+        $clientConfig['endpoints'] = [
+            'revert' => $this->Link('api/revert'),
+            'read' => $this->Link('api/read'),
+        ];
         return $clientConfig;
     }
 
     /**
+     * JSON endpoint to read the history of a record.
+     */
+    public function apiRead(HTTPRequest $request): HTTPResponse
+    {
+        $id = (int) $request->getVar('id');
+        $dataClass = $request->getVar('dataClass') ?? '';
+        $page = (int) $request->getVar('page');
+        if (!$page) {
+            $page = 1;
+        }
+        $obj = $this->getDataObject($id, $dataClass, 404);
+        if (!$obj->canView()) {
+            $this->jsonError(403);
+        }
+        $list = Versioned::get_all_versions($dataClass, $obj->ID);
+        $totalCount = $list->Count();
+        $limit = HistoryViewerField::config()->get('default_page_size');
+        $offset = $limit * ($page - 1);
+        $list = $list->Sort('Version', 'DESC');
+        $list = $list->limit($limit, $offset);
+        $versions = [];
+        foreach ($list as $record) {
+            $author = $record->Author();
+            $publisher = $record->Publisher();
+            $versions[] = [
+                'version' => $record->Version,
+                'absoluteLink' => method_exists($record, 'AbsoluteLink') ? $record->AbsoluteLink() : '',
+                'author' => [
+                    'firstName' => $author ? $author->FirstName : '',
+                    'surname' => $author ? $author->Surname : '',
+                ],
+                'publisher' => [
+                    'firstName' => $publisher ? $publisher->FirstName : '',
+                    'surname' => $publisher ? $publisher->Surname : '',
+                ],
+                'deleted' => (bool) $record->WasDeleted,
+                'draft' => (bool) $record->WasDraft,
+                'published' => (bool) $record->WasPublished,
+                'liveVersion' => (bool) $record->isLiveVersion(),
+                'latestDraftVersion' => $record->isLatestDraftVersion(),
+                'lastEdited' => $record->LastEdited,
+            ];
+        }
+        $data = [
+            'pageInfo' => [
+                'totalCount' => $totalCount,
+            ],
+            'versions' => $versions,
+        ];
+        $this->extend('updateApiRead', $data, $request);
+        return $this->jsonSuccess(200, $data);
+    }
+
+    /**
+     * JSON endpoint to revert a record to a specific version.
+     */
+    public function apiRevert(HTTPRequest $request): HTTPResponse
+    {
+        if (!SecurityToken::inst()->checkRequest($request)) {
+            $this->jsonError(400);
+        }
+        $id = (int) $this->getPostedJsonValue($request, 'id');
+        $dataClass = $this->getPostedJsonValue($request, 'dataClass');
+        $toVersion = (int) $this->getPostedJsonValue($request, 'toVersion');
+        $obj = $this->getDataObject($id, $dataClass, 400);
+        if (!$obj->canEdit()) {
+            $this->jsonError(403);
+        }
+        if (!$obj->getAtVersion($toVersion)) {
+            $this->jsonError(400);
+        }
+        /** @var Versioned|DataObject $record */
+        $record = Versioned::get_latest_version($dataClass, $id);
+        $record->rollbackRecursive($toVersion);
+        return $this->jsonSuccess(204);
+    }
+
+    /**
      * Gets a JSON schema representing the current version detail form.
-     *
-     * WARNING: Experimental API.
-     * @internal
      */
     public function schema(HTTPRequest $request): HTTPResponse
     {
@@ -148,15 +237,15 @@ class HistoryViewerController extends LeftAndMain
         $required = ['RecordClass', 'RecordID', 'RecordDate'];
         $this->validateInput($context, $required);
 
-        $recordClass = $context['RecordClass'];
+        $dataClass = $context['RecordClass'];
         $recordId = $context['RecordID'];
 
         $form = null;
 
-        Versioned::withVersionedMode(function () use ($context, $recordClass, $recordId, &$form) {
+        Versioned::withVersionedMode(function () use ($context, $dataClass, $recordId, &$form) {
             Versioned::reading_archived_date($context['RecordDate']);
 
-            $record = DataList::create(DataObject::getSchema()->baseDataClass($recordClass))
+            $record = DataList::create(DataObject::getSchema()->baseDataClass($dataClass))
                 ->byID($recordId);
 
             if ($record) {
@@ -164,7 +253,7 @@ class HistoryViewerController extends LeftAndMain
 
                 // Ensure the form is scaffolded with archive date enabled.
                 $form = $this->scaffoldForm(HistoryViewerController::FORM_NAME_VERSION, $effectiveContext, [
-                    $recordClass,
+                    $dataClass,
                     $recordId,
                 ]);
             }
@@ -182,17 +271,17 @@ class HistoryViewerController extends LeftAndMain
         $required = ['RecordClass', 'RecordID', 'RecordVersion'];
         $this->validateInput($context, $required);
 
-        $recordClass = $context['RecordClass'];
+        $dataClass = $context['RecordClass'];
         $recordId = $context['RecordID'];
         $recordVersion = $context['RecordVersion'];
 
         // Load record and perform a canView check
-        $record = $this->getRecordVersion($recordClass, $recordId, $recordVersion);
+        $record = $this->getRecordVersion($dataClass, $recordId, $recordVersion);
 
         $effectiveContext = array_merge($context, ['Record' => $record]);
 
         return $this->scaffoldForm(HistoryViewerController::FORM_NAME_VERSION, $effectiveContext, [
-            $recordClass,
+            $dataClass,
             $recordId,
         ]);
     }
@@ -200,14 +289,14 @@ class HistoryViewerController extends LeftAndMain
     /**
      * Fetches record version and checks canView permission for result
      *
-     * @param string $recordClass
+     * @param string $dataClass
      * @param int $recordId
      * @param int $recordVersion
      * @return DataObject|null
      */
-    protected function getRecordVersion($recordClass, $recordId, $recordVersion)
+    protected function getRecordVersion($dataClass, $recordId, $recordVersion)
     {
-        $record = Versioned::get_version($recordClass, $recordId, $recordVersion);
+        $record = Versioned::get_version($dataClass, $recordId, $recordVersion);
 
         if (!$record) {
             $this->jsonError(404);
@@ -237,14 +326,14 @@ class HistoryViewerController extends LeftAndMain
     {
         $this->validateInput($context, ['RecordClass', 'RecordID', 'RecordVersionFrom', 'RecordVersionTo']);
 
-        $recordClass = $context['RecordClass'];
+        $dataClass = $context['RecordClass'];
         $recordId = $context['RecordID'];
         $recordVersionFrom = $context['RecordVersionFrom'];
         $recordVersionTo = $context['RecordVersionTo'];
 
         // Load record and perform a canView check
-        $recordFrom = $this->getRecordVersion($recordClass, $recordId, $recordVersionFrom);
-        $recordTo = $this->getRecordVersion($recordClass, $recordId, $recordVersionTo);
+        $recordFrom = $this->getRecordVersion($dataClass, $recordId, $recordVersionFrom);
+        $recordTo = $this->getRecordVersion($dataClass, $recordId, $recordVersionTo);
         if (!$recordFrom || !$recordTo) {
             return null;
         }
@@ -252,7 +341,7 @@ class HistoryViewerController extends LeftAndMain
         $effectiveContext = array_merge($context, ['Record' => $recordTo]);
 
         $form = $this->scaffoldForm(HistoryViewerController::FORM_NAME_COMPARE, $effectiveContext, [
-            $recordClass,
+            $dataClass,
             $recordId,
             $recordVersionFrom,
             $recordVersionTo,
@@ -338,5 +427,23 @@ class HistoryViewerController extends LeftAndMain
         return $form->setRequestHandler(
             LeftAndMainFormRequestHandler::create($form, $extra)
         );
+    }
+
+    private function getDataObject(int $id, string $dataClass, int $missingObjectError): DataObject
+    {
+        if (!$id) {
+            $this->jsonError($missingObjectError);
+        }
+        if (!$dataClass || !class_exists($dataClass) || !is_a($dataClass, DataObject::class, true)) {
+            $this->jsonError(400);
+        }
+        $obj = $dataClass::get()->byID($id);
+        if (!$obj) {
+            $this->jsonError($missingObjectError);
+        }
+        if (!$obj->hasExtension(Versioned::class)) {
+            $this->jsonError(400);
+        }
+        return $obj;
     }
 }

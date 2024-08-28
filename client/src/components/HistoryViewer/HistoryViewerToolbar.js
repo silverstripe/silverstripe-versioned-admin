@@ -4,6 +4,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import i18n from 'i18n';
 import { inject } from 'lib/Injector';
+import backend from 'lib/Backend';
+import Config from 'lib/Config';
+import getJsonErrorMessage from 'lib/getJsonErrorMessage';
 import { addMessage, showList } from 'state/historyviewer/HistoryViewerActions';
 
 class HistoryViewerToolbar extends Component {
@@ -22,12 +25,27 @@ class HistoryViewerToolbar extends Component {
    * @returns Promise
    */
   handleRevert() {
-    const { actions: { revertToVersion }, onAfterRevert, recordId, versionId } = this.props;
-
-    this.setState({ isReverting: true });
-
-    const handler = typeof onAfterRevert === 'function' ? onAfterRevert : () => {};
-    return revertToVersion(recordId, versionId, 'DRAFT', 'DRAFT').then(() => handler(versionId));
+    const { onAfterRevert, recordId, versionId, recordClass } = this.props;
+    const sectionConfig = Config.getSection('SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController');
+    const url = sectionConfig.endpoints.revert;
+    this.setState({
+      isReverting: true,
+    });
+    backend.post(url, {
+      id: recordId,
+      toVersion: versionId,
+      dataClass: recordClass,
+    }, {
+      'X-SecurityID': Config.get('SecurityID')
+    })
+      .then(() => {
+        this.props.showToolbarSuccessMessage(versionId);
+        onAfterRevert();
+      })
+      .catch(async (err) => {
+        const message = await getJsonErrorMessage(err);
+        this.props.actions.toasts.error(message);
+      });
   }
 
   render() {
@@ -83,17 +101,19 @@ HistoryViewerToolbar.propTypes = {
   onAfterRevert: PropTypes.func,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
+  recordClass: PropTypes.string.isRequired,
 };
 
 HistoryViewerToolbar.defaultProps = {
   isLatestVersion: false,
   isPreviewable: false,
   isRevertable: false,
+  showToolbarSuccessMessage: () => {},
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    onAfterRevert(versionId) {
+    showToolbarSuccessMessage(versionId) {
       dispatch(addMessage(
         i18n.sprintf(
           i18n._t('HistoryViewerToolbar.REVERTED_MESSAGE', 'Successfully reverted to version %s'),

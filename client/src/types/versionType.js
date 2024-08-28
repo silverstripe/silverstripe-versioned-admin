@@ -6,7 +6,7 @@ const memberShape = PropTypes.shape({
   surname: PropTypes.string,
 });
 
-// Describes the data structure for a Version, returned via GraphQL scaffolding
+// Describes the data structure for a Version, returned via HistoryViewerController
 const versionType = PropTypes.shape({
   version: PropTypes.number,
   absoluteLink: PropTypes.string,

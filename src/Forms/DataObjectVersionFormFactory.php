@@ -13,6 +13,7 @@ use SilverStripe\Forms\FormFactory;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\GridField\GridField;
 
 class DataObjectVersionFormFactory implements FormFactory
 {
@@ -98,10 +99,24 @@ class DataObjectVersionFormFactory implements FormFactory
 
         $this->removeHistoryViewerFields($fields);
         $this->removeSelectedRightTitles($fields);
+        $this->removeGridFields($fields);
 
         $this->invokeWithExtensions('updateFormFields', $fields, $controller, $name, $context);
 
         return $fields;
+    }
+
+    /**
+     * Remove all GridField instances from the form as they isn't a corresponding react
+     * field to render the GridField on the frontend.
+     */
+    private function removeGridFields(FieldList $fields)
+    {
+        $fields->recursiveWalk(function (FormField $field) {
+            if ($field instanceof GridField) {
+                $field->getContainerFieldList()->remove($field);
+            }
+        });
     }
 
     /**

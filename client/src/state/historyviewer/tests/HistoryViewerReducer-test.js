@@ -1,4 +1,5 @@
-/* global jest, describe, it, expect */
+/* eslint-disable import/no-extraneous-dependencies */
+/* global test, jest, describe, it, expect */
 
 import historyViewerReducer from 'state/historyviewer/HistoryViewerReducer';
 import { defaultCompare } from 'types/compareType';

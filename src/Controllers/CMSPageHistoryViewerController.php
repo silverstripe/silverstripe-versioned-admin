@@ -13,8 +13,9 @@ if (!class_exists(CMSMain::class)) {
 
 /**
  * The history viewer controller uses the React based {@link HistoryViewerField} to
- * display the history for a {@link DataObject} that has the {@link Versioned}
- * extension.
+ * display the history for a {@link SiteTree}
+ *
+ * This class requires the silverstripe/cms module to be installed
  */
 class CMSPageHistoryViewerController extends CMSMain
 {
