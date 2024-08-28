@@ -4,7 +4,7 @@ namespace SilverStripe\VersionedAdmin\Extensions;
 
 use DNADesign\Elemental\Models\BaseElement;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
@@ -13,9 +13,9 @@ use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 /**
  * Adds a archive view for Elemental blocks
  *
- * @extends DataExtension<BaseElement>
+ * @extends Extension<BaseElement>
  */
-class BlockArchiveExtension extends DataExtension implements ArchiveViewProvider
+class BlockArchiveExtension extends Extension implements ArchiveViewProvider
 {
     /**
      * @inheritDoc
