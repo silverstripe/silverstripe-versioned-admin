@@ -5,3 +5,7 @@ SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\Viewab
 SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\UnviewableVersionedObject:
   record_one:
     Title: Record one
+
+SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\TestVersionedObject:
+  TestVersionedObject01:
+    Title: TestVersionedObject01 Title

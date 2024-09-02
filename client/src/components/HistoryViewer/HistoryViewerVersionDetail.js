@@ -134,8 +134,10 @@ class HistoryViewerVersionDetail extends PureComponent {
         isLatestVersion={isLatestVersion}
         recordId={recordId}
         versionId={version.version}
+        recordClass={this.props.recordClass}
         isPreviewable={this.isPreviewable()}
         isRevertable={isRevertable}
+        onAfterRevert={this.props.onAfterRevert}
       />
     );
   }
@@ -216,6 +218,7 @@ HistoryViewerVersionDetail.propTypes = {
   ListComponent: PropTypes.elementType.isRequired,
   PreviewComponent: PropTypes.elementType,
   recordId: PropTypes.number.isRequired,
+  recordClass: PropTypes.string.isRequired,
   schemaUrl: PropTypes.string.isRequired,
   ToolbarComponent: PropTypes.elementType.isRequired,
   version: versionType,
@@ -227,6 +230,7 @@ HistoryViewerVersionDetail.propTypes = {
     PropTypes.bool,
   ]),
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
+  onAfterRevert: PropTypes.func.isRequired,
 };
 
 HistoryViewerVersionDetail.defaultProps = {

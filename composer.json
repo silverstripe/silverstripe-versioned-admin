@@ -24,7 +24,6 @@
         "silverstripe/admin": "^3",
         "silverstripe/framework": "^6",
         "silverstripe/versioned": "^3",
-        "silverstripe/graphql": "^6",
         "silverstripe/vendor-plugin": "^2"
     },
     "require-dev": {
