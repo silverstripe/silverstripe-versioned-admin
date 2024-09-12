@@ -7,7 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\VersionedAdmin\Forms\GridField\GridFieldFileRestoreAction;
 use SilverStripe\VersionedAdmin\Tests\ArchiveAdminTest\VersionedObject;
 
