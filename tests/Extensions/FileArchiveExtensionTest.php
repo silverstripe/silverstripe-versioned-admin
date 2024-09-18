@@ -6,12 +6,11 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Assets\AssetControlExtension;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Assets\File;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FileArchiveExtensionTest extends SapphireTest
 {
-    /**
-     * @dataProvider provideIsArchiveFieldEnabled
-     */
+    #[DataProvider('provideIsArchiveFieldEnabled')]
     public function testIsArchiveFieldEnabled(
         bool $assetControlExtension,
         bool $file,
@@ -23,7 +22,7 @@ class FileArchiveExtensionTest extends SapphireTest
         $this->assertSame($expected, $actual);
     }
 
-    public function provideIsArchiveFieldEnabled(): array
+    public static function provideIsArchiveFieldEnabled(): array
     {
         return [
             [

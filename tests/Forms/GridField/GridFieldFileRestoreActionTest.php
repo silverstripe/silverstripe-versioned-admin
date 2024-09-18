@@ -23,7 +23,7 @@ class GridFieldFileRestoreActionTest extends SapphireTest
         $this->assertNull($action->getRestoreAction($gridField, new File(), 'Test'));
 
         $file = $this->getMockBuilder(File::class)
-            ->setMethods(['exists'])
+            ->onlyMethods(['exists'])
             ->getMock();
         $file->method('exists')
             ->willReturn(true);

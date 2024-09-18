@@ -10,6 +10,7 @@ use SilverStripe\Forms\TreeMultiselectField;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Security\Group;
 use SilverStripe\VersionedAdmin\Forms\DiffField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DiffFieldTest extends SapphireTest
 {
@@ -38,9 +39,7 @@ class DiffFieldTest extends SapphireTest
         $this->assertEquals('(No diff available)', $diffField->Value());
     }
 
-    /**
-     * @dataProvider provideEscaping
-     */
+    #[DataProvider('provideEscaping')]
     public function testEscaping(
         string $className,
         string $oldValue,
@@ -62,7 +61,7 @@ class DiffFieldTest extends SapphireTest
         $this->assertSame($expected, $diffField->Value(), $message);
     }
 
-    public function provideEscaping()
+    public static function provideEscaping()
     {
         return [
             [

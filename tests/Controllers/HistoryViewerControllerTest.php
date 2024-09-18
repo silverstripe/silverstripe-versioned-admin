@@ -16,6 +16,7 @@ use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HistoryViewerControllerTest extends FunctionalTest
 {
@@ -63,7 +64,7 @@ class HistoryViewerControllerTest extends FunctionalTest
     public function testSchema()
     {
         $controllerMock = $this->getMockBuilder(HistoryViewerController::class)
-            ->setMethods(['getVersionForm', 'getCompareForm', 'getSchemaResponse'])
+            ->onlyMethods(['getVersionForm', 'getCompareForm', 'getSchemaResponse'])
             ->getMock();
 
         $controllerMock->expects($this->once())->method('getVersionForm')->with([
@@ -84,7 +85,7 @@ class HistoryViewerControllerTest extends FunctionalTest
 
         $request = $this->getMockBuilder(HTTPRequest::class)
             ->setConstructorArgs(['GET', '/'])
-            ->setMethods(['param'])
+            ->onlyMethods(['param'])
             ->getMock();
         $request->expects($this->once())->method('param')->with('FormName')->willReturn('versionForm');
         $request->offsetSet('RecordClass', 'Page');
@@ -98,7 +99,7 @@ class HistoryViewerControllerTest extends FunctionalTest
 
         $request = $this->getMockBuilder(HTTPRequest::class)
             ->setConstructorArgs(['GET', '/'])
-            ->setMethods(['param'])
+            ->onlyMethods(['param'])
             ->getMock();
         $request->expects($this->once())->method('param')->with('FormName')->willReturn('compareForm');
         $request->offsetSet('RecordClass', 'Page');
@@ -202,7 +203,7 @@ class HistoryViewerControllerTest extends FunctionalTest
     public function testVersionFormReturnsVersionForm()
     {
         $controllerMock = $this->getMockBuilder(HistoryViewerController::class)
-            ->setMethods(['getVersionForm'])
+            ->onlyMethods(['getVersionForm'])
             ->getMock();
 
         $mockData = [
@@ -220,7 +221,7 @@ class HistoryViewerControllerTest extends FunctionalTest
         $this->assertSame('mocked', $result);
     }
 
-    public function provideApiRead(): array
+    public static function provideApiRead(): array
     {
         return [
             'Valid' => [
@@ -271,9 +272,7 @@ class HistoryViewerControllerTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideApiRead
-     */
+    #[DataProvider('provideApiRead')]
     public function testApiRead(
         string $idType,
         string $fail,
@@ -404,7 +403,7 @@ class HistoryViewerControllerTest extends FunctionalTest
         }
     }
 
-    public function provideApiRevert(): array
+    public static function provideApiRevert(): array
     {
         return [
             'Valid' => [
@@ -470,9 +469,7 @@ class HistoryViewerControllerTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideApiRevert
-     */
+    #[DataProvider('provideApiRevert')]
     public function testApiRevert(
         string $idType,
         string $fail,
