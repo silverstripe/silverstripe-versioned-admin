@@ -12,7 +12,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\VersionedAdmin\Forms\DiffTransformation;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class DiffTransformationTest extends SapphireTest
 {
