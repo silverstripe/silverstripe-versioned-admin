@@ -1,5 +1,5 @@
 <form $FormAttributes data-layout-type="border">
     <% loop $Fields %>
-        $FieldHolder
+        $renderFieldHolder
     <% end_loop %>
 </form>
