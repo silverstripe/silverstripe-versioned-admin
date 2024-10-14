@@ -42,6 +42,8 @@ class HistoryViewerController extends LeftAndMain
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
+    private static $ignore_menuitem = true;
+
     private static array $url_handlers = [
         'GET api/read' => 'apiRead',
         'POST api/revert' => 'apiRevert',
