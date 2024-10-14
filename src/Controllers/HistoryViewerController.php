@@ -67,7 +67,7 @@ class HistoryViewerController extends LeftAndMain
     /**
      * Returns configuration required by the client app
      */
-    public function getClientConfig()
+    public function getClientConfig(): array
     {
         $clientConfig = parent::getClientConfig();
         foreach ($this->formNames as $formName) {
