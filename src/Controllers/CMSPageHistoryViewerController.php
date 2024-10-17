@@ -4,6 +4,7 @@ namespace SilverStripe\VersionedAdmin\Controllers;
 
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
 
@@ -27,9 +28,9 @@ class CMSPageHistoryViewerController extends CMSMain
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
-    public function getEditForm($id = null, $fields = null)
+    public function getEditForm($id = null, $fields = null): Form
     {
-        $record = $this->getRecord($id ?: $this->currentPageID());
+        $record = $this->getRecord($id ?: $this->currentRecordID());
 
         $form = parent::getEditForm($id);
         $form->addExtraClass('history-viewer__form');
