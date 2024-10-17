@@ -25,7 +25,7 @@ Feature: View a list of versions
     When I fill in the "Content" HTML field with "<p>Publish scenario</p>"
     And I press the "Publish" button
     And I wait 3 seconds
-    Then I should see a "Published 'Home' successfully." success toast
+    Then I should see a "Published Page "Home"" success toast
     When I click on the ".toast__close" element
     And I click on "History" in the header tabs
     And I wait for 3 seconds
@@ -40,7 +40,7 @@ Feature: View a list of versions
     When I fill in the "Content" HTML field with "<p>Save scenario</p>"
     And I press the "Save" button
     And I wait 3 seconds
-    Then I should see a "Saved 'Home' successfully." success toast
+    Then I should see a "Saved Page "Home"" success toast
     When I click on the ".toast__close" element
     And I click on "History" in the header tabs
     And I wait for 3 seconds
@@ -55,7 +55,7 @@ Feature: View a list of versions
     When I fill in the "Content" HTML field with "<p>Order scenario</p>"
     And I press the "Publish" button
     And I wait 3 seconds
-    Then I should see a "Published 'Home' successfully." success toast
+    Then I should see a "Published Page "Home"" success toast
     When I click on the ".toast__close" element
     And I click on "History" in the header tabs
     And I wait for 3 seconds
