@@ -39,7 +39,6 @@ Feature: Compare mode
     Given I click on "Content" in the header tabs
     Then I fill in the "Content" HTML field with "<p>Hello universe</p>"
     And I press the "Save" button
-    And I wait 3 seconds
     And I click on the ".toast__close" element
     And I click on "History" in the header tabs
     And I wait for 3 seconds
