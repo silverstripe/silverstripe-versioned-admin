@@ -42,6 +42,8 @@ class HistoryViewerController extends LeftAndMain
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
+    private static $ignore_menuitem = true;
+
     private static array $url_handlers = [
         'GET api/read' => 'apiRead',
         'POST api/revert' => 'apiRevert',
@@ -65,7 +67,7 @@ class HistoryViewerController extends LeftAndMain
     /**
      * Returns configuration required by the client app
      */
-    public function getClientConfig()
+    public function getClientConfig(): array
     {
         $clientConfig = parent::getClientConfig();
         foreach ($this->formNames as $formName) {

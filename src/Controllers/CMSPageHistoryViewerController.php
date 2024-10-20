@@ -27,6 +27,8 @@ class CMSPageHistoryViewerController extends CMSMain
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
 
+    private static $ignore_menuitem = true;
+
     public function getEditForm($id = null, $fields = null)
     {
         $record = $this->getRecord($id ?: $this->currentPageID());
