@@ -1,7 +1,7 @@
 ---
 Name: archiveadmin
 ---
-SilverStripe\Versioned\VersionedGridFieldItemRequest:
+SilverStripe\Versioned\Versioned\VersionedGridFieldItemRequest:
   extensions:
     - SilverStripe\VersionedAdmin\Extensions\ArchiveRestoreAction
 ---

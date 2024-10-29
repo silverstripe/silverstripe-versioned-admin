@@ -15,7 +15,7 @@ use SilverStripe\View\Parsers\HtmlDiff;
  * e.g. a TextField with the value "Old data" can be transformed with {@see DiffTransformation}
  * and then having setValue called again to load in "New data" - this field will then render
  * the value "<ins>New</ins> <del>Old</del> data". Most useful in historic version comparisons
- * {@see SilverStripe\Versioned\Versioned}
+ * {@see SilverStripe\Versioned\Mode\Versioned}
  */
 class DiffField extends HTMLReadonlyField
 {

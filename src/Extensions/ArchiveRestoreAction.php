@@ -10,9 +10,9 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Validation\ValidationResult;
-use SilverStripe\Versioned\RestoreAction;
-use SilverStripe\Versioned\Versioned;
-use SilverStripe\Versioned\VersionedGridFieldItemRequest;
+use SilverStripe\Versioned\Versioned\RestoreAction;
+use SilverStripe\Versioned\Mode\Versioned;
+use SilverStripe\Versioned\Versioned\VersionedGridFieldItemRequest;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 
 /**

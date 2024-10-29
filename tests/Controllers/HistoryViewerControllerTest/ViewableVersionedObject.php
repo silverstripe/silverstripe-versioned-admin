@@ -4,7 +4,7 @@ namespace SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerT
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\Versioned\Mode\Versioned;
 
 class ViewableVersionedObject extends DataObject implements TestOnly
 {

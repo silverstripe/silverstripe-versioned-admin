@@ -4,7 +4,7 @@ namespace SilverStripe\VersionedAdmin\Extensions;
 
 use SilverStripe\Admin\Forms\UsedOnTable;
 use SilverStripe\Core\Extension;
-use SilverStripe\Versioned\ChangeSetItem;
+use SilverStripe\Versioned\Staged\ChangeSetItem;
 
 /**
  * @extends Extension<UsedOnTable>

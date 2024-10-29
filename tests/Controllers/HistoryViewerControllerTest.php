@@ -14,7 +14,7 @@ use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\Vi
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\TestVersionedObject;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\Versioned\Mode\Versioned;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
 use PHPUnit\Framework\Attributes\DataProvider;
 

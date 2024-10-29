@@ -5,7 +5,7 @@ namespace SilverStripe\VersionedAdmin\Tests\Navigator;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\Versioned\Mode\Versioned;
 
 class VersionedRecord extends DataObject implements TestOnly, CMSPreviewable
 {

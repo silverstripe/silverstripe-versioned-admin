@@ -12,7 +12,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\Versioned\Mode\Versioned;
 use SilverStripe\VersionedAdmin\Forms\DataObjectVersionFormFactory;
 use SilverStripe\VersionedAdmin\Forms\DiffTransformation;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;

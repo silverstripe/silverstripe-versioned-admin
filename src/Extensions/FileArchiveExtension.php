@@ -8,7 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Versioned\GridFieldRestoreAction;
+use SilverStripe\Versioned\Versioned\GridFieldRestoreAction;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\Forms\GridField\GridFieldFileRestoreAction;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;

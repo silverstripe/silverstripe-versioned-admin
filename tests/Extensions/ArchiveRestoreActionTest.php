@@ -15,7 +15,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
-use SilverStripe\Versioned\VersionedGridFieldItemRequest;
+use SilverStripe\Versioned\Versioned\VersionedGridFieldItemRequest;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\ViewableVersionedObject;
 use ReflectionMethod;

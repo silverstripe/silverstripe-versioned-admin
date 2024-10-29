@@ -19,9 +19,9 @@ use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Versioned\GridFieldRestoreAction;
-use SilverStripe\Versioned\Versioned;
-use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
+use SilverStripe\Versioned\Versioned\GridFieldRestoreAction;
+use SilverStripe\Versioned\Mode\Versioned;
+use SilverStripe\Versioned\Mode\VersionedGridFieldState\VersionedGridFieldState;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 use SilverStripe\Model\ArrayData;
 
