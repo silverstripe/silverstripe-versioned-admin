@@ -3,7 +3,7 @@
 namespace SilverStripe\VersionedAdmin\Controllers;
 
 use InvalidArgumentException;
-use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\FormSchemaController;
 use SilverStripe\Admin\LeftAndMainFormRequestHandler;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -22,7 +22,7 @@ use SilverStripe\Security\SecurityToken;
  * The HistoryViewerController provides AJAX endpoints for React to enable functionality, such as retrieving the form
  * schema.
  */
-class HistoryViewerController extends LeftAndMain
+class HistoryViewerController extends FormSchemaController
 {
     /**
      * @var string
@@ -41,8 +41,6 @@ class HistoryViewerController extends LeftAndMain
     private static $url_priority = 10;
 
     private static $required_permission_codes = 'CMS_ACCESS_CMSMain';
-
-    private static $ignore_menuitem = true;
 
     private static array $url_handlers = [
         'GET api/read' => 'apiRead',
