@@ -113,21 +113,6 @@ class HistoryViewerField extends FormField
         return $data;
     }
 
-    /**
-     * When not used in a React form factory context, this adds the schema data to SilverStripe template
-     * rendered attributes lists
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-        $attributes = parent::getAttributes();
-
-        $attributes['data-schema'] = json_encode($this->getSchemaData());
-
-        return $attributes;
-    }
-
     public function Type()
     {
         return 'history-viewer__container';
