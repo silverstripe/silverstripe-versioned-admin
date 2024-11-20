@@ -17,8 +17,10 @@ Feature: Restore to draft
 
   Scenario: I can restore archived version to draft
     When I go to "/admin/archive"
-    Then I should see "MyPage" in the "#Form_EditForm" element
-    Then I click "MyPage" in the "#Form_EditForm" element
+    Then I should see "MyPage" in the "#Form_EditForm .col-Title" element
+    # Need to use "directly" here or it will think the badge is part of the text in the element
+    # which results in thinking it's not a match ("MyPageArchived" !== "MyPage")
+    Then I click "MyPage" directly in the "#Form_EditForm .col-Title" element
     Then I press the "Restore to draft" button
     Then I should see "Successfully restored the page" in the "#Form_EditForm" element
     When I go to "/admin/pages"
