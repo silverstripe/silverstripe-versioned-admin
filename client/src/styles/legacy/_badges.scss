@@ -1,0 +1,15 @@
+@mixin badge-status($label, $textColor, $bgColor) {
+  .badge.status-#{$label}  {
+    background-color: $bgColor;
+    border-color: $textColor;
+  }
+  .badge.status-#{$label}  {
+    color: $textColor;
+  }
+}
+
+@include badge-status('addedtodraft', #cf3f00, #fff2ea);
+@include badge-status('modified', #cf3f00, #fff2ea);
+@include badge-status('archived', #455b6c, #f1f3f6);
+@include badge-status('deletedonlive', #455b6c, #f1f3f6);
+@include badge-status('removedfromdraft', #455b6c, #f1f3f6);
