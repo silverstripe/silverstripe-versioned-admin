@@ -91,7 +91,7 @@ class DataObjectVersionFormFactory implements FormFactory
         return in_array($this->getFormType($context), $this->config()->get('readonly_types') ?? []);
     }
 
-    protected function getFormFields(?RequestHandler $controller = null, $name, $context = [])
+    protected function getFormFields(?RequestHandler $controller, $name, $context = [])
     {
         $record = $context['Record'];
         /** @var FieldList $fields */
@@ -157,7 +157,7 @@ class DataObjectVersionFormFactory implements FormFactory
         }
     }
 
-    protected function getFormActions(?RequestHandler $controller = null, $formName, $context = [])
+    protected function getFormActions(?RequestHandler $controller, $formName, $context = [])
     {
         $actions = FieldList::create();
         $this->invokeWithExtensions('updateFormActions', $actions, $controller, $formName, $context);
