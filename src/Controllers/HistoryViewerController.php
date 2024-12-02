@@ -355,7 +355,7 @@ class HistoryViewerController extends FormSchemaController
         return $form;
     }
 
-    public function versionForm(HTTPRequest $request = null)
+    public function versionForm(?HTTPRequest $request = null)
     {
         if (!$request) {
             $this->jsonError(400);
@@ -373,7 +373,7 @@ class HistoryViewerController extends FormSchemaController
         }
     }
 
-    public function compareForm(HTTPRequest $request = null)
+    public function compareForm(?HTTPRequest $request = null)
     {
         if (!$request) {
             $this->jsonError(400);
