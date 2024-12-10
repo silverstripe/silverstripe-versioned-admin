@@ -28,7 +28,7 @@ class CMSPageHistoryViewerController extends CMSMain
 
     public function getEditForm($id = null, $fields = null)
     {
-        $record = $this->getRecord($id ?: $this->currentPageID());
+        $record = $this->getRecord($id ?: $this->currentRecordID());
 
         $form = parent::getEditForm($id);
         $form->addExtraClass('history-viewer__form');
