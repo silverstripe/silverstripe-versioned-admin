@@ -24,4 +24,4 @@ Feature: Restore to draft
     Then I press the "Restore to draft" button
     Then I should see "Successfully restored the page" in the "#Form_EditForm" element
     When I go to "/admin/pages"
-    And I should see "MyPage" in the ".cms-tree [data-pagetype='Page']:nth-of-type(2).status-addedtodraft" element
+    And I should see "MyPage" in the ".cms-tree [data-recordtype='Page']:nth-of-type(2).status-addedtodraft" element
