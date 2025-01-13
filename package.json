@@ -79,7 +79,7 @@
     "reactstrap": "^8.9.0",
     "redux": "^5.0.1",
     "url": "^0.11.0",
-    "uuid": "^9.0.0"
+    "uuid": "^11.0.4"
   },
   "resolutions": {
     "colors": "1.4.0"
