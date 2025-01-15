@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.2.0",
     "classnames": "^2.3.2",
     "core-js": "^3.26.0",
     "create-react-class": "^15.7.0",
@@ -77,7 +77,7 @@
     "react-redux": "^9.2.0",
     "react-router": "^6.4.3",
     "react-router-redux": "^4.0.8",
-    "reactstrap": "^8.9.0",
+    "reactstrap": "^9.2.0",
     "redux": "^5.0.1",
     "url": "^0.11.0",
     "uuid": "^11.0.4"
