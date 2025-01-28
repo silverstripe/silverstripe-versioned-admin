@@ -53,7 +53,7 @@ class HistoryViewerHeading extends Component {
         className="history-viewer__actions-dropdown"
       >
         <DropdownToggle className="font-icon-sliders" />
-        <DropdownMenu right>
+        <DropdownMenu end>
           <div className="form-check">
             <input
               id="history-viewer-compare-two"
@@ -62,7 +62,7 @@ class HistoryViewerHeading extends Component {
               checked={compareModeSelected}
               onChange={this.handleCompareModeChange}
             />
-            <label className="form-check-label" htmlFor="history-viewer-compare-two">
+            <label className="form-label form-check-label" htmlFor="history-viewer-compare-two">
               {i18n._t('HistoryViewerHeading.COMPARE_VERSIONS', 'Compare two versions')}
             </label>
           </div>
