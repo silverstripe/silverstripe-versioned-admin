@@ -138,31 +138,10 @@ class ArchiveAdmin extends ModelAdmin
         $config->addComponent(new GridFieldRestoreAction);
         $config->addComponent(new GridField_ActionMenu);
 
-        $singleton = singleton($class);
-        $list = $singleton->get();
-        $baseTable = $singleton->baseTable();
-
-        $list = $list
-            ->setDataQueryParam('Versioned.mode', 'latest_versions');
-        // Join a temporary alias BaseTable_Draft, renaming this on execution to BaseTable
-        // See Versioned::augmentSQL() For reference on this alias
-        $draftTable = $baseTable . '_Draft';
-        $list = $list
-            ->leftJoin(
-                $draftTable,
-                "\"{$baseTable}\".\"ID\" = \"{$draftTable}\".\"ID\""
-            );
-
-        if ($singleton->hasStages()) {
-            $liveTable = $baseTable . '_Live';
-            $list = $list->leftJoin(
-                $liveTable,
-                "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
-            );
-        }
-
-        $list = $list->where("\"{$draftTable}\".\"ID\" IS NULL");
-        $list = $list->sort('LastEdited DESC');
+        // Include "on live only" records because they won't appear in GridFields and
+        // other admin areas - so this may be the only way content authors can know that
+        // content is in a bad state.
+        $list = Versioned::getRemovedFromDraft($class)->sort('LastEdited DESC');
 
         $field = GridField::create(
             $title,
