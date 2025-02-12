@@ -62,8 +62,8 @@ class DiffTransformationTest extends SapphireTest
         $form->loadDataFrom($oldData);
 
         foreach ($form->Fields() as $index => $field) {
-            $this->assertStringContainsString($expected[$index]['before'], $field->Value(), 'Value before is shown');
-            $this->assertStringContainsString($expected[$index]['after'], $field->Value(), 'Value after is shown');
+            $this->assertStringContainsString($expected[$index]['before'], $field->getFormattedValue());
+            $this->assertStringContainsString($expected[$index]['after'], $field->getFormattedValue());
         }
     }
 
@@ -87,8 +87,8 @@ class DiffTransformationTest extends SapphireTest
         $form->loadDataFrom($oldData);
 
         foreach (array_values($form->Fields()->dataFields() ?? []) as $index => $field) {
-            $this->assertStringContainsString($expected[$index]['before'], $field->Value(), 'Value before is shown');
-            $this->assertStringContainsString($expected[$index]['after'], $field->Value(), 'Value after is shown');
+            $this->assertStringContainsString($expected[$index]['before'], $field->getFormattedValue());
+            $this->assertStringContainsString($expected[$index]['after'], $field->getFormattedValue());
         }
     }
 

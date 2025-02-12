@@ -42,10 +42,10 @@ class DiffField extends HTMLReadonlyField
         return $this->comparisonField;
     }
 
-    public function Value()
+    public function getFormattedValue(): mixed
     {
-        $oldValue = $this->getOutdatedField()->Value();
-        $newValue = $this->getComparisonField()->Value();
+        $oldValue = $this->getOutdatedField()->getFormattedValue();
+        $newValue = $this->getComparisonField()->getFormattedValue();
 
         // Objects can't be diffed
         if (is_object($oldValue) || is_object($newValue)) {
@@ -58,7 +58,7 @@ class DiffField extends HTMLReadonlyField
         }
         // Ensure that the emtpy placeholder value is not escaped
         // The empty placeholder value is usually going to be `<i>('none')</i>`
-        $emptyPlaceholder = ReadonlyField::create('na')->Value();
+        $emptyPlaceholder = ReadonlyField::create('na')->getFormattedValue();
         if ($oldValue === $newValue && $newValue === $emptyPlaceholder) {
             // if both the old and new valus are empty, let the surronding <i> tags render as HTML (escape = false)
             $escape = false;
@@ -102,14 +102,14 @@ class DiffField extends HTMLReadonlyField
 
     public function getSchemaStateDefaults()
     {
-        $fromValue = $this->getOutdatedField()->Value();
+        $fromValue = $this->getOutdatedField()->getFormattedValue();
         $toField = $this->getComparisonField();
-        $toValue = $toField->Value();
+        $toValue = $toField->getFormattedValue();
 
         $state = array_merge(
             $toField->getSchemaStateDefaults(),
             parent::getSchemaStateDefaults(),
-            ['value' => $this->Value()]
+            ['value' => $this->getFormattedValue()]
         );
         $state['data']['diff'] = [
             'from' => $fromValue,

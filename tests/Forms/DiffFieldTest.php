@@ -22,7 +22,7 @@ class DiffFieldTest extends SapphireTest
         $diffField->setComparisonField($newField);
         $diffField->setValue('old');
 
-        $this->assertMatchesRegularExpression('/^<del>old<\/del> *<ins>new<\/ins>$/', $diffField->Value());
+        $this->assertMatchesRegularExpression('/^<del>old<\/del> *<ins>new<\/ins>$/', $diffField->getFormattedValue());
     }
 
     /**
@@ -36,7 +36,7 @@ class DiffFieldTest extends SapphireTest
         $diffField->setComparisonField($newField);
         $diffField->setValue(ManyManyList::create(Group::class, 'Group_Members', 'GroupID', 'MemberID'));
 
-        $this->assertEquals('(No diff available)', $diffField->Value());
+        $this->assertEquals('(No diff available)', $diffField->getFormattedValue());
     }
 
     #[DataProvider('provideEscaping')]
@@ -45,59 +45,53 @@ class DiffFieldTest extends SapphireTest
         string $oldValue,
         string $newValue,
         string $expected,
-        string $message
     ) {
         // get $emptyPlaceholder here instead of provideEscaping to prevent
         // BadMethodCallException: No injector manifests available
         // error in dataProvider method
-        $emptyPlaceholder = ReadonlyField::create('na')->Value();
+        $emptyPlaceholder = ReadonlyField::create('na')->getFormattedValue();
         $emptyPlaceholderNoTags = strip_tags($emptyPlaceholder);
         $expected = str_replace('$emptyPlaceholderNoTags', $emptyPlaceholderNoTags, $expected);
         $expected = str_replace('$emptyPlaceholder', $emptyPlaceholder, $expected);
-        $newField = new $className('Test', 'Test', $oldValue);
+        $newField = new $className('Test', 'Test', $newValue);
         $diffField = DiffField::create('DiffTest');
         $diffField->setComparisonField($newField);
-        $diffField->setValue($newValue);
-        $this->assertSame($expected, $diffField->Value(), $message);
+        $diffField->setValue($oldValue);
+        $this->assertSame($expected, $diffField->getFormattedValue());
     }
 
     public static function provideEscaping()
     {
         return [
-            [
-                ReadonlyField::class,
-                'Something',
-                'Something <strong>bold</strong>',
-                'Something <del>&lt;strong&gt; bold &lt;/strong&gt;</del>',
-                'Non HTML field is escaped'
+            'readonly-add-bold' => [
+                'className' => ReadonlyField::class,
+                'oldValue' => 'Something',
+                'newValue' => 'Something <strong>bold</strong>',
+                'expected' => 'Something <ins>&lt;strong&gt; bold &lt;/strong&gt;</ins>',
             ],
-            [
-                HTMLEditorField_Readonly::class,
-                'Something',
-                'Something <strong>bold</strong>',
-                'Something <del><strong>bold</strong></del>',
-                'Non HTML field is not escaped'
+            'htmleditor-readonly' => [
+                'className' => HTMLEditorField_Readonly::class,
+                'oldValue' => 'Something',
+                'newValue' => 'Something <strong>bold</strong>',
+                'expected' => 'Something <ins><strong>bold</strong></ins>',
             ],
-            [
-                ReadonlyField::class,
-                '',
-                '',
-                '$emptyPlaceholder',
-                'No value is not escaped'
+            'readonly-nothing' => [
+                'className' => ReadonlyField::class,
+                'oldValue' => '',
+                'newValue' => '',
+                'expected' => "<i>('none')</i>",
             ],
-            [
-                ReadonlyField::class,
-                '',
-                'Something',
-                '<del>Something</del> <ins>$emptyPlaceholderNoTags</ins>',
-                'No value is escaped without tags removed when value added'
+            'readonly-add-something' => [
+                'className' => ReadonlyField::class,
+                'oldValue' => '',
+                'newValue' => 'Something',
+                'expected' => "<del>('none')</del> <ins>Something</ins>",
             ],
-            [
-                ReadonlyField::class,
-                'Something',
-                '',
-                '<del>$emptyPlaceholderNoTags</del> <ins>Something</ins>',
-                'No value is escaped without tags removed when value removed'
+            'readonly-remove-something' => [
+                'className' => ReadonlyField::class,
+                'oldValue' => 'Something',
+                'newValue' => '',
+                'expected' => "<del>Something</del> <ins>('none')</ins>",
             ],
         ];
     }
