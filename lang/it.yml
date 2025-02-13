@@ -1,4 +1,6 @@
 it:
+  SilverStripe\Admin\Navigator\SilverStripeNavigatorItem:
+    WONT_BE_SHOWN: 'Nota: questo messaggio non sarà mostrato ai tuoi visitatori'
   SilverStripe\VersionedAdmin\ArchiveAdmin:
     COLUMN_ARCHIVEDBY: 'Archiviata Da'
     COLUMN_DATEARCHIVED: 'Data archiviazione'
@@ -15,5 +17,18 @@ it:
     ErrorItemViewPermissionDenied: 'Non hai i necessari permessi per vedere {ObjectTitle}'
   SilverStripe\VersionedAdmin\Forms\DiffField:
     NO_DIFF_AVAILABLE: 'Diff non disponibile'
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink:
+    ARCHIVED_FROM: 'Sito archiviato il {date}'
+    PREVIEW: 'Versione anteprima'
+    TITLE: Archiviato
   SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink:
+    PUBLISHED_SITE: 'Sito Pubblicato'
     TITLE: Pubblicato
+  SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink:
+    DRAFT_SITE: 'Sito Bozza'
+    TITLE: Bozza
+  SilverStripe\Versioned\RestoreAction:
+    RESTORE: 'Ripristina a bozza'
+    RESTORE_DESC: 'Ripristina la versione archiviata a bozza'
+    RESTORE_TO_ROOT: 'Ripristina a bozza al primo livello'
+    RESTORE_TO_ROOT_DESC: 'Ripristina la versione archiviata a bozza come elemento di primo livello'
