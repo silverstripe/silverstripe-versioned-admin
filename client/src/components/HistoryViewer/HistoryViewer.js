@@ -3,9 +3,8 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import Griddle from 'griddle-react';
+import Paginator from 'components/Paginator/Paginator';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
-import i18n from 'i18n';
 import { inject } from 'lib/Injector';
 import backend from 'lib/Backend';
 import Config from 'lib/Config';
@@ -33,8 +32,6 @@ class HistoryViewer extends Component {
     super(props);
 
     this.handleSetPage = this.handleSetPage.bind(this);
-    this.handleNextPage = this.handleNextPage.bind(this);
-    this.handlePrevPage = this.handlePrevPage.bind(this);
     this.handleAfterRevert = this.handleAfterRevert.bind(this);
     this.refreshVersionData = this.refreshVersionData.bind(this);
 
@@ -49,8 +46,7 @@ class HistoryViewer extends Component {
   }
 
   /**
-   * Manually handle state changes in the page number, because Griddle doesn't support Redux.
-   * See: https://github.com/GriddleGriddle/Griddle/issues/626
+   * Manually handle state changes in the page number,
    *
    * @param {object} prevProps
    */
@@ -178,18 +174,8 @@ class HistoryViewer extends Component {
   handleSetPage(page) {
     const { onSetPage } = this.props;
     if (typeof onSetPage === 'function') {
-      // Note: data from Griddle is zero-indexed
-      onSetPage(page + 1);
+      onSetPage(page);
     }
-  }
-
-  /**
-   * Handler for incrementing the set page
-   */
-  handleNextPage() {
-    const { page } = this.props;
-    // Note: data for Griddle needs to be zero-indexed, so don't add 1 to this
-    this.handleSetPage(page);
   }
 
   /**
@@ -206,20 +192,6 @@ class HistoryViewer extends Component {
       // set a timeout so that the user can see the success message before the page reloads
       setTimeout(() => window.location.reload(), 1500);
     }
-  }
-
-  /**
-   * Handler for decrementing the set page
-   */
-  handlePrevPage() {
-    const { page } = this.props;
-    // Note: data for Griddle needs to be zero-indexed
-    const currentPage = page - 1;
-    if (currentPage < 1) {
-      this.handleSetPage(currentPage);
-      return;
-    }
-    this.handleSetPage(currentPage - 1);
   }
 
   /**
@@ -295,42 +267,22 @@ class HistoryViewer extends Component {
 
   /**
    * Renders the react component for pagination.
-   * Currently borrows the pagination from Griddle, to keep styling consistent
-   * between the two views.
-   *
-   * See: ThumbnailView.js
    *
    * @returns {XML|null}
    */
   renderPagination() {
-    const { limit, page } = this.props;
-    const { versions } = this.state;
     const totalCount = this.state.totalCount;
-
-    if (versions.length === 0) {
+    const limit = this.props.limit;
+    if (this.state.versions.length === 0 || totalCount <= limit) {
       return null;
     }
-    if (totalCount <= limit) {
-      return null;
-    }
-
     const props = {
-      setPage: this.handleSetPage,
-      maxPage: Math.ceil(totalCount / limit),
-      next: this.handleNextPage,
-      nextText: i18n._t('HistoryViewer.NEXT', 'Next'),
-      previous: this.handlePrevPage,
-      previousText: i18n._t('HistoryViewer.PREVIOUS', 'Previous'),
-      // Note: zero indexed
-      currentPage: page - 1,
-      useGriddleStyles: false,
+      totalItems: totalCount,
+      maxItemsPerPage: limit,
+      currentPage: this.props.page,
+      onChangePage: this.handleSetPage,
     };
-
-    return (
-      <div className="griddle-footer">
-        <Griddle.GridPagination {...props} />
-      </div>
-    );
+    return <Paginator {...props} />;
   }
 
   /**

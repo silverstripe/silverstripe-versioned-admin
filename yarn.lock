@@ -1908,10 +1908,10 @@
     stylelint-config-standard "^36.0.0"
     stylelint-scss "^6.2.1"
 
-"@silverstripe/webpack-config@^3.0.0-alpha2":
-  version "3.0.0-alpha2"
-  resolved "https://registry.yarnpkg.com/@silverstripe/webpack-config/-/webpack-config-3.0.0-alpha2.tgz#ea2c50a953e5de4e53dacfc42501c9b3c88835f2"
-  integrity sha512-KsqwAxKLvutDnYf755Z16gUO4EeRH6GnAgl1qaejFRN+6bRI2wTnPuiGZz0OLKvH8Fz+/zEmL1WFLmm5iQIk5A==
+"@silverstripe/webpack-config@^3.0.0-alpha3":
+  version "3.0.0-alpha3"
+  resolved "https://registry.yarnpkg.com/@silverstripe/webpack-config/-/webpack-config-3.0.0-alpha3.tgz#db3ab129324b3b2e56e93323c9ec7544c75fcb52"
+  integrity sha512-j4WmK7TdN0/WCkqiJ2atXA6xZdUxO+SQ0/mdXaGWtkJQFn34Q/QcHKjD4iqn/TCi//Lyr5E+zfORMLDBZhwN4A==
   dependencies:
     "@babel/core" "^7.19.6"
     "@babel/preset-env" "^7.19.4"
@@ -6868,13 +6868,6 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
-griddle-react@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/griddle-react/-/griddle-react-0.8.2.tgz#5bfe00b6680c571229916557c2f48ebc0798217a"
-  integrity sha512-3Va7bpyyDTl3gM2L9wJbUVLq9xLrwp1CMlaR4CEYCRJphwCQhmJLZkmdbOcr+I4XT3pBD4M9d8fp5jTgvz6umg==
-  dependencies:
-    lodash "^4.17.4"
-
 gzip-size@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/gzip-size/-/gzip-size-6.0.0.tgz#065367fd50c239c0671cbcbad5be3e2eeb10e462"
@@ -8788,7 +8781,7 @@ lodash.uniq@4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==
 
-lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4:
+lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
