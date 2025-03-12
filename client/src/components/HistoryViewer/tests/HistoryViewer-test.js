@@ -188,7 +188,7 @@ test('HistoryViewer shows a loading state while loading results', async () => {
   expect(container.querySelectorAll('.cms-content-loading-spinner')).toHaveLength(1);
 });
 
-test('HistoryViewer should have called onSetPage and handleNextPage after next button in navigation clicked', async () => {
+test('HistoryViewer should handle next button being clicked', async () => {
   const onSetPage = jest.fn();
   render(
     <HistoryViewer {...makeProps({
