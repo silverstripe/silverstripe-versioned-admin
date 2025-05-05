@@ -27,8 +27,9 @@ Feature: View a version
 
     When I click on the first version
     And I wait for 3 seconds until I see the "#Form_versionForm" element
-    Then I should see an "#Form_versionForm_Title[readonly]" element
-    And I should see an "#Form_versionForm_URLSegment[readonly]" element
+    Then I should see an "#Form_versionForm_Title[readonly][value='Home']" element
+    And I should see an "#Form_versionForm_URLSegment[readonly][value='home']" element
+    And I should see an "#Form_versionForm_MetaDescription[readonly][value='']" element
 
   Scenario: Show page published status
     When I go to "/admin/pages"
