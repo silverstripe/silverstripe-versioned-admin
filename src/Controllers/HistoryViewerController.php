@@ -437,7 +437,7 @@ class HistoryViewerController extends FormSchemaController
         if (!$dataClass || !class_exists($dataClass) || !is_a($dataClass, DataObject::class, true)) {
             $this->jsonError(400);
         }
-        $obj = $dataClass::get()->byID($id);
+        $obj = Versioned::get_all_versions($dataClass, $id)->first();
         if (!$obj) {
             $this->jsonError($missingObjectError);
         }
