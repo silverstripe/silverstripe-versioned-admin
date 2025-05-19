@@ -2,6 +2,7 @@
 
 namespace SilverStripe\VersionedAdmin;
 
+use InvalidArgumentException;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
@@ -24,6 +25,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\DataList;
 
 /**
  * Archive admin is a section of the CMS that displays archived records
@@ -130,6 +132,9 @@ class ArchiveAdmin extends ModelAdmin
      */
     public static function createArchiveGridField($title, $class)
     {
+        if (!is_a($class, DataObject::class, true)) {
+            throw new InvalidArgumentException("Class $class in not a DataObject");
+        }
         $config = GridFieldConfig_Base::create();
         $config->removeComponentsByType(VersionedGridFieldState::class);
         $config->removeComponentsByType(GridFieldFilterHeader::class);
@@ -137,33 +142,7 @@ class ArchiveAdmin extends ModelAdmin
         $config->addComponent(new GridFieldViewButton);
         $config->addComponent(new GridFieldRestoreAction);
         $config->addComponent(new GridField_ActionMenu);
-
-        $singleton = singleton($class);
-        $list = $singleton->get();
-        $baseTable = $singleton->baseTable();
-
-        $list = $list
-            ->setDataQueryParam('Versioned.mode', 'latest_versions');
-        // Join a temporary alias BaseTable_Draft, renaming this on execution to BaseTable
-        // See Versioned::augmentSQL() For reference on this alias
-        $draftTable = $baseTable . '_Draft';
-        $list = $list
-            ->leftJoin(
-                $draftTable,
-                "\"{$baseTable}\".\"ID\" = \"{$draftTable}\".\"ID\""
-            );
-
-        if ($singleton->hasStages()) {
-            $liveTable = $baseTable . '_Live';
-            $list = $list->leftJoin(
-                $liveTable,
-                "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
-            );
-        }
-
-        $list = $list->where("\"{$draftTable}\".\"ID\" IS NULL");
-        $list = $list->sort('LastEdited DESC');
-
+        $list = ArchiveAdmin::getListForGridField($class);
         $field = GridField::create(
             $title,
             false,
@@ -171,7 +150,6 @@ class ArchiveAdmin extends ModelAdmin
             $config
         );
         $field->setModelClass($class);
-
         return $field;
     }
 
@@ -368,5 +346,44 @@ class ArchiveAdmin extends ModelAdmin
         $forms->first()->LinkOrCurrent = 'link';
 
         return $forms;
+    }
+
+    /**
+     * Gets a Datalist for use on the archive gridfield
+     */
+    private static function getListForGridField(string $dataClass): DataList
+    {
+        /** @var DataObject $dataClass */
+        $obj = DataObject::singleton($dataClass);
+        /** @var DataList $list */
+        $list = $obj->get();
+        $baseTable = $obj->baseTable();
+        // $list = $list->setDataQueryParam('Versioned.mode', 'all_versions');
+        $list = $list->setDataQueryParam([
+            'Versioned.mode' => 'archive',
+            'Versioned.date' => '2100-01-01 00:00:00',
+            'Versioned.stage' => Versioned::DRAFT,
+        ]);
+        p($list->count());
+        // Join a temporary alias BaseTable_Draft, renaming this on execution to BaseTable
+        // See Versioned::augmentSQL() For reference on this alias
+        $draftTable = $baseTable . '_Draft';
+        $list = $list
+            ->leftJoin(
+                $draftTable,
+                "\"{$baseTable}\".\"ID\" = \"{$draftTable}\".\"ID\""
+            );
+        if ($obj->hasStages()) {
+            $liveTable = $baseTable . '_Live';
+            $list = $list->leftJoin(
+                $liveTable,
+                "\"{$baseTable}\".\"ID\" = \"{$liveTable}\".\"ID\""
+            );
+        }
+        $list = $list->where("\"{$draftTable}\".\"ID\" IS NULL");
+        $versionsTable = $baseTable . '_Versions';
+        // $list = $list->where("\"{$versionsTable}\".\"WasDeleted\" = 1");
+        $list = $list->orderBy("\"{$versionsTable}\".\"LastEdited\" DESC");
+        return $list;
     }
 }
