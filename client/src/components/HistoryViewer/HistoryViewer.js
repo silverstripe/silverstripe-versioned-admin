@@ -1,7 +1,7 @@
 /* global window */
 
 import React, { Component } from 'react';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Griddle from 'griddle-react';
 import historyViewerConfig from 'containers/HistoryViewer/HistoryViewerConfig';
@@ -18,6 +18,7 @@ import { compareType } from 'types/compareType';
 import classNames from 'classnames';
 import ResizeAware from 'components/ResizeAware/ResizeAware';
 import * as viewModeActions from 'state/viewMode/ViewModeActions';
+import * as toastsActions from 'state/toasts/ToastsActions';
 import PropTypes from 'prop-types';
 
 /**
@@ -34,23 +35,30 @@ class HistoryViewer extends Component {
     this.handlePrevPage = this.handlePrevPage.bind(this);
   }
 
-  /**
-   * Manually handle state changes in the page number, because Griddle doesn't support Redux.
-   * See: https://github.com/GriddleGriddle/Griddle/issues/626
-   *
-   * @param {object} prevProps
-   */
   componentDidUpdate(prevProps) {
+    // Display a toast if there were any new graphql errors
+    if (prevProps.graphQLErrors.length < this.props.graphQLErrors.length) {
+      this.props.toastActions.error(i18n._t('Admin.UNKNOWN_ERROR', 'An unknown error has occurred.'));
+    }
+
+    // Manually handle state changes in the page number, because Griddle doesn't support Redux.
+    // See: https://github.com/GriddleGriddle/Griddle/issues/626
     if (!this.props.actions || !this.props.actions.versions) {
       return;
     }
-
     const { page: prevPage } = prevProps;
     const { page: currentPage } = this.props;
     const { actions: { versions } } = this.props;
-
     if (prevPage !== currentPage && typeof versions.goToPage === 'function') {
       versions.goToPage(currentPage);
+    }
+  }
+
+  componentDidMount() {
+    // Display a toast if there were any pre-existing graphql errors
+    const { graphQLErrors, toastActions } = this.props;
+    if (graphQLErrors.length > 0) {
+      toastActions.error(i18n._t('Admin.UNKNOWN_ERROR', 'An unknown error has occurred.'));
     }
   }
 
@@ -368,7 +376,13 @@ class HistoryViewer extends Component {
   }
 
   render() {
-    const { loading, compare, currentVersion, recordId } = this.props;
+    const { graphQLErrors, loading, compare, currentVersion, recordId } = this.props;
+
+    // Do not proceed if there are graphql error.
+    // A toast message will be shown in componentDidMount() or componentDidUpdate()
+    if (graphQLErrors.length > 0) {
+      return null;
+    }
 
     if (!recordId) {
       return null;
@@ -391,6 +405,8 @@ class HistoryViewer extends Component {
 }
 
 HistoryViewer.propTypes = {
+  loading: PropTypes.bool,
+  graphQLErrors: PropTypes.arrayOf(PropTypes.string),
   contextKey: PropTypes.string,
   limit: PropTypes.number,
   ListComponent: PropTypes.elementType.isRequired,
@@ -418,9 +434,18 @@ HistoryViewer.propTypes = {
   onSelect: PropTypes.func,
   onSetPage: PropTypes.func,
   onResize: PropTypes.func,
+  toastActions: PropTypes.shape({
+    display: PropTypes.func,
+    info: PropTypes.func,
+    success: PropTypes.func,
+    warning: PropTypes.func,
+    error: PropTypes.func,
+  }),
 };
 
 HistoryViewer.defaultProps = {
+  loading: false,
+  graphQLErrors: [],
   compare: {},
   contextKey: '',
   currentVersion: false,
@@ -465,7 +490,9 @@ function mapDispatchToProps(dispatch) {
     },
     onResize(panelWidth) {
       dispatch(viewModeActions.enableOrDisableSplitMode(panelWidth));
-    }
+    },
+    // Note we can't use actions.toasts because that overrides actions.versions
+    toastActions: bindActionCreators(toastsActions, dispatch),
   };
 }
 
