@@ -4,6 +4,9 @@ Name: archiveadmin
 SilverStripe\Versioned\VersionedGridFieldItemRequest:
   extensions:
     - SilverStripe\VersionedAdmin\Extensions\ArchiveRestoreAction
+SilverStripe\Forms\GridField\GridField:
+  extensions:
+    - SilverStripe\VersionedAdmin\Extensions\GridFieldExtension
 ---
 Name: pagesarchive
 Only:
