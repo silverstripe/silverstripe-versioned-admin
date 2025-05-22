@@ -308,3 +308,40 @@ test('HistoryViewer reject unknown error', async () => {
   await new Promise(resolve => setTimeout(resolve, 0));
   expect(lastToastErrorMessage).toBe('An unknown error has occurred.');
 });
+
+test('HistoryViewer displays no error when there are none', async () => {
+  const error = jest.fn();
+  render(
+    <HistoryViewer {...makeProps({ toastActions: { error } })}/>
+  );
+  const el = await screen.queryByTestId('test-list');
+  expect(el).not.toBeFalsy();
+  expect(error.mock.calls.length).toBe(0);
+});
+
+test('HistoryViewer displays error when there is one on initial render', async () => {
+  const error = jest.fn();
+  render(
+    <HistoryViewer {...makeProps({ graphQLErrors: ['error 1', 'error 2'], toastActions: { error } })}/>
+  );
+  const el = await screen.queryByTestId('test-list');
+  expect(el).toBeFalsy();
+  expect(error.mock.calls.length).toBe(1);
+  expect(error.mock.calls[0][0]).toBe('An unknown error has occurred.');
+});
+
+test('HistoryViewer displays error when there is one in updated props', async () => {
+  const error = jest.fn();
+  const props = makeProps({ toastActions: { error } });
+  const { rerender, queryByTestId } = render(<HistoryViewer {...props}/>);
+  const el = await queryByTestId('test-list');
+  expect(el).not.toBeFalsy();
+  expect(error.mock.calls.length).toBe(0);
+
+  props.graphQLErrors = ['error 1', 'error 2'];
+  rerender(<HistoryViewer {...props}/>);
+  const el2 = await queryByTestId('test-list');
+  expect(el2).toBeFalsy();
+  expect(error.mock.calls.length).toBe(1);
+  expect(error.mock.calls[0][0]).toBe('An unknown error has occurred.');
+});
