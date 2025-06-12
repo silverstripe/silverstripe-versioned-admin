@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -136,7 +137,9 @@ class HistoryViewerController extends LeftAndMain
             $specifiesDate = false;
         }
 
-        return $specifiesDate ? $this->getVersionFormByDate($context) : $this->getVersionFormByVersion($context);
+        $form = $specifiesDate ? $this->getVersionFormByDate($context) : $this->getVersionFormByVersion($context);
+        $this->removeUnrenderableFields($form);
+        return $form;
     }
 
     /**
@@ -262,7 +265,7 @@ class HistoryViewerController extends LeftAndMain
         $comparisonTransformation = DiffTransformation::create();
         $form->transform($comparisonTransformation);
         $form->loadDataFrom($recordFrom);
-
+        $this->removeUnrenderableFields($form);
         return $form;
     }
 
@@ -338,5 +341,25 @@ class HistoryViewerController extends LeftAndMain
         return $form->setRequestHandler(
             LeftAndMainFormRequestHandler::create($form, $extra)
         );
+    }
+
+    /**
+     * Remove all form fields that can't be rendered in the history view
+     */
+    private function removeUnrenderableFields(?Form $form): void
+    {
+        if (!$form) {
+            return;
+        }
+        $toRemove = [];
+        $form->Fields()->recursiveWalk(function (FormField $formField) use (&$toRemove) {
+            $schemaData = $formField->getSchemaData();
+            if (!$schemaData['schemaType'] && !$schemaData['component']) {
+                $toRemove[] = $formField->getName();
+            }
+        });
+        if (!empty($toRemove)) {
+            $form->Fields()->removeByName($toRemove);
+        }
     }
 }
