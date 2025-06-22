@@ -8,9 +8,12 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\VersionedAdmin\Controllers\HistoryViewerController;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\UnviewableVersionedObject;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\ViewableVersionedObject;
+use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\VersionedObjectWithGridField;
 
 class HistoryViewerControllerTest extends SapphireTest
 {
@@ -19,6 +22,7 @@ class HistoryViewerControllerTest extends SapphireTest
     protected static $extra_dataobjects = [
         ViewableVersionedObject::class,
         UnviewableVersionedObject::class,
+        VersionedObjectWithGridField::class,
     ];
 
     public function testGetClientConfig()
@@ -190,5 +194,40 @@ class HistoryViewerControllerTest extends SapphireTest
         $result = $controllerMock->versionForm(new HTTPRequest('GET', '/', $mockData));
 
         $this->assertSame('mocked', $result);
+    }
+
+    public static function provideFieldsRemovedFromForm(): array
+    {
+        return [
+            [
+                'method' => 'getVersionForm',
+                'expected' => ['Title', 'MyInt', 'SecurityID'],
+            ],
+            [
+                'method' => 'getCompareForm',
+                'expected' => ['Title', 'MyInt'],
+            ],
+        ];
+    }
+
+    /** @dataProvider provideFieldsRemovedFromForm */
+    public function testFieldsRemovedFromForm(string $method, array $expected): void
+    {
+        // Need to update the record so it has a second version of history
+        $record = $this->objFromFixture(VersionedObjectWithGridField::class, 'record_one');
+        $record->MyInt = '1';
+        $record->write();
+        $context = [
+            'RecordClass' => VersionedObjectWithGridField::class,
+            'RecordID' => $record->ID,
+            'RecordVersion' => 1,
+            'RecordVersionFrom' => 1,
+            'RecordVersionTo' => 2,
+        ];
+        $controller = new HistoryViewerController();
+        $this->assertSame(
+            $expected,
+            $controller->$method($context)->Fields()->dataFieldNames(),
+        );
     }
 }
