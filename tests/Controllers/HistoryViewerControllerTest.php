@@ -8,6 +8,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\VersionedAdmin\Controllers\HistoryViewerController;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\UnviewableVersionedObject;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\ViewableVersionedObject;
@@ -17,6 +19,7 @@ use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Forms\HistoryViewerField;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\VersionedObjectWithGridField;
 
 class HistoryViewerControllerTest extends FunctionalTest
 {
@@ -26,6 +29,7 @@ class HistoryViewerControllerTest extends FunctionalTest
         ViewableVersionedObject::class,
         UnviewableVersionedObject::class,
         TestVersionedObject::class,
+        VersionedObjectWithGridField::class,
     ];
 
     private $securityTokenWasEnabled = false;
@@ -268,6 +272,20 @@ class HistoryViewerControllerTest extends FunctionalTest
                 'idType' => 'existing',
                 'fail' => 'unversioned-class',
                 'expectedCode' => 400,
+            ],
+        ];
+    }
+
+    public static function provideFieldsRemovedFromForm(): array
+    {
+        return [
+            [
+                'method' => 'getVersionForm',
+                'expected' => ['Title', 'MyInt', 'SecurityID'],
+            ],
+            [
+                'method' => 'getCompareForm',
+                'expected' => ['Title', 'MyInt'],
             ],
         ];
     }
@@ -548,5 +566,26 @@ class HistoryViewerControllerTest extends FunctionalTest
         return [
             'X-' . $securityToken->getName() => $securityToken->getSecurityID()
         ];
+    }
+
+    #[DataProvider('provideFieldsRemovedFromForm')]
+    public function testFieldsRemovedFromForm(string $method, array $expected): void
+    {
+        // Need to update the record so it has a second version of history
+        $record = $this->objFromFixture(VersionedObjectWithGridField::class, 'record_one');
+        $record->MyInt = '1';
+        $record->write();
+        $context = [
+            'RecordClass' => VersionedObjectWithGridField::class,
+            'RecordID' => $record->ID,
+            'RecordVersion' => 1,
+            'RecordVersionFrom' => 1,
+            'RecordVersionTo' => 2,
+        ];
+        $controller = new HistoryViewerController();
+        $this->assertSame(
+            $expected,
+            $controller->$method($context)->Fields()->dataFieldNames(),
+        );
     }
 }
