@@ -48,8 +48,8 @@ class SiteTreeArchiveExtension extends Extension implements ArchiveViewProvider
         ]);
         $listColumns->setFieldFormatting([
             'ParentID' => function ($val, $item) {
-                if (SiteTree::get_by_id($val)) {
-                    $breadcrumbs = SiteTree::get_by_id($val)->getBreadcrumbItems(2);
+                if (SiteTree::get()->setUseCache(true)->byID($val)) {
+                    $breadcrumbs = SiteTree::get()->setUseCache(true)->byID($val)->getBreadcrumbItems(2);
                     $breadcrumbString = '../';
                     foreach ($breadcrumbs as $item) {
                         $breadcrumbString = $breadcrumbString . $item->URLSegment . '/';
