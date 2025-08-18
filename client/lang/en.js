@@ -9,6 +9,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "HistoryViewer.Author": "Author",
     "HistoryViewer.BadgeLive": "Live",
     "HistoryViewer.COMPARE_MODE": "Compare mode",
+    "HistoryViewer.ERROR": "There was an error loading this page. Try refreshing.",
     "HistoryViewer.EXIT": "Exit",
     "HistoryViewer.NEXT": "Next",
     "HistoryViewer.PREVIOUS": "Previous",
