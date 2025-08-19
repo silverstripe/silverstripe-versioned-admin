@@ -82,7 +82,9 @@
     "uuid": "^11.0.4"
   },
   "resolutions": {
-    "colors": "1.4.0"
+    "colors": "1.4.0",
+    "glob": "8.1.0",
+    "minimatch": "5.1.2"
   },
   "browserslist": [
     "defaults"
