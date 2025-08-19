@@ -88,7 +88,7 @@
   "resolutions": {
     "colors": "1.4.0",
     "glob": "8.1.0",
-    "minimatch": "5.1.2"
+    "minimatch": "5.1.6"
   },
   "browserslist": [
     "defaults"
