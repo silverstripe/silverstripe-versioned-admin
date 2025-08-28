@@ -19,4 +19,4 @@ Feature: View archived history
     # Check the version history
     When I click on "History" in the header tabs
     Then I should see a list of versions
-    And I should see "Archived" in the record column in version 1
+    And I should see "Archived" in the record column in version 4

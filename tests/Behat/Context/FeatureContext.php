@@ -158,8 +158,9 @@ class FeatureContext extends SilverStripeContext
         $version = $this->getSpecificVersion($versionNumber);
         $authorColumn = $version->find('css', '.history-viewer__author');
 
-        $exists = strpos($authorColumn->getText() ?? '', $text ?? '') !== false;
-        Assert::assertTrue($exists, 'Author column contains ' . $text);
+        $authorText = $authorColumn->getText();
+        $exists = strpos($authorText, $text ?? '') !== false;
+        Assert::assertTrue($exists, 'Author column actually contains: ' . $authorText);
     }
 
     /**
@@ -172,8 +173,9 @@ class FeatureContext extends SilverStripeContext
         $version = $this->getSpecificVersion($versionNumber);
         $recordColumn = $version->find('css', '.history-viewer__version-state');
 
-        $exists = strpos($recordColumn->getText() ?? '', $text ?? '') !== false;
-        Assert::assertTrue($exists, 'Record column contains ' . $text);
+        $recordText = $recordColumn->getText();
+        $exists = strpos($recordText, $text ?? '') !== false;
+        Assert::assertTrue($exists, 'Record column actually contains: ' . $recordText);
     }
 
     /**
@@ -184,8 +186,9 @@ class FeatureContext extends SilverStripeContext
         $version = $this->getSpecificVersion($versionNumber);
         $versionColumn = $version->find('css', '.history-viewer__version-no');
 
-        $exists = strpos($versionColumn->getText() ?? '', $text ?? '') !== false;
-        Assert::assertTrue($exists, 'Version column contains ' . $text);
+        $versionText = $versionColumn->getText();
+        $exists = strpos($versionText, $text ?? '') !== false;
+        Assert::assertTrue($exists, 'Version column actually contains: ' . $versionText);
     }
 
     /**
