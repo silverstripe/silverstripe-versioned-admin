@@ -31,7 +31,8 @@ class HistoryViewerCompareWarning extends Component {
           <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
           {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
         </span>
-        <button className="btn dismiss-button font-icon-cancel" onClick={this.handleDismissCompare}>
+        <button className="btn dismiss-button" onClick={this.handleDismissCompare}>
+          <span className="font-icon-cancel" aria-hidden="true" />
           {i18n._t('HistoryViewer.EXIT', 'Exit')}
         </button>
       </div>

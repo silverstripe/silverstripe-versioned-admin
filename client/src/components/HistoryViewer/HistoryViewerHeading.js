@@ -46,13 +46,16 @@ class HistoryViewerHeading extends Component {
       return null;
     }
 
+    const dropdownLabel = i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode');
     return (
       <Dropdown
         isOpen={dropdownOpen}
         toggle={this.toggle}
         className="history-viewer__actions-dropdown"
       >
-        <DropdownToggle className="font-icon-sliders" />
+        <DropdownToggle className="btn--no-text" title={dropdownLabel} aria-label={dropdownLabel}>
+          <span className="font-icon-sliders" aria-hidden="true" />
+        </DropdownToggle>
         <DropdownMenu end>
           <div className="form-check">
             <input
