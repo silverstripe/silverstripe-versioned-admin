@@ -52,7 +52,8 @@ class ArchiveRestoreAction extends Extension
                 FormAction::create('doRestore', $title)
                     ->setDescription($description)
                     ->setAttribute('data-to-root', $restoreToRoot)
-                    ->addExtraClass('btn-warning font-icon-back-in-time ArchiveAdmin__action--restore')
+                    ->addExtraClass('btn-warning ArchiveAdmin__action--restore')
+                    ->setIcon('back-in-time')
                     ->setUseButtonTag(true)
             );
 
