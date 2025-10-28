@@ -1,5 +1,3 @@
-/* global document */
-
 import React, { PureComponent } from 'react';
 import classnames from 'classnames';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
@@ -128,6 +126,8 @@ class HistoryViewerVersionDetail extends PureComponent {
       return null;
     }
 
+    const forceDisabled = version.deleted;
+
     return (
       <ToolbarComponent
         identifier="HistoryViewer.VersionDetail.Toolbar"
@@ -136,6 +136,7 @@ class HistoryViewerVersionDetail extends PureComponent {
         versionId={version.version}
         isPreviewable={this.isPreviewable()}
         isRevertable={isRevertable}
+        forceDisabled={forceDisabled}
       />
     );
   }
@@ -151,6 +152,7 @@ class HistoryViewerVersionDetail extends PureComponent {
       ListComponent,
       schemaUrl,
       CompareWarningComponent,
+      FormBuilderLoaderComponent,
       previewState,
     } = this.props;
 
@@ -187,7 +189,7 @@ class HistoryViewerVersionDetail extends PureComponent {
           />
 
           <div className={classnames(formClasses)}>
-            <FormBuilderLoader
+            <FormBuilderLoaderComponent
               identifier="HistoryViewer.VersionDetail"
               schemaUrl={schemaUrl}
             />
@@ -215,6 +217,8 @@ HistoryViewerVersionDetail.propTypes = {
   isRevertable: PropTypes.bool,
   ListComponent: PropTypes.elementType.isRequired,
   PreviewComponent: PropTypes.elementType,
+  CompareWarningComponent: PropTypes.elementType,
+  FormBuilderLoaderComponent: PropTypes.elementType,
   recordId: PropTypes.number.isRequired,
   schemaUrl: PropTypes.string.isRequired,
   ToolbarComponent: PropTypes.elementType.isRequired,
@@ -234,6 +238,7 @@ HistoryViewerVersionDetail.defaultProps = {
   isPreviewable: false,
   isRevertable: false,
   compare: false,
+  FormBuilderLoaderComponent: FormBuilderLoader,
 };
 
 export { HistoryViewerVersionDetail as Component };

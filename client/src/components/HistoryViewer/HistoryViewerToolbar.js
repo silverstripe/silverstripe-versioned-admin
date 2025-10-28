@@ -36,7 +36,8 @@ class HistoryViewerToolbar extends Component {
       ViewModeComponent,
       isLatestVersion,
       isPreviewable,
-      isRevertable
+      isRevertable,
+      forceDisabled,
     } = this.props;
     const { isReverting } = this.state;
 
@@ -60,7 +61,7 @@ class HistoryViewerToolbar extends Component {
             data={{
               buttonStyle: 'warning'
             }}
-            disabled={isLatestVersion || isReverting}
+            disabled={isLatestVersion || isReverting || forceDisabled}
             loading={isReverting}
             title={i18n._t('HistoryViewerToolbar.REVERT_TO_VERSION', 'Revert to this version')}
           /> }
@@ -83,12 +84,14 @@ HistoryViewerToolbar.propTypes = {
   onAfterRevert: PropTypes.func,
   recordId: PropTypes.number.isRequired,
   versionId: PropTypes.number.isRequired,
+  forceDisabled: PropTypes.bool,
 };
 
 HistoryViewerToolbar.defaultProps = {
   isLatestVersion: false,
   isPreviewable: false,
   isRevertable: false,
+  forceDisabled: false,
 };
 
 function mapDispatchToProps(dispatch) {
