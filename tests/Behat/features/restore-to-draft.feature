@@ -12,7 +12,7 @@ Feature: Restore to draft
       And I should see "MyPage"
       And I click on "MyPage" in the tree
       And I press the "Publish" button
-      And I click "More options" in the "#ActionMenus" element
+      And I press the "More options" button
       And I press the "Unpublish and archive" button, confirming the dialog
 
   Scenario: I can restore archived version to draft
