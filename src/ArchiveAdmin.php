@@ -6,6 +6,7 @@ use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -24,6 +25,8 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
 use SilverStripe\Model\ArrayData;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\Filters\WithinRangeFilter;
 
 /**
  * Archive admin is a section of the CMS that displays archived records
@@ -132,7 +135,6 @@ class ArchiveAdmin extends ModelAdmin
     {
         $config = GridFieldConfig_Base::create();
         $config->removeComponentsByType(VersionedGridFieldState::class);
-        $config->removeComponentsByType(GridFieldFilterHeader::class);
         $config->addComponent(new GridFieldDetailForm);
         $config->addComponent(new GridFieldViewButton);
         $config->addComponent(new GridFieldRestoreAction);
@@ -150,6 +152,25 @@ class ArchiveAdmin extends ModelAdmin
             $config
         );
         $field->setModelClass($class);
+
+        // Add range fields to search by archived date
+        // Need to override/replace any existing "LastEdited" searchable fields.
+        $filterHeader = $config->getComponentByType(GridFieldFilterHeader::class);
+        $searchContext = $filterHeader->getSearchContext($field);
+        $searchFields = $searchContext->getSearchFields();
+        $searchFields->removeByName(['LastEdited']);
+        $searchFields->add(WithinRangeFilter::convertToRangeField(DateField::create(
+            'LastEdited',
+            _t(ArchiveAdmin::class . '.COLUMN_DATEARCHIVED', 'Date Archived')
+        )));
+        $searchContext->addFilter(WithinRangeFilter::create('LastEdited'));
+        $searchContext->addAdditionalFieldSpecs([
+            'LastEdited' => [
+                'general' => false,
+                'rangeFromDefault' => DBDate::getMinValue(),
+                'rangeToDefault' => DBDate::getMaxValue(),
+            ],
+        ]);
 
         return $field;
     }

@@ -5,6 +5,7 @@ namespace SilverStripe\VersionedAdmin\Extensions;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Core\Extension;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
@@ -61,6 +62,11 @@ class SiteTreeArchiveExtension extends Extension implements ArchiveViewProvider
                 return DBDatetime::create_field('Datetime', $val)->Ago();
             },
         ]);
+
+        // Remove "FilterClass" search field - we don't want to be searching e.g. draft or live pages.
+        $filterHeader = $listField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
+        $searchContext = $filterHeader->getSearchContext($listField);
+        $searchContext->getSearchFields()->removeByName('FilterClass');
 
         return $listField;
     }
