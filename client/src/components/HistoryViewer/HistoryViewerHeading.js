@@ -1,5 +1,5 @@
 import i18n from 'i18n';
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 import { setCompareMode } from 'state/historyviewer/HistoryViewerActions';
 import { compose } from 'redux';
@@ -11,17 +11,34 @@ class HistoryViewerHeading extends Component {
     super(props);
 
     this.toggle = this.toggle.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleCompareModeChange = this.handleCompareModeChange.bind(this);
-
     this.state = {
       dropdownOpen: false,
     };
+    this.checkboxRef = createRef();
   }
 
   toggle() {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
+    this.setState((prevState) => {
+      // If we are opening the dropdown, force focus onto the checkbox.
+      const shouldOpen = !prevState.dropdownOpen;
+      if (shouldOpen && this.checkboxRef.current) {
+        // setTimeout() is used to wait for the DOM to update after the state change.
+        setTimeout(() => this.checkboxRef.current.focus(), 0);
+      }
+      return {
+        dropdownOpen: shouldOpen
+      };
+    });
+  }
+
+  handleKeyDown(event) {
+    // Close the dropdown on Escape keypress when focused inside the dropdown menu
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.toggle();
+    }
   }
 
   handleCompareModeChange() {
@@ -64,6 +81,8 @@ class HistoryViewerHeading extends Component {
               className="no-change-track history-viewer-heading__compare-mode-checkbox"
               checked={compareModeSelected}
               onChange={this.handleCompareModeChange}
+              onKeyDown={this.handleKeyDown}
+              ref={this.checkboxRef}
             />
             <label className="form-label form-check-label" htmlFor="history-viewer-compare-two">
               {i18n._t('HistoryViewerHeading.COMPARE_VERSIONS', 'Compare two versions')}
