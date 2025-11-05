@@ -50,3 +50,19 @@ Feature: Compare mode
     And I click on version 1
     Then the text "world" should be deleted
     And the text "universe" should be added
+
+  Scenario: Compare mode keyboard nav
+    Given I focus on the ".history-viewer__actions-dropdown .btn" element
+    When I press the "Enter" key globally
+    Then I should see "Compare two versions"
+    And I should not see "Compare mode"
+    Then the "#history-viewer-compare-two" element should have focus
+    When I press the "Space" key globally
+    Then I should see "Compare mode"
+    When I press the "Escape" key globally
+    Then I should not see "Compare two versions"
+    When I press the "Shift-Tab" key globally
+    And I press the "Shift-Tab" key globally
+    Then the ".history-viewer__compare-notice .dismiss-button" element should have focus
+    When I press the "Enter" key globally
+    Then I should not see "Compare mode"

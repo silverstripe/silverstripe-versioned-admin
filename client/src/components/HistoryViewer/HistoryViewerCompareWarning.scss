@@ -22,5 +22,11 @@
     &:hover {
       background-color: lighten($color-notice, 10%);
     }
+
+    &:focus-visible {
+      outline: 2px solid $component-active-border-color;
+      outline-offset: -2px;
+      border-radius: var(--bs-btn-border-radius);
+    }
   }
 }
