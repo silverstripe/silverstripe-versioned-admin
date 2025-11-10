@@ -9,6 +9,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "HistoryViewer.Author": "Avtor",
     "HistoryViewer.BadgeLive": "Javno",
     "HistoryViewer.COMPARE_MODE": "Primerjava",
+    "HistoryViewer.ERROR": "Napaka pri nalaganju strani. Poskusite jo ponovno naložiti.",
     "HistoryViewer.EXIT": "Izhod",
     "HistoryViewer.NEXT": "Naslednja",
     "HistoryViewer.PREVIOUS": "Pretekla",
