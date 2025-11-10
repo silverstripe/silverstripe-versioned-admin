@@ -12,7 +12,7 @@ sl:
     SELECT_TYPE: 'Izberite tip vsebine'
     TAB_OTHERS: Drugo
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: 'Uredi stran'
+    MENUTITLE: Strani
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Nimate pravic za ogled {ObjectTitle}'
   SilverStripe\VersionedAdmin\Forms\DiffField:
