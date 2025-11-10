@@ -102,6 +102,7 @@ class HistoryViewerField extends FormField
         $data['data'] = array_merge($data['data'], [
             'recordId' => $sourceRecord ? $sourceRecord->ID : null,
             'recordClass' => $sourceRecord ? $sourceRecord->ClassName : null,
+            'recordClassSingularName' => $sourceRecord ? $sourceRecord->i18n_singular_name() : null,
             'contextKey' => $this->getContextKey(),
             'isPreviewable' => $this->getPreviewEnabled(),
             'isRevertable' => $this->getIsRevertable(),

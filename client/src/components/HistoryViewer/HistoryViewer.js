@@ -289,6 +289,13 @@ class HistoryViewer extends Component {
       maxItemsPerPage: limit,
       currentPage: this.props.page,
       onChangePage: this.handleSetPage,
+      title: i18n.inject(
+        i18n._t(
+          'HistoryViewer.NAME_HISTORY',
+          '{name} history'
+        ),
+        { name: this.props.recordClassSingularName }
+      )
     };
     return <Paginator {...props} />;
   }
