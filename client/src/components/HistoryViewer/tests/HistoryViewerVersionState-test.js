@@ -119,3 +119,131 @@ test('HistoryViewerVersionState doess not return a badge when the version is fal
   );
   expect(container.querySelector('.test-badge')).toBeNull();
 });
+
+test('HistoryViewerVersionState renders with role="cell"', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps()} />
+  );
+  expect(container.querySelector('[role="cell"]')).not.toBeNull();
+});
+
+test('HistoryViewerVersionState renders badge with inverted style when isActive is true', () => {
+  const BadgeComponentWithInverted = ({ status, message, inverted }) => (
+    <div className="test-badge" data-status={status} data-message={message} data-inverted={inverted} />
+  );
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      isActive: true,
+      version: {
+        liveVersion: true
+      },
+      BadgeComponent: BadgeComponentWithInverted,
+    })}
+    />
+  );
+  const badge = container.querySelector('.test-badge');
+  expect(badge.getAttribute('data-inverted')).toBe('true');
+});
+
+test('HistoryViewerVersionState renders badge without inverted style when isActive is false', () => {
+  const BadgeComponentWithInverted = ({ status, message, inverted }) => (
+    <div className="test-badge" data-status={status} data-message={message} data-inverted={inverted} />
+  );
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      isActive: false,
+      version: {
+        liveVersion: true
+      },
+      BadgeComponent: BadgeComponentWithInverted,
+    })}
+    />
+  );
+  const badge = container.querySelector('.test-badge');
+  expect(badge.getAttribute('data-inverted')).toBe('false');
+});
+
+test('HistoryViewerVersionState displays date in muted text', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
+        lastEdited: '2018-05-03 17:12:00'
+      },
+    })}
+    />
+  );
+  const mutedText = container.querySelector('.text-muted');
+  expect(mutedText).not.toBeNull();
+  expect(mutedText.textContent).toBe('05/03/2018 5:12 PM');
+});
+
+test('HistoryViewerVersionState has correct DOM structure', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
+        version: 1,
+        lastEdited: '2018-05-03 17:12:00'
+      },
+    })}
+    />
+  );
+  const rootElement = container.querySelector('.history-viewer__version-state');
+  expect(rootElement).not.toBeNull();
+  expect(rootElement.getAttribute('role')).toBe('cell');
+  expect(rootElement.children.length).toBeGreaterThan(0);
+});
+
+test('HistoryViewerVersionState renders state and date in correct order', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
+        published: true,
+        lastEdited: '2018-05-03 17:12:00'
+      },
+    })}
+    />
+  );
+  const rootElement = container.querySelector('.history-viewer__version-state');
+  const textContent = rootElement.textContent;
+  expect(textContent).toContain('Published');
+  expect(textContent).toContain('05/03/2018 5:12 PM');
+  const publishedIndex = textContent.indexOf('Published');
+  const dateIndex = textContent.indexOf('05/03/2018');
+  expect(publishedIndex).toBeLessThan(dateIndex);
+});
+
+test('HistoryViewerVersionState returns Saved state for published=false with no deletion', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
+        published: false,
+        deleted: false,
+      },
+    })}
+    />
+  );
+  expect(container.querySelector('.history-viewer__version-state').textContent).toContain('Saved');
+});
+
+test('HistoryViewerVersionState handles version with both publisher and author data', () => {
+  const { container } = render(
+    <HistoryViewerVersionState {...makeProps({
+      version: {
+        published: true,
+        lastEdited: '2020-01-15 10:30:00',
+        publisher: {
+          firstName: 'John',
+          surname: 'Doe'
+        },
+        author: {
+          firstName: 'Jane',
+          surname: 'Smith'
+        }
+      },
+    })}
+    />
+  );
+  const rootElement = container.querySelector('.history-viewer__version-state');
+  expect(rootElement).not.toBeNull();
+  expect(rootElement.textContent).toContain('Published');
+});

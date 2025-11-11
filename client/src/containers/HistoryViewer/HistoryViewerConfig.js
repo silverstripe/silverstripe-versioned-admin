@@ -3,14 +3,14 @@ import Config from 'lib/Config';
 import { inject } from 'lib/Injector';
 
 const historyViewerConfig = (HistoryViewer) => {
-  class HistoryViewerConfigProvider extends React.Component {
-    getConfig() {
+  const HistoryViewerConfigProvider = (props) => {
+    const getConfig = () => {
       const sectionKey = 'SilverStripe\\VersionedAdmin\\Controllers\\HistoryViewerController';
       return Config.getSection(sectionKey);
-    }
+    };
 
-    getSchemaUrlDetails() {
-      const { compare } = this.props;
+    const getSchemaUrlDetails = () => {
+      const { compare } = props;
       if (compare) {
         return {
           formName: 'compareForm',
@@ -26,31 +26,29 @@ const historyViewerConfig = (HistoryViewer) => {
           'RecordVersion=:version',
         ],
       };
-    }
+    };
 
-    getSchemaUrl() {
-      const config = this.getConfig();
-      const { formName, queryParts } = this.getSchemaUrlDetails();
+    const getSchemaUrl = () => {
+      const config = getConfig();
+      const { formName, queryParts } = getSchemaUrlDetails();
       const schemaUrlBase = `${config.form[formName].schemaUrl}/:id`;
       const schemaUrlQuery = queryParts.concat('RecordClass=:class&RecordID=:id').join('&');
       return `${schemaUrlBase}?${schemaUrlQuery}`;
-    }
+    };
 
-    render() {
-      const props = {
-        ...this.props,
-        config: this.getConfig(),
-        HistoryViewer,
-        schemaUrl: this.getSchemaUrl(),
-      };
+    const componentProps = {
+      ...props,
+      config: getConfig(),
+      HistoryViewer,
+      schemaUrl: getSchemaUrl(),
+    };
 
-      return (
-        <HistoryViewer
-          {...props}
-        />
-      );
-    }
-  }
+    return (
+      <HistoryViewer
+        {...componentProps}
+      />
+    );
+  };
 
   return inject(
     ['HistoryViewer']

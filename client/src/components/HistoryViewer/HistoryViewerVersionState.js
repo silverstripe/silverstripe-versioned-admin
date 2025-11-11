@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import i18n from 'i18n';
 import moment from 'moment';
@@ -6,29 +6,28 @@ import { versionType, defaultVersion } from 'types/versionType';
 import { inject } from 'lib/Injector';
 import PropTypes from 'prop-types';
 
-class HistoryViewerVersionState extends Component {
+const HistoryViewerVersionState = ({
+  version = defaultVersion,
+  extraClass = '',
+  isActive = false,
+  BadgeComponent,
+}) => {
   /**
    * Get the HTML classes to apply to the state
    *
    * @returns {string}
    */
-  getClassNames() {
-    const { extraClass } = this.props;
-    return classnames('history-viewer__version-state', extraClass);
-  }
+  const getClassNames = () => classnames('history-viewer__version-state', extraClass);
 
   /**
    * Return the type of action that was performed when the record was saved
    *
    * @returns {string} Returns either Saved, Created, Archived, Unpublished or Published
    */
-  getPublishedState() {
-    const { version } = this.props;
-
+  const getPublishedState = () => {
     if (version.version === 1) {
       return i18n._t('HistoryViewer.Created', 'Created');
     }
-
     if (version.published) {
       if (version.deleted) {
         if (version.draft) {
@@ -38,9 +37,8 @@ class HistoryViewerVersionState extends Component {
       }
       return i18n._t('HistoryViewer.Published', 'Published');
     }
-
     return i18n._t('HistoryViewer.Saved', 'Saved');
-  }
+  };
 
   /**
    * Formats the last edited date according to the current locale and return it in the example
@@ -48,19 +46,17 @@ class HistoryViewerVersionState extends Component {
    *
    * @returns {string}
    */
-  getDate() {
+  const getDate = () => {
     moment.locale(i18n.detectLocale());
-    return moment(this.props.version.lastEdited).format('L LT');
-  }
+    return moment(version.lastEdited).format('L LT');
+  };
 
   /**
    * Return any status badges for the record
    *
    * @returns {ReactElement|string}
    */
-  getBadges() {
-    const { version, isActive, BadgeComponent } = this.props;
-
+  const getBadges = () => {
     if (version.liveVersion) {
       return (
         <BadgeComponent
@@ -71,19 +67,16 @@ class HistoryViewerVersionState extends Component {
         />
       );
     }
-
     return '';
-  }
+  };
 
-  render() {
-    return (
-      <span className={this.getClassNames()} role="cell">
-        {this.getPublishedState()} <small className="text-muted">{this.getDate()}</small>
-        {this.getBadges()}
-      </span>
-    );
-  }
-}
+  return (
+    <span className={getClassNames()} role="cell">
+      {getPublishedState()} <small className="text-muted">{getDate()}</small>
+      {getBadges()}
+    </span>
+  );
+};
 
 HistoryViewerVersionState.propTypes = {
   version: versionType,
@@ -93,12 +86,6 @@ HistoryViewerVersionState.propTypes = {
     PropTypes.node,
     PropTypes.func,
   ]).isRequired
-};
-
-HistoryViewerVersionState.defaultProps = {
-  version: defaultVersion,
-  extraClass: '',
-  isActive: false,
 };
 
 export { HistoryViewerVersionState as Component };
