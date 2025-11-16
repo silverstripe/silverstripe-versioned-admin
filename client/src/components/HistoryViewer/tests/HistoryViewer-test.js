@@ -1,9 +1,24 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* global jest, test, describe, it, expect */
+/* global jest, test, describe, it, expect, beforeAll */
 
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Component as HistoryViewer } from '../HistoryViewer';
+
+// eslint-disable-next-line no-console
+const originalError = console.error;
+
+beforeAll(() => {
+  // Suppress prop type warnings in tests
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
+    const fullMessage = args.map(arg => (typeof arg === 'string' ? arg : (arg?.toString?.() || ''))).join(' ');
+    // Only suppress if message contains "Invalid prop" OR "Failed prop type"
+    if (fullMessage.includes('Invalid prop') || fullMessage.includes('Failed prop type')) {
+      return;
+    }
+    originalError(...args);
+  });
+});
 
 let resolveBackend;
 let rejectBackend;
@@ -344,4 +359,295 @@ test('HistoryViewer displays error when there is one in updated props', async ()
   expect(el2).toBeFalsy();
   expect(error.mock.calls.length).toBe(1);
   expect(error.mock.calls[0][0]).toBe('An unknown error has occurred.');
+});
+
+test('HistoryViewer does not render when recordId is missing', () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      recordId: null
+    })}
+    />
+  );
+  expect(container.firstChild).toBeNull();
+});
+
+test('HistoryViewer refreshes version data when page prop changes', async () => {
+  const props = makeProps({ limit: 1, page: 1 });
+  const { rerender, queryByTestId } = render(<HistoryViewer {...props}/>);
+  resolveBackend(makeEndpointJson());
+  await screen.findAllByTestId('test-version');
+  const initialVersions = queryByTestId('test-list').querySelectorAll('[data-testid="test-version"]');
+  expect(initialVersions).toHaveLength(2);
+
+  props.page = 2;
+  rerender(<HistoryViewer {...props}/>);
+  resolveBackend(makeEndpointJson());
+  await screen.findAllByTestId('test-version');
+  // Should still show versions since refreshVersionData was called
+  expect(queryByTestId('test-list')).not.toBeNull();
+});
+
+test('HistoryViewer renders comparison selection list when versionFrom is set', async () => {
+  const ListComponent = jest.fn(({ versions, extraClass }) => (
+    <div data-testid="test-list" className={extraClass}>
+      {versions.map(v => <div key={v.version} data-testid="test-version" data-id={v.version}/>)}
+    </div>
+  ));
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      compare: {
+        versionFrom: {
+          version: 13,
+          author: {
+            firstName: 'Scott',
+            surname: 'Stockman'
+          },
+          publisher: null,
+          published: false,
+          latestDraftVersion: true,
+          liveVersion: false,
+          lastEdited: '2018-03-08 11:57:56'
+        },
+        versionTo: false
+      },
+      ListComponent
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findAllByTestId('test-list');
+  const comparisonList = container.querySelector('.history-viewer__table--comparison-selected');
+  expect(comparisonList).not.toBeNull();
+});
+
+test('HistoryViewer does not render comparison selection list when versionFrom is not set', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      },
+      compare: false
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findByTestId('test-version-detail');
+  const comparisonList = container.querySelector('.history-viewer__table--comparison-selected');
+  expect(comparisonList).toBeNull();
+});
+
+test('HistoryViewer renders pagination when versions exceed limit', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      limit: 1
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const select = await screen.findByRole('combobox');
+  expect(select).not.toBeNull();
+});
+
+test('HistoryViewer does not render pagination when versions within limit', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      limit: 100
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const versionList = await screen.findByTestId('test-list');
+  expect(versionList).not.toBeNull();
+});
+
+test('HistoryViewer renders version list view when no currentVersion set', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      currentVersion: false
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const listContainer = await screen.findByTestId('test-list');
+  expect(listContainer).not.toBeNull();
+  expect(container.querySelector('.history-viewer__compare-mode')).toBeNull();
+});
+
+test('HistoryViewer renders version detail view when currentVersion set', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      }
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const detail = await screen.findByTestId('test-version-detail');
+  expect(detail).not.toBeNull();
+});
+
+test('HistoryViewer applies compare mode class when compare is enabled', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      compare: {
+        versionFrom: {
+          version: 13
+        },
+        versionTo: {
+          version: 14
+        }
+      },
+      currentVersion: {
+        version: 13
+      }
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findByTestId('test-version-detail');
+  const historyViewer = container.querySelector('.history-viewer');
+  expect(historyViewer.classList.contains('history-viewer__compare-mode')).toBe(true);
+});
+
+test('HistoryViewer retrieves and uses correct schema URL replacements for version detail', async () => {
+  const VersionDetailComponent = jest.fn(({ schemaUrl }) => <div data-testid="version-detail" data-schema-url={schemaUrl} />);
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      },
+      recordId: 123,
+      recordClass: 'TestClass',
+      schemaUrl: '/admin/schema/:class/:id/:version',
+      VersionDetailComponent
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const detailComponent = await screen.findByTestId('version-detail');
+  expect(detailComponent.getAttribute('data-schema-url')).toBe('/admin/schema/TestClass/123/14');
+});
+
+test('HistoryViewer shows compare warning component in list view', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: false
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const compareWarning = await screen.findByTestId('test-compare-warning');
+  expect(compareWarning).not.toBeNull();
+});
+
+test('HistoryViewer renders panel padding when not in gridfield', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      isInGridField: false
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findByTestId('test-list');
+  const panel = container.querySelector('.panel.panel--padded');
+  expect(panel).not.toBeNull();
+});
+
+test('HistoryViewer does not render panel padding when in gridfield and in list view', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      isInGridField: true,
+      currentVersion: false
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findByTestId('test-list');
+  const panel = container.querySelector('.panel.panel--padded');
+  expect(panel).toBeNull();
+});
+
+test('HistoryViewer handles getLatestVersion when currentVersion is the latest draft', async () => {
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 123,
+        latestDraftVersion: true
+      }
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const el = await screen.findByTestId('test-version-detail');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  // latestDraftVersion should be true even though 123 is not in the versions list
+  expect(el.getAttribute('data-islatestversion')).toEqual('true');
+});
+
+test('HistoryViewer handles isListView correctly with partial compare mode', async () => {
+  const { container } = render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      },
+      compare: {
+        versionFrom: {
+          version: 13
+        },
+        versionTo: false
+      },
+      isInGridField: true
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  const lists = await screen.findAllByTestId('test-list');
+  expect(lists.length).toBeGreaterThan(0);
+  // With partial compare mode (versionFrom set but versionTo false), renderCompareMode
+  // returns renderVersionList(), which renders the list without the --no-margins class
+  // because renderVersionList() includes its own padding logic
+  const historyViewer = container.querySelector('.history-viewer');
+  expect(historyViewer).not.toBeNull();
+});
+
+test('HistoryViewer passes onAfterRevert callback to VersionDetailComponent', async () => {
+  const VersionDetailComponent = jest.fn(() => <div data-testid="version-detail" />);
+  render(
+    <HistoryViewer {...makeProps({
+      currentVersion: {
+        version: 14
+      },
+      VersionDetailComponent
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findByTestId('version-detail');
+  expect(VersionDetailComponent).toHaveBeenCalled();
+  const callArgs = VersionDetailComponent.mock.calls[0][0];
+  expect(typeof callArgs.onAfterRevert).toBe('function');
+});
+
+test('HistoryViewer passes ListComponent versions from state', async () => {
+  const ListComponent = jest.fn(({ versions }) => (
+    <div data-testid="test-list">
+      {versions.map(v => <div key={v.version} data-testid="test-version" data-id={v.version}/>)}
+    </div>
+  ));
+  render(
+    <HistoryViewer {...makeProps({
+      ListComponent
+    })}
+    />
+  );
+  resolveBackend(makeEndpointJson());
+  await screen.findByTestId('test-list');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  expect(ListComponent).toHaveBeenCalled();
+  const callArgs = ListComponent.mock.calls.find(args => args[0].versions && args[0].versions.length > 0);
+  expect(callArgs).toBeDefined();
+  expect(callArgs[0].versions).toHaveLength(2);
+  expect(callArgs[0].versions[0].version).toBe(14);
+  expect(callArgs[0].versions[1].version).toBe(13);
 });

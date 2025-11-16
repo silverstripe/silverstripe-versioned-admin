@@ -1,44 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import i18n from 'i18n';
 import { setCompareMode } from 'state/historyviewer/HistoryViewerActions';
 
-class HistoryViewerCompareWarning extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleDismissCompare = this.handleDismissCompare.bind(this);
+/**
+ * Renders a notice indicating the user is in compare mode (if compare mode is active)
+ */
+const HistoryViewerCompareWarning = ({
+  isCompare,
+  onDismissCompare,
+}) => {
+  const handleDismissCompare = () => {
+    onDismissCompare();
+  };
+  if (!isCompare) {
+    return null;
   }
-
-  handleDismissCompare() {
-    this.props.onDismissCompare();
-  }
-
-  /**
-   * Renders a notice indicating the user is in compare mode (if compare mode is active)
-   *
-   * @returns {string}
-   */
-  render() {
-    if (!this.props.isCompare) {
-      return null;
-    }
-
-    return (
-      <div className="history-viewer__compare-notice alert alert-info">
-        <span className="notice-message">
-          <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
-          {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
-        </span>
-        <button className="btn dismiss-button" onClick={this.handleDismissCompare}>
-          <span className="font-icon-cancel" aria-hidden="true" />
-          {i18n._t('HistoryViewer.EXIT', 'Exit')}
-        </button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="history-viewer__compare-notice alert alert-info">
+      <span className="notice-message">
+        <strong>{i18n._t('HistoryViewer.COMPARE_MODE', 'Compare mode')}: </strong>
+        {i18n._t('HistoryViewer.SELECT_PROMPT', 'Select two versions')}
+      </span>
+      <button className="btn dismiss-button" onClick={handleDismissCompare}>
+        <span className="font-icon-cancel" aria-hidden="true" />
+        {i18n._t('HistoryViewer.EXIT', 'Exit')}
+      </button>
+    </div>
+  );
+};
 
 HistoryViewerCompareWarning.propTypes = {
   isCompare: PropTypes.bool.isRequired,
@@ -48,7 +39,6 @@ function mapStateToProps(state) {
   const {
     compare,
   } = state.versionedAdmin.historyViewer;
-
   return {
     isCompare: !!compare,
   };

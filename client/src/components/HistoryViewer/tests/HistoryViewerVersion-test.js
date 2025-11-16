@@ -167,3 +167,261 @@ test('HistoryViewerVersion handleClose() deselect version when closing version i
   expect(onSelect).toBeCalled();
   expect(onCompareMode).not.toBeCalled();
 });
+
+test('HistoryViewerVersion does not render compare button when compareModeAvailable is false', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      compareModeAvailable: false,
+      isActive: false,
+    })}
+    />
+  );
+  expect(container.querySelectorAll('[data-extraclass="history-viewer__compare-button"')).toHaveLength(0);
+});
+
+test('HistoryViewerVersion does not render compare button when compare mode is already active', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      compareModeAvailable: true,
+      compare: {
+        versionFrom: { Version: 1 },
+      },
+      isActive: false,
+    })}
+    />
+  );
+  expect(container.querySelectorAll('[data-extraclass="history-viewer__compare-button"')).toHaveLength(0);
+});
+
+test('HistoryViewerVersion does not render clear button or selected message when not active', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      isActive: false,
+    })}
+    />
+  );
+  expect(screen.queryByText('Already selected')).toBeNull();
+  expect(container.querySelectorAll('[data-extraclass="history-viewer__close-button"')).toHaveLength(0);
+});
+
+test('HistoryViewerVersion renders empty actions cell when not active and not in compare mode', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      isActive: false,
+      compare: false,
+    })}
+    />
+  );
+  const actions = container.querySelectorAll('.history-viewer__actions');
+  expect(actions).toHaveLength(1);
+  expect(actions[0].children.length).toBe(0);
+});
+
+test('HistoryViewerVersion getAuthor() returns empty string when member has no name', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      version: {
+        ...makeProps().version,
+        author: {
+          firstName: '',
+          surname: '',
+        },
+      },
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  expect(container.querySelector('.history-viewer__author').textContent).toBe(' ');
+});
+
+test('HistoryViewerVersion getAuthor() returns only firstName when surname is missing', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      version: {
+        ...makeProps().version,
+        author: {
+          firstName: 'Jane',
+          surname: '',
+        },
+      },
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  expect(container.querySelector('.history-viewer__author').textContent).toBe('Jane ');
+});
+
+test('HistoryViewerVersion calls handleKeyUp when Enter key is pressed', async () => {
+  const onSelect = jest.fn();
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      isActive: false,
+    })}
+    />
+  );
+  const link = container.querySelector('.history-viewer__version-link');
+  fireEvent.keyUp(link, { keyCode: 13 });
+  expect(onSelect).toBeCalledWith(makeProps().version, false);
+});
+
+test('HistoryViewerVersion does not call handleClick when non-Enter key is pressed', async () => {
+  const onSelect = jest.fn();
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      isActive: false,
+    })}
+    />
+  );
+  const link = container.querySelector('.history-viewer__version-link');
+  fireEvent.keyUp(link, { keyCode: 32 });
+  expect(onSelect).not.toBeCalled();
+});
+
+test('HistoryViewerVersion renders version number correctly', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps()}/>
+  );
+  expect(container.querySelector('.history-viewer__version-no').textContent).toBe('3');
+});
+
+test('HistoryViewerVersion applies correct className when isActive is true', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      isActive: true,
+    })}
+    />
+  );
+  const row = container.querySelector('.history-viewer__row');
+  expect(row.classList.contains('history-viewer__row--current')).toBe(true);
+});
+
+test('HistoryViewerVersion does not apply current className when isActive is false', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      isActive: false,
+    })}
+    />
+  );
+  const row = container.querySelector('.history-viewer__row');
+  expect(row.classList.contains('history-viewer__row--current')).toBe(false);
+});
+
+test('HistoryViewerVersion applies comparison-selected className when in compare mode but selections incomplete', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      compare: {
+        versionFrom: { Version: 1 },
+      },
+      isActive: false,
+    })}
+    />
+  );
+  const row = container.querySelector('.history-viewer__row');
+  expect(row.classList.contains('history-viewer__row--comparison-selected')).toBe(true);
+});
+
+test('HistoryViewerVersion applies comparison-selected className when in compare mode with versionFrom and versionTo', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      compare: {
+        versionFrom: { Version: 1 },
+        versionTo: { Version: 2 },
+      },
+      isActive: false,
+    })}
+    />
+  );
+  const row = container.querySelector('.history-viewer__row');
+  expect(row.classList.contains('history-viewer__row--comparison-selected')).toBe(true);
+});
+
+test('HistoryViewerVersion applies extraClass when provided as string', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      extraClass: 'custom-extra-class',
+    })}
+    />
+  );
+  const row = container.querySelector('.history-viewer__row');
+  expect(row.classList.contains('custom-extra-class')).toBe(true);
+});
+
+test('HistoryViewerVersion applies extraClass when provided as object', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      extraClass: {
+        'custom-class-1': true,
+        'custom-class-2': false,
+      },
+    })}
+    />
+  );
+  const row = container.querySelector('.history-viewer__row');
+  expect(row.classList.contains('custom-class-1')).toBe(true);
+  expect(row.classList.contains('custom-class-2')).toBe(false);
+});
+
+test('HistoryViewerVersion renders StateComponent with correct props', async () => {
+  const StateComponent = jest.fn(() => <div data-testid="custom-state" />);
+  render(
+    <HistoryViewerVersion {...makeProps({
+      StateComponent,
+    })}
+    />
+  );
+  expect(screen.getByTestId('custom-state')).not.toBeNull();
+});
+
+test('HistoryViewerVersion renders list item with role row', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps()}/>
+  );
+  const listItem = container.querySelector('li[role="row"]');
+  expect(listItem).not.toBeNull();
+  expect(listItem.classList.contains('history-viewer__row')).toBe(true);
+});
+
+test('HistoryViewerVersion renders version link with button role and correct tabIndex', async () => {
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps()}/>
+  );
+  const link = container.querySelector('[role="button"]');
+  expect(link).not.toBeNull();
+  expect(link.getAttribute('tabIndex')).toBe('0');
+});
+
+test('HistoryViewerVersion passes correct version prop to onSelect when compare object provided', async () => {
+  const onSelect = jest.fn();
+  const compareObj = {
+    versionFrom: { Version: 1 },
+  };
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      isActive: false,
+      compare: compareObj,
+    })}
+    />
+  );
+  fireEvent.click(container.querySelector('.history-viewer__version-link'));
+  expect(onSelect).toBeCalledWith(makeProps().version, compareObj);
+});
+
+test('HistoryViewerVersion handleClose passes correct arguments to onSelect', async () => {
+  const onSelect = jest.fn();
+  const compareObj = {
+    versionFrom: { Version: 3 },
+  };
+  const { container } = render(
+    <HistoryViewerVersion {...makeProps({
+      onSelect,
+      compare: compareObj,
+    })}
+    />
+  );
+  await screen.findByText('Already selected');
+  fireEvent.click(container.querySelector('[data-extraclass="history-viewer__close-button"'));
+  expect(onSelect).toHaveBeenCalledWith(0, compareObj);
+});

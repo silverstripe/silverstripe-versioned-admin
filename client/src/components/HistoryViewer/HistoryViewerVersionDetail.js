@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect } from 'react';
 import classnames from 'classnames';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import { inject } from 'lib/Injector';
@@ -7,23 +7,54 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import qs from 'qs';
 
-class HistoryViewerVersionDetail extends PureComponent {
-  componentDidMount() {
-    this.toggleToolbarClass(true);
-  }
+const HistoryViewerVersionDetail = ({
+  isLatestVersion = false,
+  isPreviewable = false,
+  isRevertable = false,
+  ListComponent,
+  PreviewComponent,
+  CompareWarningComponent,
+  FormBuilderLoaderComponent = FormBuilderLoader,
+  recordId,
+  recordClass,
+  schemaUrl,
+  ToolbarComponent,
+  version,
+  compare = false,
+  previewState,
+  onAfterRevert,
+  compareModeAvailable,
+}) => {
+  /**
+   * Return whether or not we should be comparing two versions
+   * @returns {boolean}
+   */
+  const isCompareMode = () => compare && compare.versionFrom && compare.versionTo;
 
   /**
-   * When new props are received (from Redux dispatch events), check whether the preview
-   * state changes. If so, we want to add or remove the legacy CSS modifier for the CMS
-   * north toolbar based on whether the view mode is "split" (add) or anything else (remove)
+   * Return whether or not we should be displaying the preview component
+   * @returns {boolean}
    */
-  componentDidUpdate() {
-    this.toggleToolbarClass(this.props.previewState === 'split');
-  }
+  const isPreviewableCheck = () => isPreviewable && !isCompareMode();
 
-  componentWillUnmount() {
-    this.toggleToolbarClass(false);
-  }
+  /**
+   * Until the CMS is fully React driven, we must control certain aspects of the CMS DOM with
+   * manual CSS tweaks.
+   *
+   * @param {boolean} add
+   */
+  const toggleToolbarClass = (add = true) => {
+    const selector = document
+      .querySelector('.CMSPageHistoryViewerController div:not(.cms-content-tools) .cms-content-header');
+    const className = 'history-viewer__toolbar--condensed';
+    if (selector && isPreviewableCheck()) {
+      if (add) {
+        selector.classList.add(className);
+      } else {
+        selector.classList.remove(className);
+      }
+    }
+  };
 
   /**
    * Originally this component hard coded the array of versions to be passed
@@ -33,66 +64,27 @@ class HistoryViewerVersionDetail extends PureComponent {
    *
    * @returns {array}
    */
-  getListVersions() {
-    const { compare, version } = this.props;
-    if (this.isCompareMode()) {
+  const getListVersions = () => {
+    if (isCompareMode()) {
       return [compare.versionTo, compare.versionFrom];
     }
     return [version];
-  }
-
-  /**
-   * Return whether or not we should be displaying the preview component
-   * @returns {boolean}
-   */
-  isPreviewable() {
-    const { isPreviewable } = this.props;
-    return isPreviewable && !this.isCompareMode();
-  }
-
-  /**
-   * Return whether or not we should be comparing two versions
-   * @returns {boolean}
-   */
-  isCompareMode() {
-    const { compare } = this.props;
-    return compare && compare.versionFrom && compare.versionTo;
-  }
-
-  /**
-   * Until the CMS is fully React driven, we must control certain aspects of the CMS DOM with
-   * manual CSS tweaks.
-   *
-   * @param {boolean} add
-   */
-  toggleToolbarClass(add = true) {
-    const selector = document
-      .querySelector('.CMSPageHistoryViewerController div:not(.cms-content-tools) .cms-content-header');
-    const className = 'history-viewer__toolbar--condensed';
-
-    if (selector && this.isPreviewable()) {
-      if (add) {
-        selector.classList.add(className);
-      } else {
-        selector.classList.remove(className);
-      }
-    }
-  }
+  };
 
   /**
    * If the preview panel is enabled, return the component
    *
    * @returns {Preview|null}
    */
-  renderPreview() {
+  const renderPreview = () => {
     const {
-      version: { absoluteLink, lastEdited, version },
-      PreviewComponent,
-      previewState
-    } = this.props;
+      absoluteLink,
+      lastEdited,
+      version: versionNumber,
+    } = version;
 
     // Don't render the preview if the view mode is "edit"
-    if (!this.isPreviewable() || previewState === 'edit') {
+    if (!isPreviewableCheck() || previewState === 'edit') {
       return null;
     }
 
@@ -109,60 +101,46 @@ class HistoryViewerVersionDetail extends PureComponent {
             Stage: { href, type: 'text/html' },
           },
         }}
-        itemId={version}
+        itemId={versionNumber}
       />
     );
-  }
+  };
 
   /**
    * If the toolbar should be viewable, return the component
    *
    * @returns {HistoryViewerToolbar|null}
    */
-  renderToolbar() {
-    const { ToolbarComponent, isLatestVersion, isRevertable, recordId, version } = this.props;
-
-    if (this.isCompareMode()) {
+  const renderToolbar = () => {
+    if (isCompareMode()) {
       return null;
     }
-
     const forceDisabled = version.deleted;
-
     return (
       <ToolbarComponent
         identifier="HistoryViewer.VersionDetail.Toolbar"
         isLatestVersion={isLatestVersion}
         recordId={recordId}
         versionId={version.version}
-        recordClass={this.props.recordClass}
-        isPreviewable={this.isPreviewable()}
+        recordClass={recordClass}
+        isPreviewable={isPreviewableCheck()}
         isRevertable={isRevertable}
-        onAfterRevert={this.props.onAfterRevert}
+        onAfterRevert={onAfterRevert}
         forceDisabled={forceDisabled}
       />
     );
-  }
+  };
 
   /**
    * Renders the version detail view form
    *
    * @returns {Object}
    */
-  renderDetails() {
-    const {
-      compareModeAvailable,
-      ListComponent,
-      schemaUrl,
-      CompareWarningComponent,
-      FormBuilderLoaderComponent,
-      previewState,
-    } = this.props;
-
+  const renderDetails = () => {
     // Hide when the preview mode is explicitly enabled
-    if (this.isPreviewable() && previewState === 'preview') {
+    if (isPreviewableCheck() && previewState === 'preview') {
       return null;
     }
-
     const containerClasses = [
       'flexbox-area-grow',
       'panel',
@@ -173,23 +151,21 @@ class HistoryViewerVersionDetail extends PureComponent {
     const extraListClasses = {
       'history-viewer__table': true,
       'history-viewer__table--current': true,
-      'history-viewer__table--compare': this.isCompareMode(),
+      'history-viewer__table--compare': isCompareMode(),
     };
     const formClasses = {
       'history-viewer__version-detail': true,
-      'history-viewer__version-detail--compare': this.isCompareMode(),
+      'history-viewer__version-detail--compare': isCompareMode(),
     };
     return (
       <div className="flexbox-area-grow fill-height">
         <CompareWarningComponent fixed />
-
         <div className={classnames(containerClasses)}>
           <ListComponent
             extraClass={classnames(extraListClasses)}
-            versions={this.getListVersions()}
+            versions={getListVersions()}
             compareModeAvailable={compareModeAvailable}
           />
-
           <div className={classnames(formClasses)}>
             <FormBuilderLoaderComponent
               identifier="HistoryViewer.VersionDetail"
@@ -197,21 +173,34 @@ class HistoryViewerVersionDetail extends PureComponent {
             />
           </div>
         </div>
-
-        {this.renderToolbar()}
+        {renderToolbar()}
       </div>
     );
-  }
+  };
 
-  render() {
-    return (
-      <div className="flexbox-area-grow fill-width">
-        {this.renderDetails()}
-        {this.renderPreview()}
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    toggleToolbarClass(true);
+    return () => {
+      toggleToolbarClass(false);
+    };
+  }, []);
+
+  /**
+   * When new props are received (from Redux dispatch events), check whether the preview
+   * state changes. If so, we want to add or remove the legacy CSS modifier for the CMS
+   * north toolbar based on whether the view mode is "split" (add) or anything else (remove)
+   */
+  useEffect(() => {
+    toggleToolbarClass(previewState === 'split');
+  }, [previewState]);
+
+  return (
+    <div className="flexbox-area-grow fill-width">
+      {renderDetails()}
+      {renderPreview()}
+    </div>
+  );
+};
 
 HistoryViewerVersionDetail.propTypes = {
   isLatestVersion: PropTypes.bool,
@@ -235,14 +224,7 @@ HistoryViewerVersionDetail.propTypes = {
   ]),
   previewState: PropTypes.oneOf(['edit', 'preview', 'split']),
   onAfterRevert: PropTypes.func.isRequired,
-};
-
-HistoryViewerVersionDetail.defaultProps = {
-  isLatestVersion: false,
-  isPreviewable: false,
-  isRevertable: false,
-  compare: false,
-  FormBuilderLoaderComponent: FormBuilderLoader,
+  compareModeAvailable: PropTypes.bool,
 };
 
 export { HistoryViewerVersionDetail as Component };
