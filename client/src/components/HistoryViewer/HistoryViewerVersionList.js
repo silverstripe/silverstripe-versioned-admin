@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import i18n from 'i18n';
@@ -138,7 +138,10 @@ function mapStateToProps(state) {
   };
 }
 
-export { HistoryViewerVersionList as Component };
+// Wrapping export in React.memo() because the old class component extended React.PureComponent
+const MemoizedHistoryViewerVersionList = memo(HistoryViewerVersionList);
+
+export { MemoizedHistoryViewerVersionList as Component };
 
 export default compose(
   connect(mapStateToProps),
@@ -151,4 +154,4 @@ export default compose(
     }),
     () => 'VersionedAdmin.HistoryViewer.HistoryViewerVersionList'
   )
-)(HistoryViewerVersionList);
+)(MemoizedHistoryViewerVersionList);

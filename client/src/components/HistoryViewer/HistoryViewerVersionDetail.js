@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import classnames from 'classnames';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import { inject } from 'lib/Injector';
@@ -227,7 +227,10 @@ HistoryViewerVersionDetail.propTypes = {
   compareModeAvailable: PropTypes.bool,
 };
 
-export { HistoryViewerVersionDetail as Component };
+// Wrapping export in React.memo() because the old class component extended React.PureComponent
+const MemoizedHistoryViewerVersionDetail = memo(HistoryViewerVersionDetail);
+
+export { MemoizedHistoryViewerVersionDetail as Component };
 
 export default inject(
   ['HistoryViewerVersionList', 'HistoryViewerToolbar', 'Preview', 'HistoryViewerCompareWarning'],
@@ -238,4 +241,4 @@ export default inject(
     CompareWarningComponent,
   }),
   ({ version }, context) => `${context}.HistoryViewerVersionDetail.${version.Version}`
-)(HistoryViewerVersionDetail);
+)(MemoizedHistoryViewerVersionDetail);
