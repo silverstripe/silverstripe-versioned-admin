@@ -83,7 +83,6 @@ class ArchiveRestoreActionTest extends SapphireTest
 
         $ext = new ArchiveRestoreAction();
         $method = new ReflectionMethod(ArchiveRestoreAction::class, 'updateItemEditForm');
-        $method->setAccessible(true);
         $ext->setOwner($itemRequest);
         $method->invokeArgs($ext, [$form]);
 

@@ -311,7 +311,8 @@ class HistoryViewerControllerTest extends FunctionalTest
             $lastEdited = [];
             $versions = Versioned::get_all_versions(get_class($fixture), $fixture->ID);
             foreach ($versions as $version) {
-                $lastEdited[$version->Version] = $version->LastEdited;
+                $key = $version->Version ?? '';
+                $lastEdited[$key] = $version->LastEdited;
             }
             for ($page = 1; $page <= 3; $page++) {
                 $qsa = [];
