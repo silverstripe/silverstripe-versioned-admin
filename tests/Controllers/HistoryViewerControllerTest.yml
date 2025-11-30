@@ -10,6 +10,10 @@ SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\TestVe
   TestVersionedObject01:
     Title: TestVersionedObject01 Title
 
+SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\TestNonStagedVersionedObject:
+  TestNonStagedVersionedObject01:
+    Title: TestNonStagedVersionedObject01 Title
+
 SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\VersionedObjectWithGridField:
   record_one:
     Title: Record one

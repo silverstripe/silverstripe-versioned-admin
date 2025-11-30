@@ -14,6 +14,7 @@ use SilverStripe\VersionedAdmin\Controllers\HistoryViewerController;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\UnviewableVersionedObject;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\ViewableVersionedObject;
 use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\TestVersionedObject;
+use SilverStripe\VersionedAdmin\Tests\Controllers\HistoryViewerControllerTest\TestNonStagedVersionedObject;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
@@ -29,6 +30,7 @@ class HistoryViewerControllerTest extends FunctionalTest
         ViewableVersionedObject::class,
         UnviewableVersionedObject::class,
         TestVersionedObject::class,
+        TestNonStagedVersionedObject::class,
         VersionedObjectWithGridField::class,
     ];
 
@@ -276,20 +278,6 @@ class HistoryViewerControllerTest extends FunctionalTest
         ];
     }
 
-    public static function provideFieldsRemovedFromForm(): array
-    {
-        return [
-            [
-                'method' => 'getVersionForm',
-                'expected' => ['Title', 'MyInt', 'SecurityID'],
-            ],
-            [
-                'method' => 'getCompareForm',
-                'expected' => ['Title', 'MyInt'],
-            ],
-        ];
-    }
-
     #[DataProvider('provideApiRead')]
     public function testApiRead(
         string $idType,
@@ -419,6 +407,76 @@ class HistoryViewerControllerTest extends FunctionalTest
                 TestVersionedObject::add_extension(Versioned::class);
             }
         }
+    }
+
+    /**
+     * Test that isLiveVersion() returns false for versioned non-staged objects
+     */
+    public function testApiReadNonStaged(): void
+    {
+        $fixture = $this->objFromFixture(TestNonStagedVersionedObject::class, 'TestNonStagedVersionedObject01');
+        $fixture = $this->getFixture();
+        $fixture->Title = 'TestNonStagedVersionedObject01 Title B';
+        $fixture->write();
+        $lastEdited = [];
+        $versions = Versioned::get_all_versions(get_class($fixture), $fixture->ID);
+        foreach ($versions as $version) {
+            $lastEdited[$version->Version] = $version->LastEdited;
+        }
+        $qsa = [];
+        $qsa[] = "id={$fixture->ID}";
+        $qsa[] = "dataClass=" . urlencode(get_class($fixture));
+        $qsa[] = "page=1";
+        $qs = implode('&', $qsa);
+        $url = "/admin/historyviewer/api/read?$qs";
+        $response = $this->mainSession->sendRequest('GET', $url, []);
+        $this->assertSame('application/json', $response->getHeader('Content-type'));
+        $this->assertSame(200, $response->getStatusCode());
+        $expected = [
+            'pageInfo' => [
+                'totalCount' => 2,
+            ],
+            'versions' => [
+                [
+                    'version' => 2,
+                    'absoluteLink' => '',
+                    'author' => [
+                        'firstName' => 'ADMIN',
+                        'surname' => 'User',
+                    ],
+                    'publisher' => [
+                        'firstName' => '',
+                        'surname' => '',
+                    ],
+                    'deleted' => false,
+                    'draft' => true,
+                    'published' => false,
+                    'liveVersion' => false,
+                    'latestDraftVersion' => true,
+                    'lastEdited' => $lastEdited[2],
+                ],
+                [
+                    'version' => 1,
+                    'absoluteLink' => '',
+                    'author' => [
+                        'firstName' => '',
+                        'surname' => '',
+                    ],
+                    'publisher' => [
+                        'firstName' => '',
+                        'surname' => '',
+                    ],
+                    'deleted' => false,
+                    'draft' => true,
+                    'published' => false,
+                    'liveVersion' => false,
+                    'latestDraftVersion' => false,
+                    'lastEdited' => $lastEdited[1],
+                ],
+            ],
+        ];
+        $json = json_decode($response->getBody(), true);
+        $this->assertSame($expected, $json);
     }
 
     public static function provideApiRevert(): array
@@ -565,6 +623,20 @@ class HistoryViewerControllerTest extends FunctionalTest
         $securityToken = SecurityToken::inst();
         return [
             'X-' . $securityToken->getName() => $securityToken->getSecurityID()
+        ];
+    }
+
+    public static function provideFieldsRemovedFromForm(): array
+    {
+        return [
+            [
+                'method' => 'getVersionForm',
+                'expected' => ['Title', 'MyInt', 'SecurityID'],
+            ],
+            [
+                'method' => 'getCompareForm',
+                'expected' => ['Title', 'MyInt'],
+            ],
         ];
     }
 

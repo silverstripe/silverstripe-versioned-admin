@@ -120,7 +120,7 @@ class HistoryViewerController extends FormSchemaController
                 'deleted' => (bool) $record->WasDeleted,
                 'draft' => (bool) $record->WasDraft,
                 'published' => (bool) $record->WasPublished,
-                'liveVersion' => (bool) $record->isLiveVersion(),
+                'liveVersion' => $this->getIsLiveVersion($record),
                 'latestDraftVersion' => $record->isLatestDraftVersion(),
                 'lastEdited' => $record->LastEdited,
             ];
@@ -468,5 +468,19 @@ class HistoryViewerController extends FormSchemaController
         if (!empty($toRemove)) {
             $form->Fields()->removeByName($toRemove);
         }
+    }
+
+    /**
+     * Determine if the given record is the live version
+     * Will return false if the record has the Versioned extension
+     * but is not staged so that the 'Live' badge does not show, as there's no concept
+     * of draft/live in those cases
+     */
+    private function getIsLiveVersion(DataObject $record): bool
+    {
+        if (!$record->hasStages()) {
+            return false;
+        }
+        return (bool) $record->isLiveVersion();
     }
 }
