@@ -1,6 +1,10 @@
 // Replicate Bootstrap table stylings relatively closely but using a unordered list
 .history-viewer__table {
   padding: 0;
+  // override values from silverstripe/admin _typography .table
+  margin-left: 0;
+  margin-right: 0;
+  min-width: unset;
 
   &--current {
     // In detail views, pulls the content (and content tabs) closer to the selected version table
