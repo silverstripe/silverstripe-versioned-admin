@@ -22,7 +22,7 @@
     "require": {
         "php": "^8.3",
         "silverstripe/admin": "^3",
-        "silverstripe/framework": "^6.1",
+        "silverstripe/framework": "^6.2",
         "silverstripe/versioned": "^3.1"
     },
     "require-dev": {
