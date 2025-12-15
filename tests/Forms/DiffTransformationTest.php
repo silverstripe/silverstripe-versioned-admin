@@ -86,7 +86,7 @@ class DiffTransformationTest extends SapphireTest
         $form->transform($transformation);
         $form->loadDataFrom($oldData);
 
-        foreach (array_values($form->Fields()->dataFields() ?? []) as $index => $field) {
+        foreach (array_values($form->Fields()->getDataFields() ?? []) as $index => $field) {
             $this->assertStringContainsString($expected[$index]['before'], $field->getFormattedValue());
             $this->assertStringContainsString($expected[$index]['after'], $field->getFormattedValue());
         }
