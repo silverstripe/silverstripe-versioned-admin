@@ -12,6 +12,7 @@ import {
   setCurrentPage,
   showVersion,
   clearMessages,
+  reset,
 } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 import { compareType } from 'types/compareType';
@@ -55,8 +56,13 @@ class HistoryViewer extends Component {
   }
 
   componentDidMount() {
+    const { resetState, graphQLErrors, toastActions } = this.props;
+    // Don't carry over state from a previously mounted history viewer,
+    // which may be for a different page
+    if (typeof resetState === 'function') {
+      resetState();
+    }
     // Display a toast if there were any pre-existing graphql errors
-    const { graphQLErrors, toastActions } = this.props;
     if (graphQLErrors.length > 0) {
       toastActions.error(i18n._t('Admin.UNKNOWN_ERROR', 'An unknown error has occurred.'));
     }
@@ -490,6 +496,9 @@ function mapDispatchToProps(dispatch) {
     },
     onResize(panelWidth) {
       dispatch(viewModeActions.enableOrDisableSplitMode(panelWidth));
+    },
+    resetState() {
+      dispatch(reset());
     },
     // Note we can't use actions.toasts because that overrides actions.versions
     toastActions: bindActionCreators(toastsActions, dispatch),
