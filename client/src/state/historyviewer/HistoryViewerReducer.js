@@ -105,6 +105,10 @@ export default function historyViewerReducer(state = initialState, { type, paylo
       };
     }
 
+    case HISTORY_VIEWER.RESET: {
+      return initialState;
+    }
+
     default:
       return state;
   }

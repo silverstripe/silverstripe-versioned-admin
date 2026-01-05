@@ -14,6 +14,7 @@ import {
   setCurrentPage,
   showVersion,
   clearMessages,
+  reset,
 } from 'state/historyviewer/HistoryViewerActions';
 import { versionType } from 'types/versionType';
 import { compareType } from 'types/compareType';
@@ -52,6 +53,7 @@ const HistoryViewer = ({
   recordClass,
   recordClassSingularName,
   previewState,
+  resetState,
 }) => {
   const [versions, setVersions] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -309,6 +311,11 @@ const HistoryViewer = ({
    * Refresh version data on initial mount
    */
   useEffect(() => {
+    // Don't carry over state from a previously mounted history viewer,
+    // which may be for a different page
+    if (typeof resetState === 'function') {
+      resetState();
+    }
     refreshVersionData();
     // Reset selected version on unmount to prevent data leaking between instances
     return () => {
@@ -419,6 +426,9 @@ function mapDispatchToProps(dispatch) {
     },
     onResize(panelWidth) {
       dispatch(viewModeActions.enableOrDisableSplitMode(panelWidth));
+    },
+    resetState() {
+      dispatch(reset());
     },
     // Note we can't use actions.toasts because that overrides actions.versions
     toastActions: bindActionCreators(toastsActions, dispatch),

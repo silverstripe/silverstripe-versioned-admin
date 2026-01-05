@@ -101,3 +101,14 @@ export function setCompareTo(version) {
     payload: { version },
   };
 }
+
+/**
+ * Resets the state for history viewer
+ *
+ * @returns {Object}
+ */
+export function reset() {
+  return {
+    type: HISTORY_VIEWER.RESET,
+  };
+}
