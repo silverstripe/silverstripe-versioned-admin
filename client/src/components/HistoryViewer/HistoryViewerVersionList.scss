@@ -15,6 +15,12 @@
     display: flex;
     list-style-type: none;
   }
+
+  // explicitly set outline-offset on the focus-visible selector instead of setting
+  // the --focus-outline-offset variable because we don't want to affect child elements here.
+  .history-viewer__version-link:focus-visible {
+    outline-offset: var(--focus-outline-offset-inset);
+  }
 }
 
 // In compare mode, we don't want any space between the two version lists, only a small black line.
@@ -89,6 +95,8 @@
 
 .table .history-viewer__row--current {
   &, &:hover {
+    --focus-outline-color: var(--focus-outline-color-inverted);
+
     background-color: $link-color;
     color: $white;
   }
