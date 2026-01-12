@@ -261,7 +261,7 @@ test('HistoryViewerVersion calls handleKeyUp when Enter key is pressed', async (
     />
   );
   const link = container.querySelector('.history-viewer__version-link');
-  fireEvent.keyUp(link, { keyCode: 13 });
+  fireEvent.keyUp(link, { key: 'Enter' });
   expect(onSelect).toBeCalledWith(makeProps().version, false);
 });
 
@@ -275,7 +275,7 @@ test('HistoryViewerVersion does not call handleClick when non-Enter key is press
     />
   );
   const link = container.querySelector('.history-viewer__version-link');
-  fireEvent.keyUp(link, { keyCode: 32 });
+  fireEvent.keyUp(link, { key: ' ' });
   expect(onSelect).not.toBeCalled();
 });
 
