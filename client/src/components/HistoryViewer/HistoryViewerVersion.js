@@ -76,7 +76,7 @@ const HistoryViewerVersion = ({
    * @param {Object} event
    */
   const handleKeyUp = (event) => {
-    if (event.keyCode === 13) {
+    if (event.key === 'Enter') {
       handleClick();
     }
   };
