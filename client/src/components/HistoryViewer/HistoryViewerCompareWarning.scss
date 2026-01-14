@@ -12,6 +12,8 @@
   }
 
   button {
+    --focus-outline-offset: var(--focus-outline-offset-inset);
+
     background-color: inherit;
     color: inherit;
     border-width: 0 0 0 $border-width;
@@ -24,8 +26,6 @@
     }
 
     &:focus-visible {
-      outline: 2px solid $component-active-border-color;
-      outline-offset: -2px;
       border-radius: var(--bs-btn-border-radius);
     }
   }
