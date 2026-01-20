@@ -88,19 +88,19 @@ const HistoryViewerVersionDetail = ({
       return null;
     }
 
-    // Build HREF for the preview
-    const parsedURL = url.parse(absoluteLink);
-    const parsedQs = qs.parse(parsedURL.query);
-    parsedQs.archiveDate = lastEdited;
-    const href = url.format({ ...parsedURL, search: qs.stringify(parsedQs) });
+    let preview = null;
+    if (absoluteLink) {
+      // Build HREF for the preview
+      const parsedURL = url.parse(absoluteLink);
+      const parsedQs = qs.parse(parsedURL.query);
+      parsedQs.archiveDate = lastEdited;
+      const href = url.format({ ...parsedURL, search: qs.stringify(parsedQs) });
+      preview = { Stage: { href, type: 'text/html' } };
+    }
     return (
       <PreviewComponent
         className="history-viewer__preview flexbox-area-grow" // removes default: fill-height
-        itemLinks={{
-          preview: {
-            Stage: { href, type: 'text/html' },
-          },
-        }}
+        itemLinks={{ preview }}
         itemId={versionNumber}
       />
     );
