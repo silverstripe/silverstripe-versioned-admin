@@ -11,6 +11,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "HistoryViewer.COMPARE_MODE": "Compare mode",
     "HistoryViewer.ERROR": "There was an error loading this page. Try refreshing.",
     "HistoryViewer.EXIT": "Exit",
+    "HistoryViewer.NAME_HISTORY": "{name} history",
     "HistoryViewer.NEXT": "Next",
     "HistoryViewer.PREVIOUS": "Previous",
     "HistoryViewer.Published": "Published",
