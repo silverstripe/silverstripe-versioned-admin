@@ -216,4 +216,19 @@ class FeatureContext extends SilverStripeContext
             }
         }
     }
+
+    /**
+     * @Then I should see :text in the version column at row :row
+     */
+    public function iShouldSeeInTheVersionColumnAtRow($text, $row)
+    {
+        $versions = $this->getVersions();
+        $version = $versions[(int) $row - 1] ?? null;
+        Assert::assertNotNull($version, 'No version found at row ' . $row);
+        $versionColumn = $version->find('css', '.history-viewer__version-no');
+
+        $versionText = $versionColumn->getText();
+        $exists = strpos($versionText, $text ?? '') !== false;
+        Assert::assertTrue($exists, 'Version column actually contains: ' . $versionText);
+    }
 }
