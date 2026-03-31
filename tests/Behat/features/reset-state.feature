@@ -18,8 +18,7 @@ Feature: Reset state
 
   Scenario: Viewing a version gets reset
     Given I click on "History" in the header tabs
-    # the "first" version aka "version 1" is actually the most recent version - it'll be a version with the number "4"
-    Then I should see 4 in the version column in version 1
+    Then I should see 4 in the version column at row 1
     When I click on the first version
     And I wait for 3 seconds until I see the "#Form_versionForm" element
     Then I should see an "#Form_versionForm_Title[readonly]" element
@@ -28,4 +27,4 @@ Feature: Reset state
     And I wait for 3 seconds
     Then I should see a list of versions in descending order
     And I should not see the "#Form_versionForm" element
-    And I should see 1 in the version column in version 1
+    And I should see 1 in the version column at row 1
