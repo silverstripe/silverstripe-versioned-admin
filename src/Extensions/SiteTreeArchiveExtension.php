@@ -2,14 +2,20 @@
 
 namespace SilverStripe\VersionedAdmin\Extensions;
 
+use SilverStripe\CMS\Forms\SiteTreeURLSegmentField;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\ArchiveAdmin;
 use SilverStripe\VersionedAdmin\Interfaces\ArchiveViewProvider;
+use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink;
 
 /**
  * Adds a archive view for Pages
@@ -77,5 +83,49 @@ class SiteTreeArchiveExtension extends Extension implements ArchiveViewProvider
     public function isArchiveFieldEnabled()
     {
         return true;
+    }
+
+    /**
+     * Point the URL segment field at the archived page.
+     */
+    protected function updateCMSFields(FieldList $fields): void
+    {
+        $owner = $this->getOwner();
+        if (!$owner->isArchived()) {
+            return;
+        }
+
+        $urlSegmentField = $fields->dataFieldByName('URLSegment');
+        if (!$urlSegmentField instanceof SiteTreeURLSegmentField) {
+            return;
+        }
+
+        $archiveDate = SilverStripeNavigatorItem_ArchiveLink::getArchiveDate($owner);
+        if (!$archiveDate) {
+            return;
+        }
+
+        $urlSegmentField
+            ->setURLPrefix(Controller::join_links(Director::absoluteBaseURL(), $this->getParentLink()))
+            ->setURLSuffix('?archiveDate=' . $archiveDate);
+    }
+
+    /**
+     * Relative link of the record's parent, resolved from version history when the parent was
+     * archived as well - the same fallback SiteTree::RelativeLink() applies.
+     */
+    private function getParentLink(): ?string
+    {
+        $owner = $this->getOwner();
+        if (!$owner->ParentID || !SiteTree::config()->get('nested_urls')) {
+            return null;
+        }
+
+        $parent = $owner->getParent();
+        if (!$parent || !$parent->exists()) {
+            $parent = Versioned::get_latest_version(SiteTree::class, $owner->ParentID);
+        }
+
+        return $parent?->RelativeLink(true);
     }
 }
