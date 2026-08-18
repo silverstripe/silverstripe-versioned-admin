@@ -2,7 +2,10 @@
 
 namespace SilverStripe\VersionedAdmin\Tests\Behat\Context;
 
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Behat\Hook\Scope\BeforeStepScope;
 use Behat\Mink\Element\NodeElement;
+use Exception;
 use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\SilverStripeContext;
 
@@ -12,6 +15,80 @@ if (!class_exists(SilverStripeContext::class)) {
 
 class FeatureContext extends SilverStripeContext
 {
+    /**
+     * Milliseconds to wait for parts of the CMS that are rendered asynchronously. Generous because
+     * CI runners are a lot slower than a development machine.
+     */
+    private const WAIT_TIMEOUT = 10000;
+
+    /**
+     * Unsaved CMS changes trigger a browser "leave site?" dialog on navigation,
+     * including during @AfterScenario cleanup. Chrome leaves the dialog message
+     * empty, causing subsequent WebDriver commands to fail with "unexpected alert open".
+     *
+     * This context runs first in behat.yml to dismiss the dialog before cleanup or
+     * subsequent steps are executed.
+     *
+     * @AfterStep
+     */
+    public function clearUnsavedChangesDialog(AfterStepScope $event)
+    {
+        $driver = $this->getSession()->getDriver();
+        if (!method_exists($driver, 'getWebDriver') || !$driver->isStarted()) {
+            return;
+        }
+
+        try {
+            $driver->getWebDriver()->switchTo()->alert()->accept();
+        } catch (Exception $e) {
+            // No dialog was open, which is the normal case
+        }
+
+        try {
+            $driver->executeScript('window.onbeforeunload = null;');
+        } catch (Exception $e) {
+            // The page may be mid-navigation - the next step re-runs this hook
+        }
+    }
+
+    /**
+     * @BeforeStep
+     */
+    public function waitForHtmlEditors(BeforeStepScope $event)
+    {
+        if (!str_contains($event->getStep()->getText(), 'HTML field')) {
+            return;
+        }
+
+        $driver = $this->getSession()->getDriver();
+        if (!method_exists($driver, 'getWebDriver') || !$driver->isStarted()) {
+            return;
+        }
+
+        // Every htmleditor textarea on the page has to be registered with TinyMCE and finished
+        // initialising. See clearUnsavedChangesDialog() for why the globals are guarded.
+        $ready = $this->getSession()->wait(self::WAIT_TIMEOUT, <<<'JS'
+            (function () {
+                if (!window.tinymce) {
+                    return false;
+                }
+                var textareas = document.querySelectorAll('textarea.htmleditor');
+                if (!textareas.length) {
+                    return false;
+                }
+                for (var i = 0; i < textareas.length; i++) {
+                    var editor = window.tinymce.EditorManager.get(textareas[i].id);
+                    if (!editor || !editor.initialized) {
+                        return false;
+                    }
+                }
+                return true;
+            })()
+            JS);
+
+        Assert::assertTrue($ready, 'The HTML editors on the page did not finish initialising');
+    }
+
     /**
      * @Then I should see a list of versions
      */
@@ -44,8 +121,10 @@ class FeatureContext extends SilverStripeContext
      */
     public function iClickOnTheFirstVersion()
     {
-        Assert::assertNotNull($this->getLatestVersion(), 'I should see a list of versions');
-        $this->getLatestVersion()->click();
+        $version = $this->getLatestVersion();
+        Assert::assertNotFalse($version, 'I should see a list of versions');
+
+        $this->clickVersion($version);
     }
 
     /**
@@ -71,7 +150,16 @@ class FeatureContext extends SilverStripeContext
      */
     public function iOpenTheHistoryViewerActionsMenu()
     {
-        $button = $this->getSession()->getPage()->find('css', '.history-viewer__heading .history-viewer__actions .btn');
+        $selector = '.history-viewer__heading .history-viewer__actions .btn';
+
+        // The heading renders alongside the version list. See clearUnsavedChangesDialog() for why
+        // jQuery is guarded.
+        $this->getSession()->wait(
+            self::WAIT_TIMEOUT,
+            sprintf('window.jQuery && window.jQuery(%s).length > 0', json_encode($selector))
+        );
+
+        $button = $this->getSession()->getPage()->find('css', $selector);
         Assert::assertNotNull($button, 'History viewer actions menu not found in the page.');
 
         $button->click();
@@ -110,8 +198,16 @@ class FeatureContext extends SilverStripeContext
     {
         $version->click();
 
-        // Wait for the form builder to load
-        $this->getSession()->wait(3000, 'window.jQuery("#Form_versionForm").length > 0');
+        // Wait for the form builder to load. In compare mode the form is only rendered once a second
+        // version has been selected, so the compare notice counts as loaded there.
+        // jQuery is guarded because the wait expression is evaluated immediately: while the CMS is
+        // still loading, calling window.jQuery() throws "window.jQuery is not a function" and the
+        // step errors instead of waiting.
+        $this->getSession()->wait(
+            self::WAIT_TIMEOUT,
+            'window.jQuery && (window.jQuery("#Form_versionForm").length > 0'
+                . ' || window.jQuery(".history-viewer__compare-notice").length > 0)'
+        );
     }
 
     /**
@@ -122,13 +218,16 @@ class FeatureContext extends SilverStripeContext
      */
     protected function getVersions($modifier = '')
     {
-        // Wait for the list to be visible
-        $this->getSession()->wait(3000, 'window.jQuery(".history-viewer .table").length > 0');
+        $selector = '.history-viewer__list .history-viewer__table .history-viewer__row' . $modifier;
 
-        $versions = $this->getSession()
-            ->getPage()
-            ->findAll('css', '.history-viewer__list .history-viewer__table .history-viewer__row' . $modifier);
-        return $versions;
+        // Wait for a row rather than the table, which renders before the versions are populated.
+        // See clearUnsavedChangesDialog() for why jQuery is guarded.
+        $this->getSession()->wait(
+            self::WAIT_TIMEOUT,
+            sprintf('window.jQuery && window.jQuery(%s).length > 0', json_encode($selector))
+        );
+
+        return $this->getSession()->getPage()->findAll('css', $selector);
     }
 
     /**
@@ -208,13 +307,21 @@ class FeatureContext extends SilverStripeContext
      */
     protected function getSpecificVersion($versionNumber)
     {
-        $versions = $this->getVersions();
-        foreach ($versions as $version) {
-            /** @var NodeElement $version */
-            if (strpos($version->getText() ?? '', $versionNumber ?? '') !== false) {
-                return $version;
+        // Rows are added to the list as they render, so the version being looked for can arrive
+        // after the first one does. Retry instead of returning null, which left callers to fail
+        // with "Call to a member function find() on null".
+        for ($attempt = 0; $attempt < 10; $attempt++) {
+            foreach ($this->getVersions() as $version) {
+                /** @var NodeElement $version */
+                if (strpos($version->getText() ?? '', $versionNumber ?? '') !== false) {
+                    return $version;
+                }
             }
+
+            usleep(500000);
         }
+
+        Assert::fail(sprintf('No version matching "%s" was found in the version list', $versionNumber));
     }
 
     /**
