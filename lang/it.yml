@@ -12,7 +12,7 @@ it:
     SELECT_TYPE: 'Selezionare tipo di contenuto'
     TAB_OTHERS: Altro
   SilverStripe\VersionedAdmin\Controllers\CMSPageHistoryViewerController:
-    MENUTITLE: 'Modifica Pagina'
+    MENUTITLE: Pagine
   SilverStripe\VersionedAdmin\Controllers\HistoryViewerController:
     ErrorItemViewPermissionDenied: 'Non hai i necessari permessi per vedere {ObjectTitle}'
   SilverStripe\VersionedAdmin\Forms\DiffField:
