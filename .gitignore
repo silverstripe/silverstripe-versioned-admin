@@ -9,3 +9,4 @@ coverage/
 /vendor/
 /_resources/
 composer.lock
+/.yarn/
