@@ -4,6 +4,8 @@ namespace SilverStripe\VersionedAdmin\Tests\Navigator;
 
 use SilverStripe\Admin\Navigator\SilverStripeNavigator;
 use SilverStripe\Admin\Navigator\SilverStripeNavigatorItem_Unversioned;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_ArchiveLink;
 use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_LiveLink;
 use SilverStripe\VersionedAdmin\Navigator\SilverStripeNavigatorItem_StageLink;
@@ -68,6 +70,41 @@ class SilverStripeNavigatorTest extends SapphireTest
         $this->assertNotContains(SilverStripeNavigatorItem_LiveLink::class, $classes);
         $this->assertNotContains(SilverStripeNavigatorItem_StageLink::class, $classes);
         $this->assertNotContains(SilverStripeNavigatorItem_UnversionedLink::class, $classes);
+    }
+
+    public function testArchiveLinkUsesTheDateOfTheLastContentVersion(): void
+    {
+        $record = DBDatetime::withFixedNow('2026-05-01 09:00:00', function (): VersionedRecord {
+            $record = new VersionedRecord();
+            $record->PreviewLinkTestProperty = 'some-value';
+            $record->write();
+            $record->publishRecursive();
+
+            return $record;
+        });
+        DBDatetime::withFixedNow('2026-05-08 14:30:00', function () use ($record): void {
+            $record->doArchive();
+        });
+
+        // ArchiveAdmin lists the version written by the archive, whose LastEdited is the moment of
+        // archiving - a date the archive reading mode resolves back to that (unqueryable) version
+        $archived = Versioned::getRemovedFromDraft(VersionedRecord::class)->byID($record->ID);
+        $item = new SilverStripeNavigatorItem_ArchiveLink($archived);
+
+        $this->assertStringContainsString('archiveDate=' . urlencode('2026-05-01 09:00:00'), $item->getLink());
+        $this->assertStringNotContainsString(urlencode('2026-05-08 14:30:00'), $item->getLink());
+    }
+
+    public function testArchiveLinkFallsBackToTheRecordDateWithoutAContentVersion(): void
+    {
+        $record = new VersionedRecord();
+        $record->PreviewLinkTestProperty = 'some-value';
+        $record->write();
+        $lastEdited = $record->LastEdited;
+
+        $item = new SilverStripeNavigatorItem_ArchiveLink($record);
+
+        $this->assertStringContainsString('archiveDate=' . urlencode($lastEdited), $item->getLink());
     }
 
     public function testGetItemsUnstaged(): void
