@@ -8,7 +8,9 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('it', {
     "HistoryViewer.Author": "Autore",
     "HistoryViewer.COMPARE_MODE": "Modalità comparazione",
+    "HistoryViewer.ERROR": "Errore durante il caricamento pagina. Provare a ricaricare.",
     "HistoryViewer.EXIT": "Uscita",
+    "HistoryViewer.NAME_HISTORY": "Cronologia {name}",
     "HistoryViewer.NEXT": "Prossimo",
     "HistoryViewer.PREVIOUS": "Precedente",
     "HistoryViewer.Published": "Pubblicato",
