@@ -1,4 +1,4 @@
-@javascript @retry @job2
+@javascript @retry @job2 @unsavedChanges
 Feature: Revert to a version
   As a CMS author
   I want to revert to an older version

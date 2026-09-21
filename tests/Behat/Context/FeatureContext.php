@@ -2,10 +2,8 @@
 
 namespace SilverStripe\VersionedAdmin\Tests\Behat\Context;
 
-use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeStepScope;
 use Behat\Mink\Element\NodeElement;
-use Exception;
 use PHPUnit\Framework\Assert;
 use SilverStripe\BehatExtension\Context\SilverStripeContext;
 
@@ -22,36 +20,14 @@ class FeatureContext extends SilverStripeContext
     private const WAIT_TIMEOUT = 10000;
 
     /**
-     * Unsaved CMS changes trigger a browser "leave site?" dialog on navigation,
-     * including during @AfterScenario cleanup. Chrome leaves the dialog message
-     * empty, causing subsequent WebDriver commands to fail with "unexpected alert open".
+     * The framework steps for HTML fields talk straight to the TinyMCE instance without waiting for
+     * it, so they fail whenever the CMS is still rendering the edit form: the textarea is in the DOM
+     * before TinyMCE has taken it over, so "getEditor(...) is null" or "HTML field not found" is
+     * reported instead of the step waiting its turn.
      *
-     * This context runs first in behat.yml to dismiss the dialog before cleanup or
-     * subsequent steps are executed.
+     * Fixed waits in the feature files don't cover this reliably, so wait for the editors to
+     * initialise before any step that works with an HTML field.
      *
-     * @AfterStep
-     */
-    public function clearUnsavedChangesDialog(AfterStepScope $event)
-    {
-        $driver = $this->getSession()->getDriver();
-        if (!method_exists($driver, 'getWebDriver') || !$driver->isStarted()) {
-            return;
-        }
-
-        try {
-            $driver->getWebDriver()->switchTo()->alert()->accept();
-        } catch (Exception $e) {
-            // No dialog was open, which is the normal case
-        }
-
-        try {
-            $driver->executeScript('window.onbeforeunload = null;');
-        } catch (Exception $e) {
-            // The page may be mid-navigation - the next step re-runs this hook
-        }
-    }
-
-    /**
      * @BeforeStep
      */
     public function waitForHtmlEditors(BeforeStepScope $event)
@@ -66,7 +42,7 @@ class FeatureContext extends SilverStripeContext
         }
 
         // Every htmleditor textarea on the page has to be registered with TinyMCE and finished
-        // initialising. See clearUnsavedChangesDialog() for why the globals are guarded.
+        // initialising. See clickVersion() for why the globals are guarded.
         $ready = $this->getSession()->wait(self::WAIT_TIMEOUT, <<<'JS'
             (function () {
                 if (!window.tinymce) {
@@ -152,8 +128,8 @@ class FeatureContext extends SilverStripeContext
     {
         $selector = '.history-viewer__heading .history-viewer__actions .btn';
 
-        // The heading renders alongside the version list. See clearUnsavedChangesDialog() for why
-        // jQuery is guarded.
+        // The heading renders alongside the version list. See clickVersion() for why jQuery is
+        // guarded.
         $this->getSession()->wait(
             self::WAIT_TIMEOUT,
             sprintf('window.jQuery && window.jQuery(%s).length > 0', json_encode($selector))
@@ -221,7 +197,7 @@ class FeatureContext extends SilverStripeContext
         $selector = '.history-viewer__list .history-viewer__table .history-viewer__row' . $modifier;
 
         // Wait for a row rather than the table, which renders before the versions are populated.
-        // See clearUnsavedChangesDialog() for why jQuery is guarded.
+        // See clickVersion() for why jQuery is guarded.
         $this->getSession()->wait(
             self::WAIT_TIMEOUT,
             sprintf('window.jQuery && window.jQuery(%s).length > 0', json_encode($selector))
