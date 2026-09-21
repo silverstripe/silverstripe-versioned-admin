@@ -21,7 +21,7 @@ class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem
         $linkTitle = _t(__CLASS__ . '.PREVIEW', 'Preview version');
         $recordLink = Convert::raw2att(Controller::join_links(
             $this->record->AbsoluteLink(),
-            '?archiveDate=' . urlencode($this->record->LastEdited ?? '')
+            '?archiveDate=' . urlencode(static::getArchiveDate($this->record))
         ));
         return "<a class=\"{$linkClass}\" href=\"$recordLink\" target=\"_blank\">$linkTitle</a>";
     }
@@ -51,7 +51,11 @@ class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem
     public function getLink()
     {
         $link = $this->record->PreviewLink();
-        return $link ? Controller::join_links($link, '?archiveDate=' . urlencode($this->record->LastEdited ?? '')) : '';
+        if (!$link) {
+            return '';
+        }
+
+        return Controller::join_links($link, '?archiveDate=' . urlencode(static::getArchiveDate($this->record)));
     }
 
     public function canView($member = null)
@@ -71,5 +75,15 @@ class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem
     public function isActive()
     {
         return $this->isArchived();
+    }
+
+    /**
+     * Date to read the given record at.
+     */
+    public static function getArchiveDate(DataObject $record): string
+    {
+        $latestVersion = Versioned::get_latest_version($record->baseClass(), $record->ID);
+
+        return (string) ($latestVersion?->LastEdited ?: $record->LastEdited ?? '');
     }
 }
