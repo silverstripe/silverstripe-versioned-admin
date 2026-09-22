@@ -1,4 +1,4 @@
-@javascript @retry @job2
+@javascript @retry @job2 @unsavedChanges
 Feature: Reset state
   As a cms author
   I want the correct state to be used
